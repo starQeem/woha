@@ -5,7 +5,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     username: root
-    password: 1234
+    password:
     url: jdbc:mysql://localhost/woha?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
   main:
@@ -14,15 +14,15 @@ spring:
   mail:
     host: smtp.qq.com  # 配置 smtp 服务器地址
     port: 587  # smtp 服务器端口
-    username: 2572277647@qq.com #配置你的邮箱地址
-    password: rzqzshbgjxsrebda #配置申请到的授权码
+    username:  #配置你的邮箱地址
+    password:  #配置申请到的授权码
     protocol: smtp
     defaultEncoding: utf-8
 #redis
   redis:
-    host: 106.53.103.231
+    host:
     port: 8862
-    password: wycmzxx888888..
+    password:
     lettuce:
       pool:
         max-active: 10
@@ -33,3 +33,7 @@ spring:
       default-property-inclusion: non_null # JSON处理时忽略非空字段
 mybatis-plus:
   type-aliases-package: com.starQeem.woha.pojo
+logging:
+  level:
+    com:
+      starQeem: debug  #开启日志
