@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章详情</title>
+    <link rel="stylesheet" href="../static/lib/semantic/dist/semantic.min.css" th:href="@{/lib/semantic/dist/semantic.min.css}">
+    <link href="../static/images/me.png" th:href="@{/images/me.png}" rel="icon" type="image/x-ico">
+    <link rel="stylesheet" href="../static/lib/editormd/css/editormd.min.css" th:href="@{/lib/editormd/css/editormd.min.css}">
+    <!-- 内容排版 -->
+    <link rel="stylesheet" href="../static/css/typo.css" th:href="@{/css/typo.css}">
+    <!-- 代码亮亮 -->
+    <link rel="stylesheet" href="../static/lib/prism/prism.css" th:href="@{/lib/prism/prism.css}">
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+    <link rel="stylesheet" href="../static/css/grade.css" th:href="@{/css/grade.css}">
+    <link rel="stylesheet" href="../static/css/liked.css" th:href="@{/css/liked.css}">
+    <link rel=stylesheet type=text/css href="../static/css/video.css" th:href="@{/css/video.css}">
+    <style>
+        body {
+            background-color: #ededed;
+            margin-left: 0px;
+            margin-top: 0px;
+        }
+        .title a.selected {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<!--顶部图片-->
+<div class="m-bg-type_outer" style="width: 100%;height: 55%">
+    <img src="../../static/images/blog.jpg" th:src="@{${story.firstPicture}}" alt="" class="ui m-bg image"
+         style="width: 100%;height: 100%;">
+    <div class="m-bg-class_cover">
+        <div class="ui container" style="position: relative ;bottom: -540px;">
+            <h2 class="m-font-size-title-large" align="center" th:text="${story.title}">标题</h2>
+            <div class="ui container" align="center">
+                <div class="ui horizontal link list" align="center">
+                    <div class="item">
+                        <i class="user outline outline icon m-font-size-text-mini" style="vertical-align: top"></i>
+                        <a href="#" th:href="@{/user/{id}(id=${story.user.id})}" th:text="${story.user.nickName}" style="color: #ffffff;font-size: 15px">Qeem</a>
+                    </div>
+                    <div class="item">
+                        <i class="calendar icon m-font-size-text-mini" style="vertical-align: top"></i>
+                        <span th:text="${#dates.format(story.updateTime,'yyyy-MM-dd HH:mm')}"
+                              class="m-font-size-text-mini">2020-01-01</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--中间内容-->
+<div id="waypoint" class="m-margin- animated fadeIn">
+    <div class="ui container m-opacity box-shadow-max">
+        <!--内容-->
+        <div class="ui attached padded segment">
+            <!--中间主要内容部分-->
+            <div id="content" class="typo  typo-selection js-toc-content m-padded-lr-responsive m-padded-tb-large"
+                 th:utext="${story.content}" >
+            </div>
+            <!-- 点赞按钮 -->
+            <div style="display: flex; justify-content: center;">
+                <!-- 点赞 -->
+                <a class="reply" style="margin-right: 0px;"
+                   data-commentid="1" data-picturesid="1"
+                   id="liked" th:attr="data-storyId=${story.id}"
+                   onclick="liked(this)"
+                ><i class="thumbs up outline icon"
+                    th:class="${status==true} ? 'thumbs up icon' : 'thumbs up outline icon'"
+                    style="width: 20px"></i></a><!--
+            --><span style="margin-right: 0px;color: #828885" th:text="${liked}">1</span>
+            </div>
+            <div style="display: flex; justify-content: center;" th:if="${likedUserThree!=null}">
+                <div th:each="likedUserThree : ${likedUserThree}">
+                    <a th:href="@{/user/{id}(id=${likedUserThree.id})}">
+                        <img src="../../static/images/me.png" alt="" th:src="@{${likedUserThree.avator}}"
+                             class="ui avatar image" style="width: 20px;height: 20px">
+                    </a>
+                </div>
+                <div style="display: flex;align-items: center;height: 30px">
+                    <p style="font-size: 8px;color: #0d71bb">...觉得很赞</p>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: center;">
+                <span th:if="${likeMessage}" th:text="${likeMessage}" style="color: red;">诶嘿</span>
+            </div><br>
+            <div class="ui bottom attached segment">
+                <!--评论区域列表-->
+                <div id="comment-container" class="ui teal segment">
+                    <div onload="myfunction()">
+                        <div class="ui threaded comments" style="max-width: 100%;">
+                            <h3 class="ui dividing header">评论</h3>
+                            <div class="comment" th:each="comment : ${commentsList}" th:if="${comment.parentCommentId == -1}">
+                                <div class="content">
+                                    <a class="avatar">
+                                        <img src="../../static/images/avatar.png" th:src="@{${comment.user.avator}}">
+                                    </a>
+                                    <a class="author">
+                                        <span th:text="${comment.user.nickName}">Matt</span><!--
+                                --><h5 th:class="'level level-' + ${comment.userDask.grade}"
+                                       th:text="${'Lv' + comment.userDask.grade}"
+                                       style="margin-left: 0px; display: inline-block;">Lv4</h5>
+
+                                        <div class="ui mini basic teal left pointing label m-padded-mini"
+                                             th:if="${comment.isAdmin == 1}">楼主
+                                        </div>
+                                    </a>
+                                    <div class="metadata">
+                    <span class="date"
+                          th:text="${#dates.format(comment.createTime,'yyyy-MM-dd HH:mm')}">Today at 5:42PM</span>
+                                    </div>
+                                    <div class="text" th:text="${comment.content}">
+                                        How artistic!
+                                    </div>
+                                    <div class="actions">
+                                        <a class="reply"
+                                           data-commentid="1" data-commentnickname="Matt" target="_blank"
+                                           th:attr="data-commentid=${comment.id},data-commentnickname=${comment.user.nickName}"
+                                           onclick="reply(this)">回复</a>
+                                        <!-- 点赞 -->
+                                        <a class="reply" style="margin-right: 0px;"
+                                           data-commentid="1" data-picturesid="1"
+                                           th:attr="data-commentid=${comment.id},data-storyId=${story.id}"
+                                           onclick="likeComment(this)"
+                                        ><i class="thumbs up outline icon"
+                                            th:class="${comment.likedUser != null and comment.likedUser.contains(userId.toString()) ? 'thumbs up icon' : 'thumbs up outline icon'}"
+                                            style="width: 10px"></i></a><!--
+                    --><span style="margin-right: 0px;color: #828885" th:text="${comment.liked}">1</span>
+                                    </div>
+                                    <!--楼中楼-->
+                                    <div class="comments">
+                                        <div class="comment" th:each="childComment : ${commentsList}"
+                                             th:if="${childComment.parentCommentId == comment.id}">
+                                            <a class="avatar">
+                                                <img src="../../static/images/me.jpg" th:src="@{${childComment.user.avator}}">
+                                            </a>
+                                            <div class="content">
+                                                <a class="author">
+                                                    <span th:text="${childComment.user.nickName}">小红</span><!--
+                                --><h5 th:class="'level level-' + ${childComment.userDask.grade}"
+                                       th:text="${'Lv' + childComment.userDask.grade}"
+                                       style="margin-left: 0px; display: inline-block;">Lv4</h5>
+                                                    <div class="ui mini basic teal left pointing label m-padded-mini"
+                                                         th:if="${childComment.isAdmin}">楼主
+                                                    </div>
+                                                    <span th:text="|@ ${childComment.commentNickName} |" class="m-teal">@ 小白</span>
+                                                </a>
+                                                <div class="metadata">
+                          <span class="date"
+                                th:text="${#dates.format(childComment.createTime,'yyyy-MM-dd HH:mm')}">Today at 5:42PM</span>
+                                                </div>
+                                                <div class="text" th:text="${childComment.content}">
+                                                    How artistic!
+                                                </div>
+                                                <div class="actions">
+                                                    <a class="reply"
+                                                       data-commentid="1" data-commentnickname="Matt"
+                                                       th:attr="data-commentid=${comment.id},data-commentnickname=${childComment.user.nickName}"
+                                                       onclick="reply(this)">回复</a>
+                                                    <!-- 点赞 -->
+                                                    <a class="reply" style="margin-right: 0px;"
+                                                       data-commentid="1" data-picturesid="1"
+                                                       th:attr="data-commentid=${childComment.id},data-storyId=${story.id}"
+                                                       onclick="likeComment(this)"
+                                                    ><i class="thumbs up outline icon"
+                                                        th:class="${childComment.likedUser != null and childComment.likedUser.contains(userId.toString()) ? 'thumbs up icon' : 'thumbs up outline icon'}"
+                                                        style="width: 10px"></i></a><!--
+                    --><span style="margin-right: 0px;color: #828885" th:text="${childComment.liked}">1</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui form">
+                    <input type="hidden" name="storyId" th:value="${story.id}">
+                    <input type="hidden" name="parentCommentId" value="-1">
+                    <div class="field">
+                        <textarea id="comment-textarea" name="content" placeholder="请输入评论信息..."></textarea>
+                    </div>
+                    <div class="fields">
+                        <div class="field  m-margin-bottom-small m-mobile-wide">
+                            <button type="button" id="submit-comment-btn" class="ui teal button m-mobile-wide"
+                                    style="width:100px;height: 40px">
+                                <i class="edit icon"></i>发布
+                            </button>
+                            <span th:if="${message}" th:text="${message}" style="color: red;">诶嘿</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toolbar" class="m-padded m-fixed m-right-bottom" style="display: none">
+        <div class="ui vertical icon buttons ">
+            <a href="#comment-container" class="ui m-teal button">评论</a>
+            <div id="toTop-button" class="ui icon button"><i class="ui medium m-teal chevron up icon"></i></div>
+        </div>
+    </div>
+    <div class="ui toc-container  flowing popup transition hidden" style="width: 250px!important;">
+        <ol class="js-toc">
+        </ol>
+    </div>
+</div>
+
+<br>
+<br>
+
+<!--    动态线条-->
+<script type="text/javascript" color="47,79,79" opacity='0.7' zIndex="-2" count="150"
+        src="https://cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+<script src="../../static/lib/jquery-3.2.1/jquery-3.2.1.min.js" th:src="@{/lib/jquery-3.2.1/jquery-3.2.1.min.js}"></script>
+<script src="../../static/lib/semantic/dist/semantic.min.js" th:src="@{/lib/semantic/dist/semantic.min.js}"></script>
+<script src="../../static/lib/scrollTo/jquery.scrollTo.min.js" th:src="@{/lib/scrollTo/jquery.scrollTo.min.js}"></script>
+<script src="../../static/lib/qrcode/qrcode.min.js" th:src="@{/lib/qrcode/qrcode.min.js}"></script>
+<script src="../../static/lib/prism/prism.js" th:src="@{/lib/prism/prism.js}"></script>
+<script src="../../static/lib/tocbot/tocbot.min.js" th:src="@{/lib/tocbot/tocbot.min.js}"></script>
+
+
+<script>
+    var commentId = -1;
+    var commentNickName;
+    /*
+    * 发送评论
+    * */
+    $(document).ready(function () {
+        $('#submit-comment-btn').click(function () {
+            // 执行发送post请求的代码
+            // 获取评论信息和图片 ID
+            var content = $("textarea[name='content']").val();
+            var storyId = $("input[name='storyId']").val();
+            // 发送 POST 请求
+            $.ajax({
+                type: "POST",
+                url: "/comment",
+                data: {
+                    content: content,
+                    storyId: storyId,
+                    parentCommentId: commentId,
+                    commentNickName: commentNickName
+                },
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                }
+            });
+            setTimeout(function () {  //等待500ms后刷新页面
+                location.reload();
+            },500);
+        });
+    })
+
+    /*
+    * 回复评论
+    * */
+    function reply(element) {
+        // 滚动到底部位置(评论区位置)
+        window.scrollTo(0, document.body.scrollHeight);
+
+        // 获取回复的评论ID和昵称
+        commentId = element.getAttribute("data-commentid");
+        commentNickName = element.getAttribute("data-commentnickname");
+
+        // 自动填充评论内容
+        var textarea = document.getElementById("comment-textarea");
+        textarea.setAttribute("placeholder", "@" + this.commentNickName);
+    }
+
+    function submitComment() {
+        // 获取评论内容并提交
+        var textarea = document.getElementById("comment-textarea");
+        var content = textarea.value;
+        // 刷新页面
+        setTimeout(function () {
+            location.reload();
+        }, 500);
+    }
+
+    /*
+   * 帖子点赞
+   * */
+    function liked(element) {
+        // 获取图片ID
+        const storyId = element.getAttribute("data-storyId");
+        $.ajax({
+            type: "POST",
+            url: "/story/liked/" + storyId,
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+            }
+        });
+        //点赞状态切换
+        var icon = element.getElementsByTagName("i")[0];
+        var className = icon.getAttribute("class");
+        if (className.indexOf("outline") != -1) {
+            className = className.replace("outline", "");
+        } else {
+            className += " outline";
+        }
+        icon.setAttribute("class", className);
+    }
+    /*
+ * 评论区点赞
+ * */
+    function likeComment(element) {
+        // 获取评论ID和图片ID
+        const commentId = element.getAttribute("data-commentid");
+        const storyId = element.getAttribute("data-storyId");
+        $.ajax({
+            type: "POST",
+            url: "/comment/liked/" + commentId,
+            data: {
+                storyId: storyId,
+            },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+            }
+        });
+        //点赞状态切换
+        var icon = element.getElementsByTagName("i")[0];
+        var className = icon.getAttribute("class");
+        if (className.indexOf("outline") != -1) {
+            className = className.replace("outline", "");
+        } else {
+            className += " outline";
+        }
+        icon.setAttribute("class", className);
+    }
+</script>
+</body>
+</html>

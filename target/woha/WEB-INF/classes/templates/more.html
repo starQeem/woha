@@ -1,0 +1,259 @@
+<!doctype html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head> 
+<meta charset="utf-8">
+<title>关于本站作者</title>
+  <link href="../static/images/me.png" th:href="@{/images/me.png}" rel="icon" type="image/x-ico">
+<style type="text/css">
+body {
+	background-color: #ededed;
+	margin-left: 0px;
+	margin-top: 0px;
+}
+.father {
+	width: 1000px;
+	margin-right: auto;
+	margin-left: auto;
+	background-color: #FFF;
+
+
+}
+.top {
+	height: 120px;
+	width: 1000px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.nav {
+	background-color: #907466;
+	height: 40px;
+	width: 1000px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.nav .title {
+	height: 40px;
+	width: 725px;
+	margin-right: auto;
+	margin-left: auto;
+	font-family: "微软雅黑";
+	font-size: 13px;
+	line-height: 40px;
+	color: #FFF;
+	text-align:center;
+}
+.banner { /* 此段banner图选择器设置宽度、高度，定位方式为相对定位，并设置DIV布局居中 */
+	width: 915px;
+	height: 350px;
+	position: relative; /* 定位方式设置 */
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 15px;
+}
+.banner img:hover {
+opacity : 0.9;
+}
+.news {
+	height: 280px;
+	width: 915px;
+	margin-top: 55px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.news #news1 {
+	line-height: 28px;
+	background-color: #f0f0f0;
+	height: 280px;
+	width: 450px;
+	float: left;
+}
+.news #news2 {
+	line-height: 28px;
+	background-color: #f0f0f0;
+	height: 280px;
+	width: 450px;
+	float: left;
+	margin-left: 15px;
+}
+.text01 {
+	height: 250px;
+	width: 915px;
+	margin-top: 15px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.footer {
+	background-color: #907466;
+	height: 88px;
+	width: 1000px;
+	margin-right: auto;
+	margin-left: auto;
+	color: #FFF;
+	margin-top: 40px;
+}
+a:link {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+	color: #FFFFFF;
+}
+a:hover {
+	color: #fff1e7;
+	font-weight: bold;
+}
+a:active {
+	text-decoration: none;
+}
+.text01 .left {
+	float: left;
+	height: 250px;
+	width: 252px;
+	background-color: #f0f0f0;
+	text-align:center;
+}
+.text01 .left .image230 {
+	height: 195px;
+	width: 230px;
+	margin-top: 11px;
+	margin-left: 11px;
+	background-color: #FFF;
+}
+.text01 .left .image232 {
+	height: 30px;
+	width: 230px;
+	margin-top: 8px;
+	margin-left: 11px;
+	font-family: "微软雅黑";
+	font-size: 14px;
+	line-height: 30px;
+	font-weight: bold;
+}
+.text01 .main1 {
+	background-color: #edf8ff;
+	height: 210px;
+	width: 373px;
+	float: left;
+	padding: 20px;
+	line-height: 22px;
+}
+.text01 #right {
+	float: left;
+	height: 248px;
+	width: 310px;
+	border: 1px solid #eeeeee;
+}
+
+.dabiaoti {
+	font-family: "Lucida Console", Monaco, monospace;
+	font-size: 15px;
+	font-weight: bold;
+	color: #000;
+}
+body,td,th {
+	font-family: "微软雅黑";
+	font-size: 12px;
+}
+a.black:link {
+	color: #000000;
+	text-decoration: none;
+}
+a.black:visited {
+	text-decoration: none;
+	color: #000000;
+}
+a.black:hover {
+	text-decoration: none;
+	color: #2eabff;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #2eabff;
+}
+.line {
+	background-color: #907466;
+	height: 4px;
+	width: 1000px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 6px;
+}
+a.black:active {
+	text-decoration: none;
+}
+.titlenews {
+	line-height: 44px;
+	background-color: #dfdfdf;
+	height: 44px;
+	width: 450px;
+}
+.news12 {
+	height: 33px;
+	width: 390px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #e0e0e0;
+	margin-right: auto;
+	margin-left: auto;
+}
+.news11 {
+	height: 33px;
+	width: 390px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #e0e0e0;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 10px;
+}
+</style>
+</head>
+<body>
+<div class="father">
+<div class="top">
+    <img src="../static/images/logo.jpg" th:src="@{/images/logo.jpg}" width="1000" height="120">
+</div>
+<header>
+  <div class="nav">
+    <div class="title">
+      <a href="index.html" th:href="@{/}" class="selected">首页</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="more.html" th:href="@{/story}">喔哈广场</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="story.html" th:href="@{/strategy}">喔哈攻略</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="picture.html" th:href="@{/pictures}">精美图片</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="message.html" target="_blank" th:href="@{/my}">我的</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+</header>
+
+<!-- banner代码开始 -->
+<div class="banner">
+  <img src="../static/images/02.jpg" th:src="@{/images/02.jpg}" width="915" height="350"></div>
+
+<!-- banner代码END -->
+<div class="text01">
+  <div class="main1">
+    <span class="dabiaoti">本站作者</span><br>
+  <br>
+    你好，我是本站作者Qeem。右边是我的联系方式，如有bug，可以联系我。
+  </div>
+  <img src="../static/images/qq.jpg" style="float: right" th:src="@{/images/qq.jpg}" width="250" height="252">
+  <img src="../static/images/wechat.png" style="float: right" th:src="@{/images/wechat.png}" width="250" height="252">
+</div>
+<div class="line"></div>
+<div class="footer"><table width="100%" border="0">
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="25" align="center">版权声明  |  联系方法  |  刊登广告  |  关于我们  |  服务条款  </td>
+  </tr>
+  <tr>
+    <td height="29" align="center">版权所有：Qeem</td>
+  </tr>
+</table>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="woha:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>woha</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="woha.war">
+      <element id="artifact" artifact-name="woha:war exploded" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,21 @@
+.like-button {
+    background-color: red;
+    border-radius: 50%;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.like-button:hover {
+    background-color: darkred;
+}
+
+.like-button i {
+    margin-right: 8px;
+}

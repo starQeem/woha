@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>我的图片编辑</title>
+    <link href="../../static/images/me.png" th:href="@{/images/me.png}" rel="icon" type="image/x-ico">
+    <link rel="stylesheet" href="../../static/lib/semantic/dist/semantic.min.css" th:href="@{/lib/semantic/dist/semantic.min.css}">
+    <link rel="stylesheet" href="../../static/lib/editormd/css/editormd.min.css" th:href="@{/lib/editormd/css/editormd.min.css}">
+    <link rel="stylesheet" href="../../static/css/me.css" th:href="@{/css/me.css}">
+    <style>
+        body {
+            background-color: #ededed;
+            margin-left: 0px;
+            margin-top: 0px;
+        }
+        .title a.selected {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<br><br><br><br><br>
+<!--中间内容-->
+<div  class="">
+    <div class="ui container">
+        <div class="ui form">
+            <div class="required field">
+                <div class="ui left labeled input">
+                    <button onclick="uploadImage('article')" style="color: teal;background-color:white; border: 0px solid teal;">上传图片</button>&nbsp;
+                    <input type="file" class="ui teal basic label" style="height: 38px;width: 1022px" id="uploadInput"/>
+                </div>
+            </div>
+        </div><br>
+        <form id="blog-form" action="#" th:object="${pictures}"  th:action="@{/my/pictures/mypicturesUpdate}"  method="post" class="ui form">
+            <input type="hidden" name="published">
+            <input type="hidden" name="id" th:value="*{id}">
+            <div class="required field">
+                <div class="ui left labeled input">
+                    <div class="ui selection compact teal basic dropdown label">
+                        <i class="dropdown icon"></i>
+                        <div class="text" >标题</div>
+                    </div>
+                    <input type="text" name="title" placeholder="标题" th:value="*{title}">
+                </div>
+            </div>
+            <div class="required field">
+                <textarea name="content" placeholder="图片描述..." maxlength="200" th:text="*{content}"></textarea>
+            </div>
+            <div class="required field">
+                <div class="ui left labeled input">
+                    <label class="ui teal basic label">图片</label>
+                    <input type="text" name="picturesAddress" placeholder="图片地址" th:value="*{picturesAddress}">
+                </div>
+            </div>
+
+            <div class="ui error message"></div>
+
+            <div class="ui right aligned container">
+                <a type="button" class="ui button" th:href="@{/my/pictures/mypictures}" >返回</a>
+                <button type="button" id="publish-btn" class="ui teal button">发布</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<br>
+<br>
+
+
+<script src="../../static/lib/jquery-3.2.1/jquery-3.2.1.min.js" th:src="@{/lib/jquery-3.2.1/jquery-3.2.1.min.js}"></script>
+<script src="../../static/lib/semantic/dist/semantic.min.js" th:src="@{/lib/semantic/dist/semantic.min.js}"></script>
+<script src="../../static/lib/editormd/editormd.min.js" th:src="@{/lib/editormd/editormd.min.js}"></script>
+
+
+<script>
+
+    function uploadImage(type) {
+        var fileInput = document.getElementById("uploadInput"); // 获取文件输入框
+        var file = fileInput.files[0]; // 获取用户选择的文件
+
+        var formData = new FormData();
+        formData.append("file", file); // 将文件添加到FormData对象中
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "https://api.superbed.cn/upload?token=0d4a8d87241e48d786cc853d207d6098"); // 设置请求方法和URL，token是Superbed提供的API Token
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                var imageUrl = response.url; // 获取上传后的图片地址
+                console.log("Image URL: " + imageUrl);
+                document.getElementsByName("picturesAddress")[0].value = imageUrl;
+            }
+        };
+        xhr.send(formData); // 发送请求，上传文件
+    }
+
+    //初始化Markdown编辑器
+    var contentEditor;
+    $(function() {
+        contentEditor = editormd("md-content", {
+            width   : "100%",
+            height  : 640,
+            syncScrolling : "single",
+            path    : "/lib/editormd/lib/",
+            tocm            : true,         // Using [TOCM]
+            tex : true,                   // 开启科学公式TeX语言支持，默认关闭
+            flowChart : true,             // 开启流程图支持，默认关闭
+            sequenceDiagram : true,       // 开启时序/序列图支持，默认关闭,
+        });
+    });
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+
+    $('.ui.dropdown').dropdown({
+        on : 'hover'
+    });
+
+    $('#save-btn').click(function () {
+        $('[name="published"]').val(false);
+        $('#blog-form').submit();
+    });
+
+    $('#publish-btn').click(function () {
+        $('[name="published"]').val(true);
+        $('#blog-form').submit();
+    });
+
+
+
+    $('.ui.form').form({
+        fields : {
+            title : {
+                identifier: 'title',
+                rules: [{
+                    type : 'empty',
+                    prompt: '标题：请输入标题'
+                }]
+            },
+            pictureAddress : {
+                identifier: 'pictureAddress',
+                rules: [{
+                    type : 'empty',
+                    prompt: '标题：请输入图片地址'
+                }]
+            },
+            content : {
+                identifier: 'content',
+                rules: [{
+                    type : 'empty',
+                    prompt: '标题：请输入内容'
+                }]
+            },
+        }
+    });
+
+</script>
+
+</body>
+</html>

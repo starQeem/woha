@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>我的攻略发布</title>
+  <link href="../../static/images/me.png" th:href="@{/images/me.png}" rel="icon" type="image/x-ico">
+  <link rel="stylesheet" href="../../static/lib/semantic/dist/semantic.min.css" th:href="@{/lib/semantic/dist/semantic.min.css}">
+  <link rel="stylesheet" href="../../static/lib/editormd/css/editormd.min.css" th:href="@{/lib/editormd/css/editormd.min.css}">
+  <link rel="stylesheet" href="../../static/css/me.css" th:href="@{/css/me.css}">
+  <style>
+    body {
+      background-color: #ededed;
+      margin-left: 0px;
+      margin-top: 0px;
+    }
+    .title a.selected {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<br>
+<!--中间内容-->
+<div  class="">
+  <div class="ui container">
+    <div class="ui form">
+      <div class="required field">
+        <div class="ui left labeled input">
+          <button onclick="uploadImage('article')" style="color: teal;background-color:white; border: 0px solid teal;">上传文章首图</button>&nbsp;
+          <input type="file" class="ui teal basic label" style="height: 38px;width: 1022px" id="uploadInput"/>
+        </div>
+      </div>
+      <div class="required field">
+        <div class="ui left labeled input">
+          <button onclick="uploadImage('text')" style="color: teal;background-color:white; border: 0px solid teal;">上传文本图片</button>&nbsp;
+          <input type="file" class="ui teal basic label" style="height: 38px;width: 1022px" id="uploadInput2"/>
+        </div>
+      </div>
+      <div class="required field">
+        <div class="ui left labeled input">
+          <label class="ui teal basic label">文本图地址</label>
+          <input type="text" name="textPicturesAddress" placeholder="文本图地址">
+        </div>
+      </div>
+    </div><br>
+    <form id="blog-form" action="#" th:action="@{/my/strategy/strategyInput}"  method="post" class="ui form">
+      <input type="hidden" name="published">
+      <div class="required field">
+        <div class="ui left labeled input">
+          <div class="ui selection compact teal basic dropdown label">
+            <input type="hidden" value="1" name="copyright" >
+            <i class="dropdown icon"></i>
+            <div class="text">标题</div>
+          </div>
+          <input type="text" name="title" placeholder="标题" >
+        </div>
+      </div>
+
+      <div class="required field">
+        <div class="" id="md-content" style="z-index: 1 !important;">
+          <textarea placeholder="内容" name="content" style="display: none" ></textarea>
+        </div>
+      </div>
+
+
+      <div class="two fields">
+        <div class="required field">
+          <div class="ui left labeled action input">
+            <label class="ui compact teal basic label">分类</label>
+            <div class="ui fluid selection dropdown">
+              <!--新增-->
+              <input type="hidden" name="type.id" >
+              <!--编辑-->
+              <input type="hidden" name="typeId" >
+              <i class="dropdown icon"></i>
+              <div class="default text">分类</div>
+              <div class="menu">
+                <div th:each="type : ${typeList}" class="item" data-value="1" th:data-value="${type.id}" th:text="${type.name}">我的故事</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="required field">
+          <div class="ui left labeled input">
+            <label class="ui teal basic label">首图</label>
+            <input type="text" name="firstPicture" placeholder="首图引用地址">
+          </div>
+        </div>
+      </div>
+      <div class="required field">
+        <textarea name="description" th:text="*{description}" placeholder="简介..." maxlength="200" ></textarea>
+      </div>
+
+      <div class="ui error message"></div>
+
+      <div class="ui right aligned container">
+        <button type="button" class="ui button" onclick="window.history.go(-1)" >返回</button>
+        <button type="button" id="publish-btn" class="ui teal button">发布</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<br>
+<br>
+
+
+<script src="../../static/lib/jquery-3.2.1/jquery-3.2.1.min.js" th:src="@{/lib/jquery-3.2.1/jquery-3.2.1.min.js}"></script>
+<script src="../../static/lib/semantic/dist/semantic.min.js" th:src="@{/lib/semantic/dist/semantic.min.js}"></script>
+<script src="../../static/lib/editormd/editormd.min.js" th:src="@{/lib/editormd/editormd.min.js}"></script>
+
+
+<script>
+
+  function uploadImage(type) {
+    if (type === 'article'){
+      var fileInput = document.getElementById("uploadInput"); // 获取文件输入框
+    }
+    if (type === 'text'){
+      var fileInput = document.getElementById("uploadInput2"); // 获取文件输入框
+    }
+    var file = fileInput.files[0]; // 获取用户选择的文件
+
+    var formData = new FormData();
+    formData.append("file", file); // 将文件添加到FormData对象中
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "https://api.superbed.cn/upload?token=0d4a8d87241e48d786cc853d207d6098"); // 设置请求方法和URL，token是Superbed提供的API Token
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+        var response = JSON.parse(xhr.responseText);
+        var imageUrl = response.url; // 获取上传后的图片地址
+        console.log("Image URL: " + imageUrl);
+        if (type === 'article'){
+          document.getElementsByName("firstPicture")[0].value = imageUrl;
+        }
+        if (type === 'text'){
+          document.getElementsByName("textPicturesAddress")[0].value = "  ![](" + imageUrl + ")";
+          console.log("content: " + content.value);
+        }
+      }
+    };
+    xhr.send(formData); // 发送请求，上传文件
+  }
+
+
+  //初始化Markdown编辑器
+  var contentEditor;
+  $(function() {
+    contentEditor = editormd("md-content", {
+      width   : "100%",
+      height  : 640,
+      syncScrolling : "single",
+      path    : "/lib/editormd/lib/",
+      htmlDecode : "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启
+      tocm            : true,         // Using [TOCM]
+      tex : true,                   // 开启科学公式TeX语言支持，默认关闭
+      flowChart : true,             // 开启流程图支持，默认关闭
+      sequenceDiagram : true,       // 开启时序/序列图支持，默认关闭,
+    });
+  });
+  $('.menu.toggle').click(function () {
+    $('.m-item').toggleClass('m-mobile-hide');
+  });
+
+  $('.ui.dropdown').dropdown({
+    on : 'hover'
+  });
+
+  $('#save-btn').click(function () {
+    $('[name="published"]').val(false);
+    $('#blog-form').submit();
+  });
+
+  $('#publish-btn').click(function () {
+    $('[name="published"]').val(true);
+    $('#blog-form').submit();
+  });
+
+
+
+  $('.ui.form').form({
+    fields : {
+      title : {
+        identifier: 'title',
+        rules: [{
+          type : 'empty',
+          prompt: '标题：请输入标题'
+        }]
+      },
+      content : {
+        identifier: 'content',
+        rules: [{
+          type : 'empty',
+          prompt: '标题：请输入内容'
+        }]
+      },
+      firstPicture : {
+        identifier: 'firstPicture',
+        rules: [{
+          type : 'empty',
+          prompt: '标题：请输入首图地址'
+        }]
+      },
+      typeId : {
+        identifier: 'typeId',
+        rules: [{
+          type : 'empty',
+          prompt: '标题：请输入分类'
+        }]
+      },
+      description : {
+        identifier: 'description',
+        rules: [{
+          type : 'empty',
+          prompt: '标题：请输入简介'
+        }]
+      },
+    }
+  });
+
+</script>
+
+</body>
+</html>

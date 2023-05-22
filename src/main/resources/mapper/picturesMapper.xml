@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.starQeem.woha.mapper.picturesMapper">
+    <resultMap id="BaseResultMap" type="com.starQeem.woha.pojo.pictures">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="picturesAddress" column="pictures_address" jdbcType="VARBINARY"/>
+        <result property="commentCount" column="comment_count" jdbcType="INTEGER"/>
+        <result property="views" column="views" jdbcType="INTEGER"/>
+        <result property="liked" column="liked" jdbcType="INTEGER"/>
+        <association property="user" javaType="com.starQeem.woha.pojo.user">
+            <id property="id" column="user_id"/>
+            <result property="nickName" column="user_nick_name"/>
+            <result property="avatar" column="user_avatar"/>
+        </association>
+        <association property="userTask" javaType="com.starQeem.woha.pojo.userTask">
+            <id property="id" column="user_task_id"/>
+            <result property="grade" column="user_task_grade"/>
+        </association>
+    </resultMap>
+    <select id="getUserWithPictures" resultMap="BaseResultMap">
+        select p.id,p.pictures_address,p.update_time,p.views,u.nick_name user_nick_name,u.id user_id,p.comment_count,p.liked
+        from pictures p
+        join user u on p.user_id = u.id
+        where u.id = #{userId};
+    </select>
+    <select id="queryPicturesWithUserById" resultMap="BaseResultMap">
+        select p.id,p.pictures_address,p.title,p.content,p.update_time,p.views,p.comment_count,
+               u.nick_name user_nick_name,u.id user_id,u_d.grade user_task_grade
+        from pictures p
+        join user u
+        on p.user_id = u.id
+        join user_task u_d
+        where p.id = #{id} and u.id = #{userId};
+    </select>
+    <select id="getMyPicturesIndexByUpdateTime" resultMap="BaseResultMap">
+        select p.id,p.pictures_address,p.update_time,p.views,p.comment_count,p.liked,
+            u.nick_name user_nick_name,u.id user_id,u.avatar user_avatar
+        from pictures p
+        join user u on p.user_id = u.id
+        where u.id = #{userId}
+        order by p.update_time desc;
+    </select>
+    <select id="getPicturesListPageInfo" resultMap="BaseResultMap">
+        select p.id,p.pictures_address,p.update_time,p.views,u.nick_name user_nick_name,u.id user_id,p.comment_count,p.liked
+        from pictures p
+        join user u on p.user_id = u.id
+        where (p.title like concat('%',#{title},'%')) or (p.content like concat('%',#{title},'%'));
+    </select>
+    <select id="getPicturesDetailById" resultMap="BaseResultMap">
+        select p.id,p.pictures_address,p.title,p.content,p.update_time,p.views,
+               u.nick_name user_nick_name,u.id user_id
+        from pictures p
+        join user u on p.user_id = u.id
+        where p.id = #{id};
+    </select>
+</mapper>

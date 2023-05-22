@@ -1,0 +1,245 @@
+@charset "utf-8";
+/* CSS Document */
+
+.father {
+	width: 1000px;
+	margin-right: auto;
+	margin-left: auto;
+	background-color: #FFF;
+
+
+}
+.top {
+	height: 120px;
+	width: 1000px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.nav {
+	background-color: #907466;
+	height: 40px;
+	width: 1000px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.nav .title {
+	height: 40px;
+	width: 725px;
+	margin-right: auto;
+	margin-left: auto;
+	font-family: "微软雅黑";
+	font-size: 13px;
+	line-height: 40px;
+	color: #FFF;
+	text-align:center;
+}
+.banner { /* 此段banner图选择器设置宽度、高度，定位方式为相对定位，并设置DIV布局居中 */
+	width: 915px;
+	height: 270px;
+	position: relative; /* 定位方式设置 */
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 15px;
+}
+.banner img:hover {
+opacity : 0.9;
+}
+.news {
+	height: 280px;
+	width: 915px;
+	margin-top: 55px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.news #news1 {
+	line-height: 28px;
+	background-color: #f0f0f0;
+	height: 280px;
+	width: 450px;
+	float: left;
+}
+.news #news2 {
+	line-height: 28px;
+	background-color: #f0f0f0;
+	height: 280px;
+	width: 450px;
+	float: left;
+	margin-left: 15px;
+}
+.text01 {
+	/*height: 150px;*/
+	width: 915px;
+	margin-top: 15px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.footer {
+	background-color: #907466;
+	height: 120px;
+	width: 1000px;
+	margin-right: auto;
+	margin-left: auto;
+	color: #FFF;
+	margin-top: 40px;
+}
+a:link {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+	color: #FFFFFF;
+}
+a:hover {
+	color: #fff1e7;
+	font-weight: bold;
+}
+a:active {
+	text-decoration: none;
+}
+.text01 .left {
+	float: left;
+	height: 250px;
+	width: 252px;
+	background-color: #f0f0f0;
+	text-align:center;
+}
+.text01 .left .image230 {
+	height: 195px;
+	width: 230px;
+	margin-top: 11px;
+	margin-left: 11px;
+	background-color: #FFF;
+}
+.text01 .left .image232 {
+	height: 30px;
+	width: 230px;
+	margin-top: 8px;
+	margin-left: 11px;
+	font-family: "微软雅黑";
+	font-size: 14px;
+	line-height: 30px;
+	font-weight: bold;
+	color: #3c3c3c;
+}
+.text01 .main1 {
+	background-color: #edf8ff;
+	height: 210px;
+	width: 310px;
+	float: left;
+	padding: 20px;
+	line-height: 22px;
+	color: #3c3c3c;
+}
+.text01 .right {
+	float: left;
+	height: 248px;
+	width: 310px;
+	border: 1px solid #eeeeee;
+	background-color: #f8f8f8;
+}
+.text01 .right .m-156-130 {/* 图标小盒子属性设置  */
+	float: left;
+	height: 100px;
+	width: 110px;
+	margin-top: 15px;
+	border-radius: 7px;
+	background-color: #f3f3f3;
+	border: 1px solid #e6e6e6;
+	cursor: pointer;   /* 鼠标在此处的效果为“小手”样式 */
+	margin-left: 30px;
+}
+
+.text01 .right .m-156-130 .m-22-22 {/* 小盒子内小图标所在盒子 */
+	height: 40px;
+	width: 40px;
+	margin-top: 17px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.text01 .right .m-156-130 .m-50-20 {/* 小盒子内文字所在盒子 */
+	height: 20px;
+	width: 70px;
+	margin-top: 8px;
+	margin-right: auto;
+	margin-left: auto;
+	font-size: 14px;
+	line-height: 20px;
+	color: #000;
+	text-align: center;
+}
+
+.text01 .right .m-156-130:hover {/* 鼠标滑过变色、变形 */
+	background-color: #ffffff;
+	transform: rotateY(20deg);/* 鼠标滑过 使盒子翻转一定角度  */
+	transition: 0.3s;
+	border: 1px solid #907466;/* 鼠标滑过出现边框，做出被选中的效果 */
+	 box-shadow: 0px 0px 4px 4px rgba(152,152,152,0.1);/* 设置一个阴影 颜色 透明度 */
+}
+.dabiaoti {
+	font-family: "Lucida Console", Monaco, monospace;
+	font-size: 15px;
+	font-weight: bold;
+	color: #000;
+}
+body,td,th {
+	font-family: "微软雅黑";
+	font-size: 12px;
+	
+}
+a.black:link {
+	color: #000000;
+	text-decoration: none;
+}
+a.black:visited {
+	text-decoration: none;
+	color: #000000;
+}
+a.black:hover {
+	text-decoration: none;
+	color: #907466;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #907466;
+	;
+	;
+}
+.line {
+	background-color: #907466;
+	height: 4px;
+	width: 1000px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 6px;
+}
+a.black:active {
+	text-decoration: none;
+}
+.titlenews {
+	line-height: 44px;
+	background-color: #dfdfdf;
+	height: 44px;
+	width: 450px;
+}
+.news12 {
+	height: 33px;
+	width: 390px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #e0e0e0;
+	margin-right: auto;
+	margin-left: auto;
+	color: #999;
+}
+.news11 {
+	height: 33px;
+	width: 390px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #e0e0e0;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 10px;
+	color: #999999;
+}

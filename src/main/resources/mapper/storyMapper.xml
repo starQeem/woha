@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.starQeem.woha.mapper.storyMapper">
+    <resultMap id="BaseResultMap" type="com.starQeem.woha.pojo.story">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="firstPicture" column="first_picture" jdbcType="VARCHAR"/>
+        <result property="commentCount" column="comment_count" jdbcType="INTEGER"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="views" column="views" jdbcType="INTEGER"/>
+        <result property="liked" column="liked" jdbcType="INTEGER"/>
+        <association property="user" javaType="com.starQeem.woha.pojo.user">
+            <id property="id" column="user_id"/>
+            <result property="nickName" column="user_nick_name"/>
+            <result property="avatar" column="user_avatar"/>
+        </association>
+    </resultMap>
+    <select id="getUserWithStory" resultMap="BaseResultMap">
+        select s.id,s.title,s.content,s.first_picture,s.update_time,s.views,s.comment_count,s.liked,s.description,
+               u.nick_name user_nick_name,u.avatar user_avatar,u.id user_id
+        from story s join user u
+        on s.user_id = u.id
+        where u.id = #{userId};
+    </select>
+    <select id="getUserWithStoryById" resultMap="BaseResultMap">
+        select s.id,s.title,s.content,s.first_picture,s.update_time,s.views,s.comment_count,s.description,
+               u.nick_name user_nick_name
+        from story s join user u
+        on s.user_id = u.id
+        where s.id = #{id} and u.id = #{userId};
+    </select>
+    <select id="getMyPicturesIndexByUpdateTime" resultMap="BaseResultMap">
+        select s.id,s.title,s.content,s.first_picture,s.update_time,s.views,s.comment_count,s.liked,s.description,
+               u.nick_name user_nick_name
+        from story s
+        join user u on s.user_id = u.id
+        where u.id = #{userId}
+        order by update_time desc limit 3;
+    </select>
+    <select id="getStory" resultMap="BaseResultMap">
+        select s.id,s.title,s.first_picture,s.update_time,s.views,s.comment_count,s.liked,s.description,
+               u.nick_name user_nick_name,u.id user_id,u.avatar user_avatar
+        from story s
+        join user u on s.user_id = u.id
+        where (s.title like concat('%',#{title},'%')) or (s.content like concat('%',#{title},'%'));
+    </select>
+    <select id="getStoryById" resultMap="BaseResultMap">
+        select s.id,s.title,s.content,s.first_picture,s.update_time,s.views,
+               u.nick_name user_nick_name,u.id user_id
+        from story s
+        join user u on s.user_id = u.id
+        where s.id = #{id};
+    </select>
+</mapper>

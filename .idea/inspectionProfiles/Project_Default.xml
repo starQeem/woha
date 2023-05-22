@@ -1,0 +1,42 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="AutoCloseableResource" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="METHOD_MATCHER_CONFIG" value="java.util.Formatter,format,java.io.Writer,append,com.google.common.base.Preconditions,checkNotNull,org.hibernate.Session,close,java.io.PrintWriter,printf,java.io.PrintStream,printf,com.github.pagehelper.page.PageMethod,startPage" />
+    </inspection_tool>
+    <inspection_tool class="CssUnknownProperty" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myCustomPropertiesEnabled" value="true" />
+      <option name="myIgnoreVendorSpecificProperties" value="false" />
+      <option name="myCustomPropertiesList">
+        <value>
+          <list size="1">
+            <item index="0" class="java.lang.String" itemvalue="align" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myValues">
+        <value>
+          <list size="14">
+            <item index="0" class="java.lang.String" itemvalue="th:href" />
+            <item index="1" class="java.lang.String" itemvalue="th:value" />
+            <item index="2" class="java.lang.String" itemvalue="th:action" />
+            <item index="3" class="java.lang.String" itemvalue="th:src" />
+            <item index="4" class="java.lang.String" itemvalue="th:text" />
+            <item index="5" class="java.lang.String" itemvalue="th:utext" />
+            <item index="6" class="java.lang.String" itemvalue="th:inline" />
+            <item index="7" class="java.lang.String" itemvalue="th:if" />
+            <item index="8" class="java.lang.String" itemvalue="th:each" />
+            <item index="9" class="java.lang.String" itemvalue="th:class" />
+            <item index="10" class="java.lang.String" itemvalue="charset" />
+            <item index="11" class="java.lang.String" itemvalue="xsi:schemalocation" />
+            <item index="12" class="java.lang.String" itemvalue="shiro:guest" />
+            <item index="13" class="java.lang.String" itemvalue="shiro:authenticated" />
+          </list>
+        </value>
+      </option>
+      <option name="myCustomValuesEnabled" value="true" />
+    </inspection_tool>
+  </profile>
+</component>

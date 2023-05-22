@@ -1,0 +1,29 @@
+/* Pet image gallery styles */
+.pet-gallery {
+    margin: 20px auto;
+    max-width: 1000px;
+}
+.pet-gallery h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.gallery-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.gallery-row a {
+    display: block;
+    margin: 10px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.gallery-row img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}

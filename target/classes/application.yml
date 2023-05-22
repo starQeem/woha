@@ -1,0 +1,39 @@
+server:
+  port: 8080
+#数据库配置
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    username: root
+    password: wycmzxx888888..
+    url: jdbc:mysql://106.53.103.231:3306/woha?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  main:
+    allow-circular-references: true
+#qq邮箱验证码
+  mail:
+    host: smtp.qq.com  # 配置 smtp 服务器地址
+    port: 587  # smtp 服务器端口
+    username: 2572277647@qq.com #配置你的邮箱地址
+    password: rzqzshbgjxsrebda #配置申请到的授权码
+    protocol: smtp
+    defaultEncoding: utf-8
+#redis
+  redis:
+    host: 106.53.103.231
+    port: 8862
+    password: wycmzxx888888..
+    lettuce:
+      pool:
+        max-active: 10
+        max-idle: 10
+        min-idle: 1
+        time-between-eviction-runs: 10s
+    jackson:
+      default-property-inclusion: non_null # JSON处理时忽略非空字段
+mybatis-plus:
+  type-aliases-package: com.starQeem.woha.pojo
+#logging:
+#  level:
+#    com:
+#      starQeem: debug  #开启日志

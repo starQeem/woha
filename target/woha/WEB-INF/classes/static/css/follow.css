@@ -1,0 +1,51 @@
+.follow-list {
+    width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/*.follow-list .info {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*}*/
+
+
+.follow-list ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.follow-list li {
+    display: flex;
+    align-items: center;
+}
+
+
+.follow-list .info {
+    text-align: left;
+}
+
+.follow-list .info a {
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+}
+
+.follow-list .info span {
+    font-size: 14px;
+    color: #666;
+}
+
+.follow-list .userAvatar {
+    display: flex;
+}
+
+.follow-list .userAvatar img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 20px;
+}

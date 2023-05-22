@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户登录</title>
+    <!-- 导入字体图标 -->
+    <link rel="stylesheet" href="../static/css/iconfont.css" th:href="@{/css/iconfont.css}">
+    <link href="../static/images/me.png" th:href="@{/images/me.png}" rel="icon" type="image/x-ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* 字体无法选中 */
+            user-select: none;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            background-color: #ecf0f3;
+            color: #a0a5a8;
+        }
+
+        .shell {
+            position: relative;
+            width: 1000px;
+            min-width: 1000px;
+            min-height: 600px;
+            height: 600px;
+            padding: 25px;
+            background-color: #ecf0f3;
+            box-shadow: 10px 10px 10px #d1d9e6, -10px -10px 10px #f9f9f9;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* 设置响应式 */
+        @media (max-width: 1200px) {
+            .shell {
+                transform: scale(0.7);
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .shell {
+                transform: scale(0.6);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .shell {
+                transform: scale(0.5);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .shell {
+                transform: scale(0.4);
+            }
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            width: 600px;
+            height: 100%;
+            padding: 25px;
+            background-color: #ecf0f3;
+            transition: 1.25s;
+        }
+
+        .form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+
+        .iconfont {
+            margin: 0 5px;
+            border: rgba(0, 0, 0, 0.5) 2px solid;
+            border-radius: 50%;
+            font-size: 25px;
+            padding: 3px;
+            opacity: 0.5;
+            transition: 0.1s;
+        }
+
+        .iconfont:hover {
+            opacity: 1;
+            transition: 0.15s;
+            cursor: pointer;
+        }
+
+        .form_input {
+            width: 350px;
+            height: 40px;
+            margin: 4px 0;
+            padding-left: 25px;
+            font-size: 13px;
+            letter-spacing: 0.15px;
+            border: none;
+            outline: none;
+            background-color: #ecf0f3;
+            transition: 0.25s ease;
+            border-radius: 8px;
+            box-shadow: inset 2px 2px 4px #d1d9e6, inset -2px -2px 4px #f9f9f9;
+        }
+
+        .form_input:focus {
+            box-shadow: inset 4px 4px 4px #d1d9e6, inset -4px -4px 4px #f9f9f9;
+        }
+
+        .form_span {
+            margin-top: 30px;
+            margin-bottom: 12px;
+        }
+
+        .form_link {
+            color: #181818;
+            font-size: 15px;
+            margin-top: 25px;
+            border-bottom: 1px solid #a0a5a8;
+            line-height: 2;
+        }
+
+        .title {
+            font-size: 34px;
+            font-weight: 700;
+            line-height: 3;
+            color: #181818;
+            letter-spacing: 10px;
+        }
+
+        .description {
+            font-size: 14px;
+            letter-spacing: 0.25px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .button {
+            width: 180px;
+            height: 50px;
+            border-radius: 25px;
+            margin-top: 50px;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 1.15px;
+            background-color: #4B70E2;
+            color: #f9f9f9;
+            box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #f9f9f9;
+            border: none;
+            outline: none;
+        }
+
+        .a-container {
+            z-index: 100;
+            left: calc(100% - 600px);
+        }
+
+        .b-container {
+            left: calc(100% - 600px);
+            z-index: 0;
+        }
+
+        .switch {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 400px;
+            padding: 50px;
+            z-index: 200;
+            transition: 1.25s;
+            background-color: #ecf0f3;
+            overflow: hidden;
+            box-shadow: 4px 4px 10px #d1d9e6, -4px -4px 10px #d1d9e6;
+        }
+
+        .switch_circle {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background-color: #ecf0f3;
+            box-shadow: inset 8px 8px 12px #b8bec7, inset -8px -8px 12px #fff;
+            bottom: -60%;
+            left: -60%;
+            transition: 1.25s;
+        }
+
+        .switch_circle-t {
+            top: -30%;
+            left: 60%;
+            width: 300px;
+            height: 300px;
+        }
+
+        .switch_container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: absolute;
+            width: 400px;
+            padding: 50px 55px;
+            transition: 1.25s;
+        }
+
+        .switch_button {
+            cursor: pointer;
+        }
+
+        .switch_button:hover,
+        .submit:hover {
+            box-shadow: 6px 6px 10px #d1d9e6, -6px -6px 10px #f9f9f9;
+            transform: scale(0.985);
+            transition: 0.25s;
+        }
+
+        .switch_button:active,
+        .switch_button:focus {
+            box-shadow: 2px 2px 6px #d1d9e6, -2px -2px 6px #f9f9f9;
+            transform: scale(0.97);
+            transition: 0.25s;
+        }
+
+        .is-txr {
+            left: calc(100% - 400px);
+            transition: 1.25s;
+            transform-origin: left;
+        }
+
+        .is-txl {
+            left: 0;
+            transition: 1.25s;
+            transform-origin: right;
+        }
+
+        .is-z {
+            z-index: 200;
+            transition: 1.25s;
+        }
+
+        .is-hidden {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            transition: 1.25s;
+        }
+
+        .is-gx {
+            animation: is-gx 1.25s;
+        }
+
+        @keyframes is-gx {
+
+            0%,
+            10%,
+            100% {
+                width: 400px;
+            }
+
+            30%,
+            50% {
+                width: 500px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="shell">
+        <div class="container b-container" id="b-container">
+            <form method="post" th:action="@{/login}" class="form" id="b-form">
+                <h2 class="form_title title">登入账号</h2>
+                <div class="form_icons">
+                    <i class="iconfont icon-QQ"></i>
+                    <i class="iconfont icon-weixin"></i>
+                    <i class="iconfont icon-bilibili-line"></i>
+                </div><br><br>
+                <span class="form_span" style="color: red" th:text="${message}" th:if="${message!=null}">请登录</span>
+                <a href="#" style="color: #828885" th:href="@{/login}">账号密码登录</a>
+                <input type="text" class="form_input" id="username" name="username" placeholder="Username" >
+                <input type="text" class="form_input" id="code" name="code" placeholder="Code">
+                <div style="display: flex; justify-content: space-between;">
+                <button class="form_button button submit" type="button" id="sendBtn">SendCode</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="form_button button submit" type="submit" onclick="return validateForm()">Sign in</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="switch" id="switch-cnt">
+            <div class="switch_circle"></div>
+            <div class="switch_circle switch_circle-t"></div>
+            <div class="switch_container" id="switch-c1">
+                <h2 class="switch_title title" style="letter-spacing: 0;">Hello Friend！</h2>
+                <p class="switch_description description">去注册一个账号，成为尊贵的粉丝会员，让我们踏入奇妙的旅途！</p>
+                <a th:href="@{/register}"><button class="switch_button button switch-btn">Register</button></a>
+            </div>
+        </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>
+<script>
+    //登录校验
+    function validateForm() {
+        var regex2 = /^(?!.*[\u4e00-\u9fa5]).{1,50}$/; // 正则表达式
+        // 获取表单元素的值
+        var username = document.forms["b-form"]["username"].value;
+        var code = document.forms["b-form"]["code"].value;
+        // 检查用户名
+        if (username == "") {
+            alert("用户名不能为空");
+            return false;
+        }
+        if (!regex2.test(username)){
+            alert("用户名不能为中文且必须在50位以内!")
+            return false;
+        }
+        //检查验证码
+        if (code == "") {
+            alert("密码不能为空");
+            return false;
+        }
+        // 校验通过，允许提交表单
+        return true;
+    }
+
+    //发送验证码
+    const sendBtn = document.querySelector('#sendBtn');
+    const codeInput = document.querySelector('#code');
+
+    let countDown = 60; // 倒计时时间
+
+    sendBtn.addEventListener('click', function() {
+        var username = document.forms["b-form"]["username"].value;
+        // 邮箱格式
+        var re = new RegExp("^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([a-z]{2,6}(?:\\.[a-z]{2})?)$", "i");
+        // 检查邮箱
+        if (username == "") {
+            alert("邮箱不能为空!");
+            return false;
+        }
+        if (!re.test(username)){
+            alert("邮箱格式不正确!")
+            return false;
+        }
+        // 校验通过后将按钮禁用
+        sendBtn.disabled = true;
+
+        // 修改按钮的文本为倒数60秒
+        sendBtn.textContent = `倒数 (${countDown}s)`;
+
+        // 使用 setInterval 方法来实现倒数功能
+        var timer = setInterval(function() {
+            countDown--;
+            sendBtn.textContent = `倒数 (${countDown}s)`;
+
+            if (countDown === 0) {
+                // 倒数结束后恢复按钮原样
+                clearInterval(timer);
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'SENDCODE';
+                countDown = 60;
+            }
+        }, 1000);
+        // 发送 POST 请求
+        $.ajax({
+            type: "POST",
+            url: "/code",
+            data: {
+                username: username,
+            },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+            }
+        });
+    });
+</script>
+</body>
+
+</html>
