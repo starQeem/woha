@@ -223,7 +223,21 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
      * */
     @Override
     public List<comment> getComments(Long id) {
-        return commentMapper.getPicturesComments(id);
+        //查询所有评论
+        List<comment> picturesComments = commentMapper.getPicturesComments(id);
+        //查询所有点赞
+        Object likedUserIds = stringRedisTemplate.opsForHash().entries(COMMENT_LIKED);
+        // 创建一个Map来存储likedUserIds的键值对
+        Map<String, String> likedUserIdsMap;
+        likedUserIdsMap = (Map<String, String>) likedUserIds;
+        for (comment commentList : picturesComments){  //遍历所有评论
+            for (Map.Entry<String, String> commentLiked : likedUserIdsMap.entrySet()){  //遍历所有点赞
+                 if (commentList.getId().toString().equals(commentLiked.getKey())){  //判断点赞的key和评论的id是否相等
+                     commentList.setLikedUser(commentLiked.getValue());  //相等则把点赞的用户赋值给评论对象
+                 }
+            }
+        }
+        return picturesComments;
     }
 
     /*
@@ -240,22 +254,23 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
     @Override
     public boolean liked(Long picturesId, Long userId) {
         //判断是否点过赞
-        Object getPictures = stringRedisTemplate.opsForZSet().score(PICTURES_LIKED + String.valueOf(picturesId), String.valueOf(userId));
+        Double getPictures = stringRedisTemplate.opsForZSet().score(PICTURES_LIKED + picturesId, String.valueOf(userId));
         if (getPictures != null) {//点过赞
             //删除点赞信息
-            stringRedisTemplate.opsForZSet().remove(PICTURES_LIKED + String.valueOf(picturesId), String.valueOf(userId));
+            stringRedisTemplate.opsForZSet().remove(PICTURES_LIKED + picturesId, String.valueOf(userId));
             return true;
         } else { //没点过赞
-            stringRedisTemplate.opsForZSet().add(PICTURES_LIKED + String.valueOf(picturesId), String.valueOf(userId), new Date().getTime());
+            stringRedisTemplate.opsForZSet().add(PICTURES_LIKED + picturesId, String.valueOf(userId), new Date().getTime());
             return false;
         }
     }
+
     /*
      * 查询是否点赞
      * */
     @Override
     public boolean getStatus(Long picturesId, Long userId) {
-        Object getPictures = stringRedisTemplate.opsForZSet().score(PICTURES_LIKED + picturesId.toString(), userId.toString());
+        Double getPictures = stringRedisTemplate.opsForZSet().score(PICTURES_LIKED + picturesId.toString(), userId.toString());
         if (getPictures == null) {
             return false;
         } else {
@@ -305,8 +320,8 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
             stringRedisTemplate.delete(PICTURES_DETAIL + id);
         }
         //删除图片的点赞信息
-        Object redisPicturesLikedUser = stringRedisTemplate.opsForZSet().range(PICTURES_LIKED + String.valueOf(id),0,-1);
-        if (redisPicturesLikedUser != null){
+        Set<String> redisPicturesLikedUser = stringRedisTemplate.opsForZSet().range(PICTURES_LIKED + String.valueOf(id), 0, -1);
+        if (redisPicturesLikedUser != null) {
             stringRedisTemplate.delete(PICTURES_LIKED + String.valueOf(id));
         }
         return isSuccess;
@@ -331,7 +346,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
     @Override
     public List<user> getLikedUserThree(Long id) {
         Set<String> range = stringRedisTemplate.opsForZSet().range(PICTURES_LIKED + id.toString(), 0, 2);
-        if (!range.isEmpty()){
+        if (!range.isEmpty()) {
             String firstThree = String.join(",", range);
             QueryWrapper<user> queryWrapper = new QueryWrapper<>();
             queryWrapper.select("id", "avatar")
@@ -339,7 +354,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
                     .last("ORDER BY FIELD(id, " + firstThree + ")");
             List<user> ThreeUserLikedList = userService.getBaseMapper().selectList(queryWrapper);
             return ThreeUserLikedList;
-        }else {
+        } else {
             return null;
         }
     }
