@@ -31,8 +31,6 @@ CREATE TABLE `comment` (
   `parent_comment_id` bigint(20) DEFAULT NULL,
   `is_admin` int(11) DEFAULT '0' COMMENT '是否为楼主',
   `comment_nick_name` varchar(255) DEFAULT NULL COMMENT '评论区@的人的昵称',
-  `liked` int(11) DEFAULT '0' COMMENT '点赞数',
-  `liked_user` longtext COMMENT '点赞的用户',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8;
 

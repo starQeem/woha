@@ -128,7 +128,13 @@
                     ><i class="thumbs up outline icon"
                         th:class="${comment.likedUser != null and comment.likedUser.contains(userId.toString()) ? 'thumbs up icon' : 'thumbs up outline icon'}"
                         style="width: 10px"></i></a><!--
-                    --><span style="margin-right: 0px;color: #828885" th:text="${comment.liked}">1</span>
+                    --><span style="margin-right: 0px;color: #828885"
+                             th:if="${#strings.isEmpty(comment.likedUser)}" th:text="0">0</span>
+                    <span style="margin-right: 0px;color: #828885"
+                          th:unless="${#strings.isEmpty(comment.likedUser)}"
+                          th:with="idArray=${comment.likedUser != null ? comment.likedUser.split(',') : null}"
+                          th:text="${idArray != null ? idArray.length : 0}">1</span>
+                  </div>
                   </div>
                   <!--楼中楼-->
                   <div class="comments">
@@ -174,7 +180,12 @@
                           ><i class="thumbs up outline icon"
                               th:class="${childComment.likedUser != null and childComment.likedUser.contains(userId.toString()) ? 'thumbs up icon' : 'thumbs up outline icon'}"
                               style="width: 10px"></i></a><!--
-                    --><span style="margin-right: 0px;color: #828885" th:text="${childComment.liked}">1</span>
+                    --><span style="margin-right: 0px;color: #828885"
+                             th:if="${#strings.isEmpty(childComment.likedUser)}" th:text="0">0</span>
+                          <span style="margin-right: 0px;color: #828885"
+                                th:unless="${#strings.isEmpty(childComment.likedUser)}"
+                                th:with="idArray=${childComment.likedUser != null ? childComment.likedUser.split(',') : null}"
+                                th:text="${idArray != null ? idArray.length : 0}">1</span>
                         </div>
                       </div>
                     </div>

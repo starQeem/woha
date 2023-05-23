@@ -47,8 +47,7 @@ public class commentController {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         if (user != null){
-            boolean isLiked = commentService.liked(commentId, Long.valueOf(user.getId()));
-            model.addAttribute("isLiked",isLiked);
+            commentService.liked(commentId, Long.valueOf(user.getId()));
         }
         if (comment.getPicturesId()!=null){
             return "redirect:/pictures/picturesdetail/"+comment.getPicturesId();

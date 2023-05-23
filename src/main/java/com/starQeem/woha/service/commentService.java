@@ -13,7 +13,7 @@ import java.util.List;
 public interface commentService extends IService<comment> {
     boolean Comment(comment comment);
     boolean removeComment(Long id);
-    boolean liked(Long commentId,Long userId);
+    void liked(Long commentId,Long userId);
     PageInfo<comment> info(Integer pageNum, int pageSize);
     PageInfo<comment> comment(Integer pageNum, int pageSize);
 }
