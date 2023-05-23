@@ -12,6 +12,7 @@ import com.starQeem.woha.pojo.*;
 import com.starQeem.woha.service.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.starQeem.woha.util.constant.COMMENT_LIKED;
 import static com.starQeem.woha.util.constant.STATUS_ONE;
 
 /**
@@ -38,6 +40,8 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
     private strategyMapper strategyMapper;
     @Resource
     private commentMapper commentMapper;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
 
     /*
      * 评论发布
@@ -53,7 +57,8 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
             QueryWrapper<pictures> picturesQueryWrapper = new QueryWrapper<>();
             picturesQueryWrapper.select("id", "comment_count", "user_id").eq("id", comment.getPicturesId());
             pictures pictures = picturesMapper.selectOne(picturesQueryWrapper);
-            Integer count = pictures.getCommentCount() + 1;  //评论数+1
+            Integer count = pictures.getCommentCount();
+            count++;//评论数+1
             pictures.setCommentCount(count);
             picturesMapper.updateById(pictures);
             if (Objects.equals(pictures.getUserId(), Long.valueOf(user.getId()))) {//判断是否为自己发的帖子
@@ -65,7 +70,8 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
             QueryWrapper<story> storyqueryWrapper = new QueryWrapper<>();
             storyqueryWrapper.select("id", "comment_count","user_id").eq("id", comment.getStoryId());
             story story = storyMapper.selectOne(storyqueryWrapper);
-            Integer count = story.getCommentCount() + 1;  //评论数+1
+            Integer count = story.getCommentCount();
+            count++;//评论数+1
             story.setCommentCount(count);
             storyMapper.updateById(story);
             if (Objects.equals(story.getUserId(), Long.valueOf(user.getId()))) {//判断是否为自己发的帖子
@@ -77,7 +83,8 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
             QueryWrapper<strategy> strategyqueryWrapper = new QueryWrapper<>();
             strategyqueryWrapper.select("id", "comment_count","user_id").eq("id", comment.getStrategyId());
             strategy strategy = strategyMapper.selectOne(strategyqueryWrapper);
-            Integer count = strategy.getCommentCount() + 1;  //评论数+1
+            Integer count = strategy.getCommentCount();
+            count++;//评论数+1
             strategy.setCommentCount(count);
             strategyMapper.updateById(strategy);
             if (Objects.equals(strategy.getUserId(), Long.valueOf(user.getId()))) {//判断是否为自己发的帖子
@@ -108,7 +115,8 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
                     QueryWrapper<pictures> picturesQueryWrapper = new QueryWrapper<>();
                     picturesQueryWrapper.select("id", "comment_count").eq("id", comment.getPicturesId());
                     pictures pictures = picturesMapper.selectOne(picturesQueryWrapper);
-                    Integer count = pictures.getCommentCount() - 1;  //评论数-1
+                    Integer count = pictures.getCommentCount();
+                    count--;//评论数-1
                     pictures.setCommentCount(count);
                     picturesMapper.updateById(pictures);
                 }
@@ -116,7 +124,8 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
                     QueryWrapper<story> storyQueryWrapper = new QueryWrapper<>();
                     storyQueryWrapper.select("id", "comment_count").eq("id", comment.getStoryId());
                     story story = storyMapper.selectOne(storyQueryWrapper);
-                    Integer count = story.getCommentCount() - 1;  //评论数-1
+                    Integer count = story.getCommentCount();
+                    count--;//评论数-1
                     story.setCommentCount(count);
                     storyMapper.updateById(story);
                 }
@@ -124,7 +133,8 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
                     QueryWrapper<strategy> strategyQueryWrapper = new QueryWrapper<>();
                     strategyQueryWrapper.select("id", "comment_count").eq("id", comment.getStrategyId());
                     strategy strategy = strategyMapper.selectOne(strategyQueryWrapper);
-                    Integer count = strategy.getCommentCount() - 1;  //评论数-1
+                    Integer count = strategy.getCommentCount();
+                    count--;//评论数-1
                     strategy.setCommentCount(count);
                     strategyMapper.updateById(strategy);
                 }
@@ -170,45 +180,33 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
      * 评论区点赞
      * */
     @Override
-    public boolean liked(Long commentId, Long userId) {
-        //判断是否点过赞
-        QueryWrapper<comment> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", commentId);
-        comment getComment = commentService.getBaseMapper().selectOne(queryWrapper);
-        if (getComment.getLikedUser() == null){
-            getComment.setLikedUser("");
-        }
-        boolean isLiked = getComment.getLikedUser().contains(userId.toString());
-        if (isLiked) {//点过赞
-            comment comment = commentService.getBaseMapper().selectById(commentId);
-            Integer commentLiked = comment.getLiked();
-            if (commentLiked > 0) {
-                comment.setLiked(commentLiked - 1);  //点赞数-1
-                commentService.updateById(comment);
+    public void liked(Long commentId, Long userId) {
+        //获取点赞的用户ids
+        Object likedUserIds = stringRedisTemplate.opsForHash().get(COMMENT_LIKED, commentId.toString());
+        if (likedUserIds == null){
+            //没有用户点过赞
+            stringRedisTemplate.opsForHash().put(COMMENT_LIKED,commentId.toString(),userId.toString());
+        }else {
+            //有用户点过赞
+            boolean isLiked = likedUserIds.toString().contains(userId.toString());
+            //判断是否点过赞
+            if (isLiked){//点过赞,取消赞
+                String[] idArray = likedUserIds.toString().split(",");
+                // 将字符串数组转换成 Stream<String> 对象
+                Stream<String> idStream = Arrays.stream(idArray);
+                // 过滤掉要删除的 ID
+                Stream<String> filteredIdStream = idStream.filter(id -> !id.equals(String.valueOf(userId)));
+                // 将过滤后的字符串数组转换成以逗号分隔的字符串
+                String newIds = filteredIdStream.collect(Collectors.joining(","));
+                stringRedisTemplate.opsForHash().put(COMMENT_LIKED,commentId.toString(),newIds);
+            }else {//没点过赞
+                if (likedUserIds.equals("")) {
+                    stringRedisTemplate.opsForHash().put(COMMENT_LIKED,commentId.toString(),userId.toString());
+                } else {
+                    stringRedisTemplate.opsForHash().put(COMMENT_LIKED,commentId.toString(),likedUserIds + "," + userId);
+                }
             }
-            // 将 ID 字符串按照逗号分隔成一个字符串数组
-            String[] idArray = comment.getLikedUser().split(",");
-            // 将字符串数组转换成 Stream<String> 对象
-            Stream<String> idStream = Arrays.stream(idArray);
-            // 过滤掉要删除的 ID
-            Stream<String> filteredIdStream = idStream.filter(id -> !id.equals(String.valueOf(userId)));
-            // 将过滤后的字符串数组转换成以逗号分隔的字符串
-            String newIds = filteredIdStream.collect(Collectors.joining(","));
-            comment.setLikedUser(newIds);
-            commentService.updateById(comment);
-        } else {
-            //没点过赞
-            comment comment = commentService.getBaseMapper().selectById(commentId);
-            Integer commentLiked = comment.getLiked();
-            comment.setLiked(commentLiked + 1);  //点赞数+1
-            if (comment.getLikedUser() == null || comment.getLikedUser().equals("")) {
-                comment.setLikedUser("" + userId);
-            } else {
-                comment.setLikedUser(comment.getLikedUser() + "," + userId);
-            }
-            commentService.updateById(comment);
         }
-        return false;
     }
     /*
     * 回复我的评论
