@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -293,7 +294,21 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
      * */
     @Override
     public List<comment> getComments(Long id) {
-        return commentMapper.getStrategyComments(id);
+        //查询所有评论
+        List<comment> strategyComments = commentMapper.getStrategyComments(id);
+        //查询所有点赞
+        Object likedUserIds = stringRedisTemplate.opsForHash().entries(COMMENT_LIKED);
+        // 创建一个Map来存储likedUserIds的键值对
+        Map<String, String> likedUserIdsMap;
+        likedUserIdsMap = (Map<String, String>) likedUserIds;
+        for (comment commentList : strategyComments){  //遍历所有评论
+            for (Map.Entry<String, String> commentLiked : likedUserIdsMap.entrySet()){  //遍历所有点赞
+                if (commentList.getId().toString().equals(commentLiked.getKey())){  //判断点赞的key和评论的id是否相等
+                    commentList.setLikedUser(commentLiked.getValue());  //相等则把点赞的用户赋值给评论对象
+                }
+            }
+        }
+        return strategyComments;
     }
 
     /*
