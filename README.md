@@ -5,7 +5,7 @@
 **主要功能：**
 
 - 广场文章、图片、攻略文章的发布、编辑、删除、展示、评论、点赞和点赞排行榜
-- 评论的点赞和回复
+- 评论的发布、删除、点赞和回复
 - 每日、每周任务
 - 登陆、注册功能（支持邮箱验证码登陆注册）
 - 用户关注、取关和查看用户信息
@@ -16,3 +16,5 @@
 
 - 前端：html、css、JavaScript、ajax
 - 后端：SpringBoot、SpringMVC、MyBatisPlus、Redis、thymeleaf、MySQL、Shiro
+
+具体的功能实现思路可以浏览我的个人博客：http://itstarqeem.space/types/33
