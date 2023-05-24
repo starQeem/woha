@@ -8,6 +8,17 @@ import com.starQeem.woha.pojo.userTask;
  * @author: Qeem
  */
 public interface userTaskService extends IService<userTask> {
+    /**
+     * 查询我的任务
+     *
+     * @return {@link userTask}
+     */
     userTask getMyTaskByUserId();
+
+    /**
+     * 查询我的等级
+     *
+     * @return {@link userTask}
+     */
     userTask getGradeByUserId();
 }

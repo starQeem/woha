@@ -11,13 +11,72 @@ import java.util.List;
  * @author: Qeem
  */
 public interface userService extends IService<user> {
+    /**
+     * 用户注册
+     *
+     * @param email    邮箱地址
+     * @param password 密码
+     * @param code     验证码
+     * @return boolean
+     */
     boolean saveRegister(String email, String password,String code);
+
+    /**
+     * 查询我信息
+     *
+     * @return {@link user}
+     */
     user queryMyMessage();
+
+    /**
+     * 我的信息回显
+     *
+     * @return {@link user}
+     */
     user getMessage();
+
+    /**
+     * 任务
+     */
     void task();
+
+    /**
+     * 获取用户信息
+     *
+     * @param id 用户id
+     * @return {@link user}
+     */
     user getUserWithGrade(Long id);
+
+    /**
+     * 发送验证码
+     *
+     * @param email 邮箱地址
+     * @throws MessagingException 通讯异常
+     */
     void sendCode(String email) throws MessagingException;
+
+    /**
+     * 获取用户头像地址
+     *
+     * @return {@link user}
+     */
     user getAvatarAddress();
+
+    /**
+     * 修改密码
+     *
+     * @param username    用户名
+     * @param password    密码
+     * @param newPassword 新密码
+     * @return boolean
+     */
     boolean updatePassword(String username, String password, String newPassword);
+
+    /**
+     * 防止密码爆破
+     *
+     * @param username 用户名
+     */
     void frequent(String username);
 }

@@ -222,8 +222,6 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
         commentList.addAll(commentPicturesInfo);
         commentList.addAll(commentStrategyInfo);
         commentList.addAll(commentStoryInfo);
-
-
         // 按照 update_time 属性降序排列
         commentList.sort(Comparator.comparing(comment::getUpdateTime).reversed());
 
@@ -233,15 +231,13 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
 
         List<comment> pagedCommentList = commentList.subList(fromIndex, toIndex);
 
-        PageInfo<comment> pageInfo = new PageInfo<>();
+        PageInfo<comment> pageInfo = new PageInfo<>();  
         pageInfo.setList(pagedCommentList);
         pageInfo.setTotal(total);
         pageInfo.setPageNum(pageNum);
         pageInfo.setPageSize(pageSize);
-
         // 计算总页数
         int totalPages = (int) Math.ceil((double) total / pageSize);
-
         // 判断是否有上一页和下一页
         boolean hasPreviousPage = pageNum > 1;
         boolean hasNextPage = pageNum < totalPages;
@@ -263,13 +259,11 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
         List<comment> picturesComment = commentMapper.picturesComment(Long.valueOf(user.getId()));//图片文章评论
         List<comment> strategyComment = commentMapper.strategyComment(Long.valueOf(user.getId()));//攻略文章评论
         List<comment> storyComment = commentMapper.storyComment(Long.valueOf(user.getId()));//广场文章评论
-
         //将3个查询结果的集合合并为1个
         List<comment> commentList = new ArrayList<>();
         commentList.addAll(picturesComment);
         commentList.addAll(strategyComment);
         commentList.addAll(storyComment);
-
         // 对合并出来的集合按照 update_time 属性降序排列
         commentList.sort(Comparator.comparing(comment::getUpdateTime).reversed());
 

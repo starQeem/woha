@@ -10,5 +10,10 @@ import java.util.List;
  * @author: Qeem
  */
 public interface strategyTypeService extends IService<strategyType> {
+    /**
+     * 查询攻略的所有分类
+     *
+     * @return {@link List}<{@link strategyType}>
+     */
     List<strategyType> queryStrategyType();
 }

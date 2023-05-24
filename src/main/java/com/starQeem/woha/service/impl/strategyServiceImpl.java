@@ -51,7 +51,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
     private userService userService;
 
     /*
-     * 新增百科
+     * 新增攻略
      * */
     @Override
     public boolean saveStrategy(strategy strategy) {
@@ -85,7 +85,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
     }
 
     /*
-     * 查询百科分类列表
+     * 查询攻略分类列表
      * */
     @Override
     public PageInfo<strategy> pageStrategyWithStrategyTypeById(Integer pageNum, int pageSize, Long id, String title) {
@@ -120,7 +120,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
     }
 
     /*
-     * 百科编辑回显
+     * 攻略编辑回显
      * */
     @Override
     public strategy getUserWithStrategyWithStrategyTypeById(Long id) {
@@ -184,7 +184,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
     }
 
     /*
-     * 登录后查询百科详情
+     * 登录后查询攻略详情
      * */
     @Override
     public strategy queryStrategyDetailById(Long id, Long userId) {
