@@ -17,4 +17,20 @@
 - 前端：html、css、JavaScript、ajax
 - 后端：SpringBoot、SpringMVC、MyBatisPlus、Redis、thymeleaf、MySQL、Shiro
 
-具体的功能实现思路可以浏览我的个人博客： <a href="http://itstarqeem.space/types/33">地址</a> 
+**系列文章** 
+
+<a href="http://itstarqeem.space/blogs/57">喔哈星项目介绍</a><br>
+<a href="http://itstarqeem.space/blogs/58">喔哈星数据库表和实体类</a><br>
+<a href="http://itstarqeem.space/blogs/59">喔哈星-首页</a><br>
+<a href="http://itstarqeem.space/blogs/64">喔哈星-登录、注册和注销功能</a><br>
+<a href="http://itstarqeem.space/blogs/63">喔哈星-查看用户资料</a><br>
+<a href="http://itstarqeem.space/blogs/63">喔哈星-用户关注、取关、修改资料、修改密码、修改头像</a><br>
+<a href="http://itstarqeem.space/blogs/66">喔哈星-每日任务、每周任务</a><br>
+<a href="http://itstarqeem.space/blogs/69">喔哈星-文章、图片的编辑、发布和删除</a><br>
+<a href="http://itstarqeem.space/blogs/62">喔哈星-喔哈攻略</a><br>
+<a href="http://itstarqeem.space/blogs/61">喔哈星-精美图片</a><br>
+<a href="http://itstarqeem.space/blogs/60">喔哈星-喔哈广场</a><br>
+<a href="http://itstarqeem.space/blogs/70">喔哈星-查看"回复我的"和查看"评论我的"(新增的功能)</a><br>
+<a href="http://itstarqeem.space/blogs/73">喔哈星-防止登陆爆破</a><br>
+<a href="http://itstarqeem.space/blogs/67">喔哈星-点赞功能</a><br>
+<a href="http://itstarqeem.space/blogs/68">喔哈星-评论功能</a>
