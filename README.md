@@ -17,4 +17,4 @@
 - 前端：html、css、JavaScript、ajax
 - 后端：SpringBoot、SpringMVC、MyBatisPlus、Redis、thymeleaf、MySQL、Shiro
 
-具体的功能实现思路可以浏览我的个人博客： <a href="http://itstarqeem.space/types/33"></a> 
+具体的功能实现思路可以浏览我的个人博客： <a href="http://itstarqeem.space/types/33">地址</a> 
