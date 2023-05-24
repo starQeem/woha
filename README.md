@@ -19,8 +19,8 @@
 
 **系列文章** 
 
-<a href="http://itstarqeem.space/blogs/57">喔哈星项目介绍</a><br>
-<a href="http://itstarqeem.space/blogs/58">喔哈星数据库表和实体类</a><br>
+<a href="http://itstarqeem.space/blogs/57">喔哈星-项目介绍</a><br>
+<a href="http://itstarqeem.space/blogs/58">喔哈星-数据库表和实体类</a><br>
 <a href="http://itstarqeem.space/blogs/59">喔哈星-首页</a><br>
 <a href="http://itstarqeem.space/blogs/64">喔哈星-登录、注册和注销功能</a><br>
 <a href="http://itstarqeem.space/blogs/63">喔哈星-查看用户资料</a><br>
