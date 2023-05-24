@@ -17,12 +17,12 @@
         <association property="user" javaType="com.starQeem.woha.pojo.user">
             <id property="id" column="user_id"/>
             <result property="nickName" column="user_nick_name"/>
-            <result property="avator" column="user_avator"/>
+            <result property="avatar" column="user_avatar"/>
         </association>
     </resultMap>
     <select id="getUserWithStory" resultMap="BaseResultMap">
         select s.id,s.title,s.content,s.first_picture,s.update_time,s.views,s.comment_count,s.liked,s.description,
-               u.nick_name user_nick_name,u.avator user_avator,u.id user_id
+               u.nick_name user_nick_name,u.avatar user_avatar,u.id user_id
         from story s join user u
         on s.user_id = u.id
         where u.id = #{userId};
@@ -44,7 +44,7 @@
     </select>
     <select id="getStory" resultMap="BaseResultMap">
         select s.id,s.title,s.first_picture,s.update_time,s.views,s.comment_count,s.liked,s.description,
-               u.nick_name user_nick_name,u.id user_id,u.avator user_avator
+               u.nick_name user_nick_name,u.id user_id,u.avatar user_avatar
         from story s
         join user u on s.user_id = u.id
         where (s.title like concat('%',#{title},'%')) or (s.content like concat('%',#{title},'%'));

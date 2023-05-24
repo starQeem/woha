@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <title>喔哈攻略</title>
@@ -34,7 +34,13 @@
                 <a href="more.html" th:href="@{/story}">喔哈广场</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="story.html" th:href="@{/strategy}" class="selected">喔哈攻略</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="picture.html" th:href="@{/pictures}">精美图片</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="message.html" target="_blank" th:href="@{/my}">我的</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="message.html" target="_blank" th:href="@{/my}">我的喔哈</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div shiro:guest>
+                    <a href="message.html" th:href="@{/login}">登录</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
+                <div shiro:authenticated>
+                    <a href="message.html" th:href="@{/logout}">注销</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
                 <form name="search" action="#" th:action="@{/strategy}">
                     <div class="ui icon transparent input m-margin-tb-tiny" style="color: white">
                         <input style="color: white" type="text" name="title" placeholder="search...." th:value="${title}">
@@ -65,7 +71,7 @@
                                 <div class="eleven wide column">
                                     <div class="ui mini horizontal link list">
                                         <div class="item">
-                                            <img src="../static/images/me.jpg" th:src="@{${strategy.user.avator}}" alt="" class="ui avatar image">
+                                            <img src="../static/images/me.jpg" th:src="@{${strategy.user.avatar}}" alt="" class="ui avatar image">
                                             <div class="content"><a href="#" th:href="@{/user/{id}(id=${strategy.user.id})}" th:text="${strategy.user.nickName}" target="_blank" class="header"  >Qeem</a></div>
                                         </div>
                                         <div class="item">

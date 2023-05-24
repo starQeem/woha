@@ -75,7 +75,7 @@
       <div style="display: flex; justify-content: center;" th:if="${likedUserThree!=null}">
         <div th:each="likedUserThree : ${likedUserThree}">
           <a th:href="@{/user/{id}(id=${likedUserThree.id})}">
-            <img src="../../static/images/me.png" alt="" th:src="@{${likedUserThree.avator}}"
+            <img src="../../static/images/me.png" alt="" th:src="@{${likedUserThree.avatar}}"
                  class="ui avatar image" style="width: 20px;height: 20px">
           </a>
         </div>
@@ -96,12 +96,12 @@
               <div class="comment" th:each="comment : ${commentsList}" th:if="${comment.parentCommentId == -1}">
                 <div class="content">
                   <a class="avatar">
-                    <img src="../../static/images/avatar.png" th:src="@{${comment.user.avator}}">
+                    <img src="../../static/images/avatar.png" th:src="@{${comment.user.avatar}}">
                   </a>
                   <a class="author">
                     <span th:text="${comment.user.nickName}">Matt</span><!--
-                                --><h5 th:class="'level level-' + ${comment.userDask.grade}"
-                                       th:text="${'Lv' + comment.userDask.grade}"
+                                --><h5 th:class="'level level-' + ${comment.userTask.grade}"
+                                       th:text="${'Lv' + comment.userTask.grade}"
                                        style="margin-left: 0px; display: inline-block;">Lv4</h5>
 
                     <div class="ui mini basic teal left pointing label m-padded-mini"
@@ -124,14 +124,22 @@
                     ><i class="thumbs up outline icon"
                         th:class="${comment.likedUser != null and comment.likedUser.contains(userId.toString()) ? 'thumbs up icon' : 'thumbs up outline icon'}"
                         style="width: 10px"></i></a><!--
-                    --><span style="margin-right: 0px;color: #828885" th:text="${comment.liked}">1</span>
+                    --><span style="margin-right: 0px;color: #828885"
+                             th:if="${#strings.isEmpty(comment.likedUser)}" th:text="0">0</span>
+                    <span style="margin-right: 0px;color: #828885"
+                          th:unless="${#strings.isEmpty(comment.likedUser)}"
+                          th:with="idArray=${comment.likedUser != null ? comment.likedUser.split(',') : null}"
+                          th:text="${idArray != null ? idArray.length : 0}">1</span>
                     <a class="reply"
-                       data-commentid="1" data-commentnickname="Matt"
-                       th:attr="data-commentid=${comment.id},data-commentnickname=${comment.user.nickName}"
+                       data-commentid="1" data-commentnickname="Matt" data-commentuserid="0"
+                       th:attr="data-commentid=${comment.id},
+                       data-commentnickname=${comment.user.nickName},
+                       data-commentuserid=${comment.user.id}"
                        onclick="reply(this)">回复</a>
                     <a class="delete" href="#"
                        th:href="@{/my/comment/delete/{commentId}(commentId=${comment.id},strategyId=${strategy.id})}"
                        onclick="return confirm('确定要删除该评论吗？')">删除</a>
+                  </div>
                   </div>
                   <!--楼中楼-->
                   <div class="comments"
@@ -139,13 +147,13 @@
                        th:if="${childComment.parentCommentId == comment.id}">
                     <div class="comment">
                       <a class="avatar">
-                        <img src="../../static/images/me.jpg" th:src="@{${childComment.user.avator}}">
+                        <img src="../../static/images/me.jpg" th:src="@{${childComment.user.avatar}}">
                       </a>
                       <div class="content">
                         <a class="author">
                           <span th:text="${childComment.user.nickName}">小红</span><!--
-                                --><h5 th:class="'level level-' + ${childComment.userDask.grade}"
-                                       th:text="${'Lv' + childComment.userDask.grade}"
+                                --><h5 th:class="'level level-' + ${childComment.userTask.grade}"
+                                       th:text="${'Lv' + childComment.userTask.grade}"
                                        style="margin-left: 0px; display: inline-block;">Lv4</h5>
                           <div class="ui mini basic teal left pointing label m-padded-mini"
                                th:if="${childComment.isAdmin}">楼主
@@ -168,10 +176,17 @@
                           ><i class="thumbs up outline icon"
                               th:class="${childComment.likedUser != null and childComment.likedUser.contains(userId.toString()) ? 'thumbs up icon' : 'thumbs up outline icon'}"
                               style="width: 10px"></i></a><!--
-                    --><span style="margin-right: 0px;color: #828885" th:text="${childComment.liked}">1</span>
+                    --><span style="margin-right: 0px;color: #828885"
+                             th:if="${#strings.isEmpty(childComment.likedUser)}" th:text="0">0</span>
+                          <span style="margin-right: 0px;color: #828885"
+                                th:unless="${#strings.isEmpty(childComment.likedUser)}"
+                                th:with="idArray=${childComment.likedUser != null ? childComment.likedUser.split(',') : null}"
+                                th:text="${idArray != null ? idArray.length : 0}">1</span>
                           <a class="reply"
-                             data-commentid="1" data-commentnickname="Matt"
-                             th:attr="data-commentid=${comment.id},data-commentnickname=${childComment.user.nickName}"
+                             data-commentid="1" data-commentnickname="Matt" data-commentuserid="0"
+                             th:attr="data-commentid=${comment.id},
+                             data-commentnickname=${childComment.user.nickName},
+                             data-commentuserid=${childComment.user.id}"
                              onclick="reply(this)">回复</a>
                           <a class="delete" href="#"
                              th:href="@{/my/comment/delete/{commentId}(commentId=${childComment.id},strategyId=${strategy.id})}"
@@ -232,6 +247,7 @@
 <script>
   var commentId = -1;
   var commentNickName;
+  var commentUserId;
   /*
   * 发送评论
   * */
@@ -249,7 +265,8 @@
           content: content,
           strategyId: strategyId,
           parentCommentId: commentId,
-          commentNickName: commentNickName
+          commentNickName: commentNickName,
+          commentUserId: commentUserId
         },
         success: function (data) {
           console.log(data);
@@ -274,6 +291,7 @@
     // 获取回复的评论ID和昵称
     commentId = element.getAttribute("data-commentid");
     commentNickName = element.getAttribute("data-commentnickname");
+    commentUserId = element.getAttribute("data-commentuserid");
 
     // 自动填充评论内容
     var textarea = document.getElementById("comment-textarea");

@@ -14,53 +14,126 @@
         <result property="storyId" column="story_id" jdbcType="BIGINT"/>
         <result property="parentCommentId" column="parent_comment_id" jdbcType="BIGINT"/>
         <result property="strategyId" column="strategy_id" jdbcType="BIGINT"/>
+        <result property="commentUserId" column="comment_user_id" jdbcType="BIGINT"/>
         <result property="liked" column="liked" jdbcType="INTEGER"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <association property="user" javaType="com.starQeem.woha.pojo.user">
             <id property="id" column="user_id"/>
             <result property="nickName" column="user_nick_name"/>
-            <result property="avator" column="user_avator"/>
+            <result property="avatar" column="user_avatar"/>
         </association>
-        <association property="userDask" javaType="com.starQeem.woha.pojo.userDask">
-            <id property="id" column="user_dask_id"/>
-            <result property="grade" column="user_dask_grade"/>
+        <association property="userTask" javaType="com.starQeem.woha.pojo.userTask">
+            <id property="id" column="user_task_id"/>
+            <result property="grade" column="user_task_grade"/>
+        </association>
+        <association property="pictures" javaType="com.starQeem.woha.pojo.pictures">
+            <id property="id" column="pictures_id"/>
+            <result property="title" column="pictures_title"/>
+        </association>
+        <association property="story" javaType="com.starQeem.woha.pojo.story">
+            <id property="id" column="story_id"/>
+            <result property="title" column="story_title"/>
+        </association>
+        <association property="strategy" javaType="com.starQeem.woha.pojo.strategy">
+            <id property="id" column="strategy_id"/>
+            <result property="title" column="strategy_title"/>
         </association>
     </resultMap>
     <select id="getPicturesComments" resultMap="BaseResultMap">
         select c.id,c.content,c.user_id,c.pictures_id,c.create_time,c.update_time,c.parent_comment_id,c.is_admin,
-               c.parent_comment_id,c.comment_nick_name,c.liked,c.liked_user,
-               u.nick_name user_nick_name,u.id user_id,u.avator user_avator,
-               u_d.grade user_dask_grade
+               c.parent_comment_id,c.comment_nick_name,
+               u.nick_name user_nick_name,u.id user_id,u.avatar user_avatar,
+               u_d.grade user_task_grade
         from `comment` c
                  join user u on u.id = c.user_id
-                 join user_dask u_d on u_d.user_id  = u.id
+                 join user_task u_d on u_d.user_id  = u.id
                  join pictures p on p.id = c.pictures_id
         where p.id = #{picturesId}
         order by c.create_time desc;
     </select>
     <select id="getStoryComments" resultMap="BaseResultMap">
         select c.id,c.content,c.user_id,c.pictures_id,c.create_time,c.update_time,c.parent_comment_id,c.is_admin,
-               c.parent_comment_id,c.comment_nick_name,c.liked,c.liked_user,
-               u.nick_name user_nick_name,u.id user_id,u.avator user_avator,
-               u_d.grade user_dask_grade
+               c.parent_comment_id,c.comment_nick_name,
+               u.nick_name user_nick_name,u.id user_id,u.avatar user_avatar,
+               u_d.grade user_task_grade
         from `comment` c
                  join user u on u.id = c.user_id
-                 join user_dask u_d on u_d.user_id  = u.id
+                 join user_task u_d on u_d.user_id  = u.id
                  join story s on s.id = c.story_id
         where s.id = #{storyId}
         order by c.create_time desc;
     </select>
     <select id="getStrategyComments" resultMap="BaseResultMap">
         select c.id,c.content,c.user_id,c.pictures_id,c.create_time,c.update_time,c.parent_comment_id,c.is_admin,
-               c.parent_comment_id,c.comment_nick_name,c.liked,c.liked_user,
-               u.nick_name user_nick_name,u.id user_id,u.avator user_avator,
-               u_d.grade user_dask_grade
+               c.parent_comment_id,c.comment_nick_name,
+               u.nick_name user_nick_name,u.id user_id,u.avatar user_avatar,
+               u_d.grade user_task_grade
         from `comment` c
                  join user u on u.id = c.user_id
-                 join user_dask u_d on u_d.user_id  = u.id
+                 join user_task u_d on u_d.user_id  = u.id
                  join strategy s on s.id = c.strategy_id
         where s.id = #{strategyId}
         order by c.create_time desc;
+    </select>
+    <select id="commentPicturesInfo" resultMap="BaseResultMap">
+        select c.content,c.pictures_id,c.update_time,c.user_id,
+               u.avatar user_avatar,u.nick_name user_nick_name,
+               p.title pictures_title
+        from `comment` c
+        join user u on u.id = c.user_id
+        JOIN pictures p ON p.id = c.pictures_id
+        WHERE c.comment_user_id = #{userId}
+        order by c.update_time desc;
+    </select>
+    <select id="commentStrategyInfo" resultMap="BaseResultMap">
+        select c.content,c.strategy_id,c.update_time,c.user_id,
+               u.avatar user_avatar,u.nick_name user_nick_name,
+               s.title strategy_title
+        from `comment` c
+                 join user u on u.id = c.user_id
+                 JOIN strategy s ON s.id = c.strategy_id
+        WHERE c.comment_user_id = #{userId}
+        order by c.update_time desc;
+    </select>
+    <select id="commentStoryInfo" resultMap="BaseResultMap">
+        select c.content,c.story_id,c.update_time,c.user_id,
+               u.avatar user_avatar,u.nick_name user_nick_name,
+               s.title story_title
+        from `comment` c
+                 join user u on u.id = c.user_id
+                 JOIN story s ON s.id = c.story_id
+        WHERE c.comment_user_id = #{userId}
+        order by c.update_time desc;
+    </select>
+    <select id="picturesComment" resultMap="BaseResultMap">
+        select c.content,c.pictures_id,c.update_time,c.user_id,
+               u.avatar user_avatar,u.nick_name user_nick_name,
+               p.title pictures_title
+        from `comment` c
+                 join user u on u.id = c.user_id
+                 JOIN pictures p ON p.id = c.pictures_id
+        WHERE p.user_id = #{userId}
+        order by c.update_time desc;
+    </select>
+    <select id="strategyComment" resultMap="BaseResultMap">
+        select c.content,c.strategy_id,c.update_time,c.user_id,
+               u.avatar user_avatar,u.nick_name user_nick_name,
+               s.title strategy_title
+        from `comment` c
+                 join user u on u.id = c.user_id
+                 JOIN strategy s ON s.id = c.strategy_id
+        WHERE s.user_id = #{userId}
+        order by c.update_time desc;
+    </select>
+    <select id="storyComment" resultMap="BaseResultMap">
+        select c.content,c.story_id,c.update_time,c.user_id,
+               u.avatar user_avatar,u.nick_name user_nick_name,
+               s.title story_title
+        from `comment` c
+                 join user u on u.id = c.user_id
+                 JOIN story s ON s.id = c.story_id
+        WHERE s.user_id = #{userId}
+        order by s.user_id desc;
     </select>
 </mapper>

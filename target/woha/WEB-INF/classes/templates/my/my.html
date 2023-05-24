@@ -33,8 +33,8 @@
                 <a href="more.html" th:href="@{/story}">喔哈广场</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="story.html" th:href="@{/strategy}">喔哈攻略</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="picture.html" th:href="@{/pictures}">精美图片</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="messageUpdate.html" th:href="@{/my}" class="selected">我的</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="message.html" th:href="@{/logout}">注销</a>
+                <a href="messageUpdate.html" th:href="@{/my}" class="selected">我的喔哈</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="message.html" th:href="@{/logout}">注销</a>&nbsp;
             </div>
         </div>
     </header>
@@ -45,15 +45,17 @@
             <a href="#" style="color: #90532b" th:href="@{/my}">主页</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/story/mystory}">广场</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/pictures/mypictures}">图片</a>&nbsp;
-            <a href="#" style="color: #90532b" th:if="${status}" th:href="@{/my/strategy/mystrategy}">攻略</a>&nbsp;
-            <a href="#" style="color: #90532b" th:href="@{/my/dask}">任务</a>&nbsp;
+            <a href="#" style="color: #90532b" th:href="@{/my/strategy/mystrategy}">攻略</a>&nbsp;
+            <a href="#" style="color: #90532b" th:href="@{/my/task}">任务</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/follow}">关注</a>&nbsp;
-            <a href="#" style="color: #90532b" th:href="@{/my/fans}">粉丝</a>
+            <a href="#" style="color: #90532b" th:href="@{/my/fans}">粉丝</a>&nbsp;
+            <a href="#" style="color: #90532b" th:href="@{/my/comment/info}">回复</a>&nbsp;
+            <a href="#" style="color: #90532b" th:href="@{/my/comment/comment}">评论</a>
          </div>
         <br>
         <div>&nbsp;&nbsp;
             <a href="" style="color: #90532b" th:href="@{/my/mymessageUpdate}">编辑资料</a>
-            <a href="" style="color: #90532b" th:href="@{/my/avator}">修改头像</a>
+            <a href="" style="color: #90532b" th:href="@{/my/avatar}">修改头像</a>
             <a href="" style="color: #90532b" th:href="@{/my/password}">修改密码</a>
         </div>
     </div><br><br>
@@ -61,7 +63,7 @@
             <div class="details" >
                 <div class="user-info" style="display: flex;">
                 <div class="avatar">
-                    <img src="../../static/images/me.jpg" th:src="@{${user.avator}}" alt="头像">
+                    <img src="../../static/images/me.jpg" th:src="@{${user.avatar}}" alt="头像">
                 </div>
                 <div style="margin-left: 10px;">
                     <p th:text="|昵称:${user.nickName}|">昵称: Qeem</p>

@@ -31,7 +31,7 @@
                 <a href="more.html" th:href="@{/story}">喔哈广场</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="story.html" th:href="@{/strategy}">喔哈攻略</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="picture.html" th:href="@{/pictures}">精美图片</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="message.html" th:href="@{/my}" class="selected">我的</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="message.html" th:href="@{/my}" class="selected">我的喔哈</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="message.html" th:href="@{/logout}">注销</a></div>
         </div>
     </header>
@@ -42,10 +42,12 @@
             <a href="#" style="color: #90532b" th:href="@{/my}">主页</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/story/mystory}">广场</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/pictures/mypictures}">图片</a>&nbsp;
-            <a href="#" style="color: #90532b" th:if="${status}" th:href="@{/my/strategy/mystrategy}">攻略</a>&nbsp;
-            <a href="#" style="color: #90532b" th:href="@{/my/dask}">任务</a>&nbsp;
+            <a href="#" style="color: #90532b" th:href="@{/my/strategy/mystrategy}">攻略</a>&nbsp;
+            <a href="#" style="color: #90532b" th:href="@{/my/task}">任务</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/follow}">关注</a>&nbsp;
-            <a href="#" style="color: #90532b" th:href="@{/my/fans}">粉丝</a>
+            <a href="#" style="color: #90532b" th:href="@{/my/fans}">粉丝</a>&nbsp;
+            <a href="#" style="color: #90532b" th:href="@{/my/comment/info}">回复</a>&nbsp;
+            <a href="#" style="color: #90532b" th:href="@{/my/comment/comment}">评论</a>
         </div>
         <br>
         <div>&nbsp;&nbsp;
@@ -64,7 +66,7 @@
                             <div class="eleven wide column">
                                 <div class="ui mini horizontal link list">
                                     <div class="item">
-                                        <img src="../../static/images/me.jpg" alt="" th:src="@{${strategy.user.avator}}"
+                                        <img src="../../static/images/me.jpg" alt="" th:src="@{${strategy.user.avatar}}"
                                              class="ui avatar image">
                                         <div class="content">
                                             <a href="#" target="_blank" th:text="${strategy.user.nickName}" class="header">Qeem</a>

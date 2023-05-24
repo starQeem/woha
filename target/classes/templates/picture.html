@@ -54,7 +54,10 @@
   <div class="commodity" th:each="pictures:${page.list}">
     <div class="com-img">
       <a href="#" target="_blank" th:href="@{/pictures/picturesdetail/{id}(id=${pictures.id})}">
-        <img  src="../static/images/com-img01.jpg" th:src="@{${pictures.picturesAddress}}" width="270" height="160">
+        <div style="width: 270px;height: 140px;overflow: hidden; display: flex; align-items: center;">
+          <img  src="../static/images/com-img01.jpg"
+                th:src="@{${pictures.picturesAddress}}" style="height: auto;width: 100%">
+        </div>
       </a>
     </div>
   </div>

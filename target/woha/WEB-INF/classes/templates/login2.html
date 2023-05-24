@@ -298,11 +298,11 @@
                 </div><br><br>
                 <span class="form_span" style="color: red" th:text="${message}" th:if="${message!=null}">请登录</span>
                 <a href="#" style="color: #828885" th:href="@{/login}">账号密码登录</a>
-                <input type="text" class="form_input" id="username" name="username" placeholder="Username" >
+                <input type="text" class="form_input" id="username" name="username" placeholder="Email" >
                 <input type="text" class="form_input" id="code" name="code" placeholder="Code">
                 <div style="display: flex; justify-content: space-between;">
-                <button class="form_button button submit" type="button" id="sendBtn">SendCode</button>&nbsp;&nbsp;&nbsp;&nbsp;
-                <button class="form_button button submit" type="submit" onclick="return validateForm()">Sign in</button>
+                <button class="form_button button submit" type="button" id="sendBtn">验证码</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="form_button button submit" type="submit" onclick="return validateForm()">登录</button>
                 </div>
             </form>
         </div>
@@ -311,35 +311,37 @@
             <div class="switch_circle"></div>
             <div class="switch_circle switch_circle-t"></div>
             <div class="switch_container" id="switch-c1">
-                <h2 class="switch_title title" style="letter-spacing: 0;">Hello Friend！</h2>
+                <h2 class="switch_title title" style="letter-spacing: 0;">你好 朋友！</h2>
                 <p class="switch_description description">去注册一个账号，成为尊贵的粉丝会员，让我们踏入奇妙的旅途！</p>
-                <a th:href="@{/register}"><button class="switch_button button switch-btn">Register</button></a>
+                <a th:href="@{/register}"><button class="switch_button button switch-btn">注册</button></a>
             </div>
         </div>
     </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" th:src="@{https://code.jquery.com/jquery-3.6.0.min.js}"></script>
 </body>
 </html>
 <script>
     //登录校验
     function validateForm() {
         var regex2 = /^(?!.*[\u4e00-\u9fa5]).{1,50}$/; // 正则表达式
+        var re = new RegExp("^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([a-z]{2,6}(?:\\.[a-z]{2})?)$", "i");
         // 获取表单元素的值
         var username = document.forms["b-form"]["username"].value;
         var code = document.forms["b-form"]["code"].value;
         // 检查用户名
         if (username == "") {
-            alert("用户名不能为空");
+            alert("邮箱不能为空!");
             return false;
         }
-        if (!regex2.test(username)){
-            alert("用户名不能为中文且必须在50位以内!")
+
+        if (!re.test(username)){
+            alert("邮箱格式不正确!")
             return false;
         }
         //检查验证码
         if (code == "") {
-            alert("密码不能为空");
+            alert("验证码不能为空!");
             return false;
         }
         // 校验通过，允许提交表单
@@ -380,7 +382,7 @@
                 // 倒数结束后恢复按钮原样
                 clearInterval(timer);
                 sendBtn.disabled = false;
-                sendBtn.textContent = 'SENDCODE';
+                sendBtn.textContent = '验证码';
                 countDown = 60;
             }
         }, 1000);

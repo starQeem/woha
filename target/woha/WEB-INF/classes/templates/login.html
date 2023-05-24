@@ -300,7 +300,7 @@
                 <a href="#" style="color: #828885" th:href="@{/login2}">验证码登录</a>
                 <input type="text" class="form_input" id="username" name="username" placeholder="Username" >
                 <input type="password" class="form_input" id="password" name="password" placeholder="Password">
-                <button class="form_button button submit" type="submit" onclick="return validateForm()">Sign in</button>
+                <button class="form_button button submit" type="submit" onclick="return validateForm()">登录</button>
             </form>
         </div>
 
@@ -308,9 +308,9 @@
             <div class="switch_circle"></div>
             <div class="switch_circle switch_circle-t"></div>
             <div class="switch_container" id="switch-c1">
-                <h2 class="switch_title title" style="letter-spacing: 0;">Hello Friend！</h2>
+                <h2 class="switch_title title" style="letter-spacing: 0;">你好 朋友！</h2>
                 <p class="switch_description description">去注册一个账号，成为尊贵的粉丝会员，让我们踏入奇妙的旅途！</p>
-                <a th:href="@{/register}"><button class="switch_button button switch-btn">Register</button></a>
+                <a th:href="@{/register}"><button class="switch_button button switch-btn">注册</button></a>
             </div>
         </div>
     </div>
@@ -320,7 +320,7 @@
 <script>
     //登录校验
     function validateForm() {
-        var regex = /^(?!.*[\u4e00-\u9fa5]).{1,16}$/; // 正则表达式
+        var regex = /^(?!.*[\u4e00-\u9fa5]).{7,16}$/; // 正则表达式
         var regex2 = /^(?!.*[\u4e00-\u9fa5]).{1,50}$/; // 正则表达式
         // 获取表单元素的值
         var username = document.forms["b-form"]["username"].value;
@@ -340,7 +340,7 @@
             return false;
         }
         if (!regex.test(password)){
-            alert("密码不能为中文且必须在16位以内!")
+            alert("密码不能为中文且必须在7~16位以内!")
             return false;
         }
         // 校验通过，允许提交表单

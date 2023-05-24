@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
 <head> 
 <meta charset="utf-8">
 <title>精美图片</title>
@@ -33,7 +33,13 @@
       <a href="more.html" th:href="@{/story}">喔哈广场</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <a href="story.html" th:href="@{/strategy}">喔哈攻略</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <a href="picture.html" th:href="@{/pictures}" class="selected">精美图片</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <a href="message.html" target="_blank" th:href="@{/my}">我的</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="message.html" target="_blank" th:href="@{/my}">我的喔哈</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <div shiro:guest>
+        <a href="message.html" th:href="@{/login}">登录</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+      <div shiro:authenticated>
+        <a href="message.html" th:href="@{/logout}">注销</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
       <form name="search" action="#" th:action="@{/pictures}">
         <div class="ui icon transparent input m-margin-tb-tiny" style="color: white">
           <input style="color: white" type="text" name="title" placeholder="search...." th:value="${title}">
@@ -48,7 +54,10 @@
   <div class="commodity" th:each="pictures:${page.list}">
     <div class="com-img">
       <a href="#" target="_blank" th:href="@{/pictures/picturesdetail/{id}(id=${pictures.id})}">
-        <img  src="../static/images/com-img01.jpg" th:src="@{${pictures.picturesAddress}}" width="270" height="160">
+        <div style="width: 270px;height: 140px;overflow: hidden; display: flex; align-items: center;">
+          <img  src="../static/images/com-img01.jpg"
+                th:src="@{${pictures.picturesAddress}}" style="height: auto;width: 100%">
+        </div>
       </a>
     </div>
   </div>

@@ -42,7 +42,7 @@
     </resultMap>
     <select id="getPicturesComments" resultMap="BaseResultMap">
         select c.id,c.content,c.user_id,c.pictures_id,c.create_time,c.update_time,c.parent_comment_id,c.is_admin,
-               c.parent_comment_id,c.comment_nick_name,c.liked,c.liked_user,
+               c.parent_comment_id,c.comment_nick_name,
                u.nick_name user_nick_name,u.id user_id,u.avatar user_avatar,
                u_d.grade user_task_grade
         from `comment` c
@@ -54,7 +54,7 @@
     </select>
     <select id="getStoryComments" resultMap="BaseResultMap">
         select c.id,c.content,c.user_id,c.pictures_id,c.create_time,c.update_time,c.parent_comment_id,c.is_admin,
-               c.parent_comment_id,c.comment_nick_name,c.liked,c.liked_user,
+               c.parent_comment_id,c.comment_nick_name,
                u.nick_name user_nick_name,u.id user_id,u.avatar user_avatar,
                u_d.grade user_task_grade
         from `comment` c
@@ -66,7 +66,7 @@
     </select>
     <select id="getStrategyComments" resultMap="BaseResultMap">
         select c.id,c.content,c.user_id,c.pictures_id,c.create_time,c.update_time,c.parent_comment_id,c.is_admin,
-               c.parent_comment_id,c.comment_nick_name,c.liked,c.liked_user,
+               c.parent_comment_id,c.comment_nick_name,
                u.nick_name user_nick_name,u.id user_id,u.avatar user_avatar,
                u_d.grade user_task_grade
         from `comment` c

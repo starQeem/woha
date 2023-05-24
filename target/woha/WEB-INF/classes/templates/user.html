@@ -32,7 +32,7 @@
                 <a href="story.html" th:href="@{/strategy}">喔哈攻略</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="picture.html" th:href="@{/pictures}">精美图片</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="#"  class="selected">用户信息</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="message.html" target="_blank" th:href="@{/my}">我的</a>
+                <a href="message.html" target="_blank" th:href="@{/my}">我的喔哈</a>
             </div>
         </div>
     </header><br>
@@ -45,11 +45,11 @@
         <div class="details" style="font-size: 8px">
                 <div class="user-info" style="display: flex;">
                 <div class="avatar">
-                    <img src="../../static/img/me.jpg" th:src="@{${user.avator}}" alt="头像">
+                    <img src="../../static/img/me.jpg" th:src="@{${user.avatar}}" alt="头像">
                 </div>
                 <div style="margin-left: 10px;">
                     <p th:text="|昵称:${user.nickName}|">昵称: Qeem</p>
-                    <p th:text="|等级:${'Lv' + user.userDask.grade}|">等级: Lv4</p>
+                    <p th:text="|等级:${'Lv' + user.userTask.grade}|">等级: Lv4</p>
                     <p th:text="|性别:${user.sex}|">性别：女</p>
                     <p th:text="|爱好:${user.hobby}|">爱好：火星</p>
                     <p th:text="|邮箱:${user.email}|">邮箱：2572277647</p>

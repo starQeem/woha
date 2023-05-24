@@ -130,7 +130,6 @@
                           th:unless="${#strings.isEmpty(comment.likedUser)}"
                           th:with="idArray=${comment.likedUser != null ? comment.likedUser.split(',') : null}"
                           th:text="${idArray != null ? idArray.length : 0}">1</span>
-                  </div>
                     <a class="reply"
                        data-commentid="1" data-commentnickname="Matt" data-commentuserid="0"
                        th:attr="data-commentid=${comment.id},
@@ -140,6 +139,7 @@
                     <a class="delete" href="#"
                        th:href="@{/my/comment/delete/{commentId}(commentId=${comment.id},strategyId=${strategy.id})}"
                        onclick="return confirm('确定要删除该评论吗？')">删除</a>
+                  </div>
                   </div>
                   <!--楼中楼-->
                   <div class="comments"

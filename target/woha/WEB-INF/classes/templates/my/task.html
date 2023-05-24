@@ -32,7 +32,7 @@
                 <a href="more.html" th:href="@{/story}">喔哈广场</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="story.html" th:href="@{/strategy}">喔哈攻略</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="picture.html" th:href="@{/pictures}">精美图片</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="message.html" th:href="@{/my}" class="selected">我的</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="message.html" th:href="@{/my}" class="selected">我的喔哈</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="message.html" th:href="@{/logout}">注销</a></div>
         </div>
     </header>
@@ -43,32 +43,34 @@
             <a href="#" style="color: #90532b" th:href="@{/my}">主页</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/story/mystory}">广场</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/pictures/mypictures}">图片</a>&nbsp;
-            <a href="#" style="color: #90532b" th:if="${status}" th:href="@{/my/strategy/mystrategy}">攻略</a>&nbsp;
-            <a href="#" style="color: #90532b" th:href="@{/my/dask}">任务</a>&nbsp;
+            <a href="#" style="color: #90532b" th:href="@{/my/strategy/mystrategy}">攻略</a>&nbsp;
+            <a href="#" style="color: #90532b" th:href="@{/my/task}">任务</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/follow}">关注</a>&nbsp;
-            <a href="#" style="color: #90532b" th:href="@{/my/fans}">粉丝</a>
+            <a href="#" style="color: #90532b" th:href="@{/my/fans}">粉丝</a>&nbsp;
+            <a href="#" style="color: #90532b" th:href="@{/my/comment/info}">回复</a>&nbsp;
+            <a href="#" style="color: #90532b" th:href="@{/my/comment/comment}">评论</a>
         </div>
         <br>
         <div class="task-list">
-            <div class="task-item" th:classappend="${dask.dailydaskLogin == 0} ? 'completed-task'">
+            <div class="task-item" th:classappend="${task.dailytaskLogin == 0} ? 'completed-task'">
                 <div class="task-title">每日任务</div>
                 <div class="task-description">完成登录 ex+10</div>
-                <div class="task-status">状态：<span th:text="${dask.dailydaskLogin == 1} ? '已完成' : '未完成'"></span></div>
+                <div class="task-status">状态：<span th:text="${task.dailytaskLogin == 1} ? '已完成' : '未完成'"></span></div>
             </div>
-            <div class="task-item" th:classappend="${dask.dailydaskStrategy == 0} ? 'completed-task'">
+            <div class="task-item" th:classappend="${task.dailytaskStrategy == 0} ? 'completed-task'">
                 <div class="task-title">每日任务</div>
                 <div class="task-description">浏览一篇百科 ex+10</div>
-                <div class="task-status">状态: <span th:text="${dask.dailydaskStrategy == 1} ? '已完成' : '未完成'"></span></div>
+                <div class="task-status">状态: <span th:text="${task.dailytaskStrategy == 1} ? '已完成' : '未完成'"></span></div>
             </div>
-            <div class="task-item" th:classappend="${dask.dailydaskStory == 0} ? 'completed-task'">
+            <div class="task-item" th:classappend="${task.dailytaskStory == 0} ? 'completed-task'">
                 <div class="task-title">每日任务</div>
                 <div class="task-description">浏览一篇故事 ex+10</div>
-                <div class="task-status">状态：<span th:text="${dask.dailydaskStory == 1} ? '已完成' : '未完成'"></span></div>
+                <div class="task-status">状态：<span th:text="${task.dailytaskStory == 1} ? '已完成' : '未完成'"></span></div>
             </div>
-            <div class="task-item" th:classappend="${dask.weeklydaskPictures == 0} ? 'completed-task'">
+            <div class="task-item" th:classappend="${task.weeklytaskPictures == 0} ? 'completed-task'">
                 <div class="task-title">每周任务</div>
                 <div class="task-description">发布一张美图 ex+50</div>
-                <div class="task-status">状态：<span th:text="${dask.weeklydaskPictures == 1} ? '已完成' : '未完成'"></span></div>
+                <div class="task-status">状态：<span th:text="${task.weeklytaskPictures == 1} ? '已完成' : '未完成'"></span></div>
             </div>
         </div>
     </div>

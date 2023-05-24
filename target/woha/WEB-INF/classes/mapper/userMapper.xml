@@ -12,10 +12,10 @@
         <result property="hobby" column="hobby" jdbcType="VARCHAR"/>
         <result property="email" column="email" jdbcType="VARCHAR"/>
         <result property="signature" column="signature" jdbcType="VARCHAR"/>
-        <result property="avator" column="avator" jdbcType="VARCHAR"/>
-        <association property="userDask" javaType="com.starQeem.woha.pojo.userDask">
-            <id property="id" column="user_dask_id"/>
-            <result property="grade" column="user_dask_grade"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <association property="userTask" javaType="com.starQeem.woha.pojo.userTask">
+            <id property="id" column="user_task_id"/>
+            <result property="grade" column="user_task_grade"/>
         </association>
         <association property="follow" javaType="com.starQeem.woha.pojo.follow">
             <id property="id" column="follow_id"/>
@@ -24,28 +24,28 @@
         </association>
     </resultMap>
     <select id="getUserWithGrade" resultMap="BaseResultMap">
-        select u.id,u.sex,u.signature,u.nick_name,u.hobby,u.email,u.avator,
-               u_d.grade user_dask_grade
-        from user_dask u_d
+        select u.id,u.sex,u.signature,u.nick_name,u.hobby,u.email,u.avatar,
+               u_d.grade user_task_grade
+        from user_task u_d
         join user u on u_d.user_id = u.id
         where u.id = #{id};
     </select>
     <select id="getFollowUser" resultMap="BaseResultMap">
-        select u.id,u.signature,u.nick_name,u.avator,
-               u_d.grade user_dask_grade,
+        select u.id,u.signature,u.nick_name,u.avatar,
+               u_d.grade user_task_grade,
                f.follow_user_id follow_follow_user_id
         from follow f
         join user u on f.follow_user_id = u.id
-        join user_dask u_d on u_d.user_id = u.id
+        join user_task u_d on u_d.user_id = u.id
         where f.user_id = #{userId};
     </select>
     <select id="getFansUser" resultMap="BaseResultMap">
-        select u.id,u.signature,u.nick_name,u.avator,
-               u_d.grade user_dask_grade,
+        select u.id,u.signature,u.nick_name,u.avatar,
+               u_d.grade user_task_grade,
                f.user_id follow_user_id
         from follow f
         join user u on f.user_id = u.id
-        join user_dask u_d on u_d.user_id = u.id
+        join user_task u_d on u_d.user_id = u.id
         where f.follow_user_id = #{userId};
     </select>
 </mapper>

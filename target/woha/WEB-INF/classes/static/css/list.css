@@ -178,7 +178,7 @@ a.black:active {
     font-size: 14px;
     line-height: 10px;
     color: #333;
-    height: 580px;
+    height: 530px;
     width: 915px;
     margin-right: auto;
     margin-left: auto;
@@ -193,12 +193,12 @@ a.black:active {
     border-left-color: #f2f2f2;
 }
 .contents .commodity {
-    height: 160px;
+    height: 140px;
     width: 270px;
     margin-left: 25px;
     float: left;
     margin-top: 25px;
-    border: 1px solid #f2f2f2;
+    /*border: 1px solid #f2f2f2;*/
 }
 .contents .commodity:hover {
     -webkit-transform:scale(1.06,1.06);
@@ -207,7 +207,7 @@ a.black:active {
     transition:all .2s;   /* 0.4s过渡 */
 }
 .contents .commodity .com-img {
-    height: 230px;
+    height: 140px;
     width: 270px;
 }
 

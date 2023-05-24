@@ -33,42 +33,49 @@
     <a href="more.html" th:href="@{/story}">喔哈广场</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
     <a href="story.html" th:href="@{/strategy}">喔哈攻略</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <a href="picture.html" th:href="@{/pictures}">精美图片</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="message.html" th:href="@{/my}" class="selected">我的</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="message.html" th:href="@{/my}" class="selected">我的喔哈</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <a href="message.html" th:href="@{/logout}">注销</a>
   </div>
 </div>
 </header>
 <!-- banner代码END -->
-<div class="contents" style="height: 700px"><br><br><br><br>
+<div class="contents" style="height: 670px"><br><br><br><br>
   <div style="display: flex; justify-content: center;">
     <a href="#" style="color: #90532b" th:href="@{/my}">主页</a>&nbsp;
     <a href="#" style="color: #90532b" th:href="@{/my/story/mystory}">广场</a>&nbsp;
     <a href="#" style="color: #90532b" th:href="@{/my/pictures/mypictures}">图片</a>&nbsp;
-    <a href="#" style="color: #90532b" th:if="${status}" th:href="@{/my/strategy/mystrategy}">攻略</a>&nbsp;
-    <a href="#" style="color: #90532b" th:href="@{/my/dask}">任务</a>&nbsp;
+    <a href="#" style="color: #90532b" th:href="@{/my/strategy/mystrategy}">攻略</a>&nbsp;
+    <a href="#" style="color: #90532b" th:href="@{/my/task}">任务</a>&nbsp;
     <a href="#" style="color: #90532b" th:href="@{/my/follow}">关注</a>&nbsp;
-    <a href="#" style="color: #90532b" th:href="@{/my/fans}">粉丝</a>
+    <a href="#" style="color: #90532b" th:href="@{/my/fans}">粉丝</a>&nbsp;
+    <a href="#" style="color: #90532b" th:href="@{/my/comment/info}">回复</a>&nbsp;
+    <a href="#" style="color: #90532b" th:href="@{/my/comment/comment}">评论</a>
   </div>
   <br>
   <div>&nbsp;&nbsp;
     <a href="" style="color: #90532b" th:href="@{/my/pictures/mypicturesInput}">发布</a>
   </div>
   <br>
-  <div class="commodity" th:each="pictures:${page.list}">
+  <div  class="commodity" style="height: 160px;" th:each="pictures:${page.list}">
     <div class="com-img" style="font-size: 10px;">
         <a href="" target="_blank" th:href="@{/my/pictures/mypicturesdetail/{id}(id=${pictures.id})}">
-          <img src="../../static/images/com-img01.jpg" width="270" height="160"  th:src="@{${pictures.picturesAddress}}">
-        </a><br><br>
-        <i class="calendar icon"></i><span th:text="${#dates.format(pictures.updateTime,'yyyy-MM-dd HH:mm')}">2020-01-01</span>
-        <i class="eye icon"></i> <span th:text="${pictures.views}">2222</span>
-        <i class="comment outline icon"></i> <span th:text="${pictures.commentCount}">1</span>
-        <i class="thumbs up outline icon"></i><span th:text="${pictures.liked}">1</span>
-        <a href="#" target="_blank" style="color: #90532b;"
-           th:href="@{/my/pictures/mypicturesUpdate/{id}(id=${pictures.id})}"
-           class="header">编辑</a>
-        <a href="#" style="color: #90532b;"
-           th:href="@{/my/pictures/mypicturesDelete/{id}(id=${pictures.id})}"
-           class="header">删除</a>
+          <div style="width: 270px;height: 140px;overflow: hidden; display: flex; align-items: center;">
+          <img src="../../static/images/com-img01.jpg" style="height: auto;width: 100%"
+               th:src="@{${pictures.picturesAddress}}">
+          </div>
+        </a>
+    </div><br>
+    <div style="font-size: 10px">
+      <i class="calendar icon"></i><span th:text="${#dates.format(pictures.updateTime,'yyyy-MM-dd HH:mm')}">2020-01-01</span>
+      <i class="eye icon"></i> <span th:text="${pictures.views}">2222</span>
+      <i class="comment outline icon"></i> <span th:text="${pictures.commentCount}">1</span>
+      <i class="thumbs up outline icon"></i><span th:text="${pictures.liked}">1</span>
+      <a href="#" target="_blank" style="color: #90532b;"
+         th:href="@{/my/pictures/mypicturesUpdate/{id}(id=${pictures.id})}"
+         class="header">编辑</a>
+      <a href="#" style="color: #90532b;"
+         th:href="@{/my/pictures/mypicturesDelete/{id}(id=${pictures.id})}"
+         class="header">删除</a>
     </div>
   </div>
 </div>

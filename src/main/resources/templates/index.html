@@ -49,8 +49,11 @@
             <a href="#" target="_blank" th:each="picture : ${picturesList}"
                th:href="@{/pictures/picturesdetail/{id}(id=${picture.id})}">
                 <li class="item active">
-                    <img src="../static/images/01.jpg" style="width: 1000px;height: 380px"
-                         th:src="@{${picture.picturesAddress}}" alt="">
+                    <div style="width: 1000px;height: 380px;overflow: hidden; display: flex; align-items: center;">
+                        <img src="../static/images/01.jpg"
+                             th:src="@{${picture.picturesAddress}}"
+                             style="width: 100%; height: auto;">
+                    </div>
                 </li>
             </a>
         </ul>

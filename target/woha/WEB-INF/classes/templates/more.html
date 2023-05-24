@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
 <head> 
 <meta charset="utf-8">
 <title>关于本站作者</title>
@@ -218,11 +218,16 @@ a.black:active {
   <div class="nav">
     <div class="title">
       <a href="index.html" th:href="@{/}" class="selected">首页</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <a href="more.html" th:href="@{/story}">喔哈广场</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      &nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="more.html" th:href="@{/story}">喔哈广场</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <a href="story.html" th:href="@{/strategy}">喔哈攻略</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <a href="picture.html" th:href="@{/pictures}">精美图片</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <a href="message.html" target="_blank" th:href="@{/my}">我的</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="message.html" target="_blank" th:href="@{/my}">我的喔哈</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <div shiro:guest>
+        <a href="message.html" th:href="@{/login}">登录</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+      <div shiro:authenticated>
+        <a href="message.html" th:href="@{/logout}">注销</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
     </div>
   </div>
 </header>
@@ -234,9 +239,11 @@ a.black:active {
 <!-- banner代码END -->
 <div class="text01">
   <div class="main1">
-    <span class="dabiaoti">本站作者</span><br>
+    <span class="dabiaoti">Qeem</span><br>
   <br>
-    你好，我是本站作者Qeem。右边是我的联系方式，如有bug，可以联系我。
+    你好，我是本站作者Qeem。如有bug，可以联系我。<br>
+    企鹅邮箱地址:<a href="" style="color: #90532b">2572277647@qq.com</a><br>
+    个人博客地址:<a href="http://itstarqeem.space" style="color: #90532b" target="_blank">http://itstarqeem.space</a><br>
   </div>
   <img src="../static/images/qq.jpg" style="float: right" th:src="@{/images/qq.jpg}" width="250" height="252">
   <img src="../static/images/wechat.png" style="float: right" th:src="@{/images/wechat.png}" width="250" height="252">
