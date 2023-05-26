@@ -4,13 +4,24 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.starQeem.woha.dto.userDto;
 import com.starQeem.woha.pojo.user;
 import com.starQeem.woha.service.userService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.subject.support.DefaultSubjectContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.annotation.Resource;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.starQeem.woha.util.constant.CODE_SIZE;
 import static com.starQeem.woha.util.constant.USER_CODE;
@@ -48,7 +59,6 @@ public class UserRealm extends AuthorizingRealm {
             userDto.setUsername(user.getUsername());
             //密码认证(shiro做~)
             SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(userDto, user.getPassword(), "");
-            System.out.println();
             return authenticationInfo;  //用户名密码登录
         }else {
             //验证码登录

@@ -210,28 +210,4 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
             return false;
         }
     }
-
-    /*
-     * 防止密码爆破
-     * */
-    @Override
-    public void frequent(String username) {
-        QueryWrapper<user> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id", "username").eq("username", username);
-        user user = userMapper.selectOne(queryWrapper);  //根据用户名查询用户
-        if (user != null) {  //判断用户是否存在
-            //存在
-            String frequent = stringRedisTemplate.opsForValue().get(USER_FREQUENT + username); //查询错误次数
-            if (frequent != null) {  //判断用户是否存在错误记录
-                //存在
-                int i = Integer.parseInt(frequent);  //将string类型转换为int类型
-                i++;  //错误次数+1
-                //存入错误数据,顺便更新过期时间
-                stringRedisTemplate.opsForValue().set(USER_FREQUENT + username, Integer.toString(i), TIME_LOGIN_FREQUENT, TimeUnit.SECONDS);
-            } else {
-                //不存在,存入错误次数1并设置过期时间
-                stringRedisTemplate.opsForValue().set(USER_FREQUENT + username, "1", TIME_LOGIN_FREQUENT, TimeUnit.SECONDS);
-            }
-        }
-    }
 }

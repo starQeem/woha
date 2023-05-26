@@ -72,11 +72,4 @@ public interface userService extends IService<user> {
      * @return boolean
      */
     boolean updatePassword(String username, String password, String newPassword);
-
-    /**
-     * 防止密码爆破
-     *
-     * @param username 用户名
-     */
-    void frequent(String username);
 }

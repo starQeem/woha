@@ -1,5 +1,8 @@
 package com.starQeem.woha.controller;
 
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.LineCaptcha;
+import cn.hutool.captcha.generator.RandomGenerator;
 import com.starQeem.woha.dto.userDto;
 import com.starQeem.woha.pojo.pictures;
 import com.starQeem.woha.pojo.user;
@@ -16,14 +19,13 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 import static com.starQeem.woha.util.constant.USER_FREQUENT;
@@ -42,8 +44,7 @@ public class UserController {
     private picturesService picturesService;
     @Resource
     private followService followService;
-    @Resource
-    private StringRedisTemplate stringRedisTemplate;
+    private LineCaptcha lineCaptcha;
     /*
      * 跳转到账号密码登录页面
      * */
@@ -65,25 +66,24 @@ public class UserController {
     public String loginInput(String username, String password,String code,Model model) {
         //获取当前用户
         Subject subject = SecurityUtils.getSubject();
-        String frequent = stringRedisTemplate.opsForValue().get(USER_FREQUENT + username);
-        if (frequent != null && Integer.parseInt(frequent) >= USER_FREQUENT_LIMIT){  //判断密码或验证码是否输入错误达到5次
-            model.addAttribute("message","操作过于频繁,请稍后再试");
-            return "login";
-        }else {
             if (password != null){ //用户名密码登录
-                //封装用户的登录数据
-                String md5DigestAsHex = DigestUtils.md5DigestAsHex(password.getBytes());
-                UsernamePasswordToken token = new UsernamePasswordToken(username, md5DigestAsHex);
-                try{
-                    subject.login(token);  //执行登录的方法,如果没有异常说明ok了
-                    userService.task();
-                    return "redirect:/my";
-                }catch (UnknownAccountException e){ //用户名不存在
-                    model.addAttribute("message","用户名不存在!");
-                    return "login";
-                }catch (IncorrectCredentialsException e){ //密码错误
-                    userService.frequent(username);
-                    model.addAttribute("message","密码错误!");
+                if (lineCaptcha.getCode().equals(code)){
+                    //封装用户的登录数据
+                    String md5DigestAsHex = DigestUtils.md5DigestAsHex(password.getBytes());
+                    UsernamePasswordToken token = new UsernamePasswordToken(username, md5DigestAsHex);
+                    try{
+                        subject.login(token);  //执行登录的方法,如果没有异常说明ok了
+                        userService.task();
+                        return "redirect:/my";
+                    }catch (UnknownAccountException e){ //用户名不存在
+                        model.addAttribute("message","用户名不存在!");
+                        return "login";
+                    }catch (IncorrectCredentialsException e){ //密码错误
+                        model.addAttribute("message","密码错误!");
+                        return "login";
+                }
+                }else {
+                    model.addAttribute("message","验证码错误!");
                     return "login";
                 }
             }else {  //邮箱验证码登录
@@ -96,12 +96,10 @@ public class UserController {
                     model.addAttribute("message","用户名不存在!");
                     return "login";
                 }catch (IncorrectCredentialsException e){ //验证码错误
-                    userService.frequent(username);
                     model.addAttribute("message","验证码错误!");
                     return "login";
                 }
             }
-        }
     }
     /*
      * 注销
@@ -146,6 +144,29 @@ public class UserController {
             return "redirect:login2";
         }
     }
+    /*
+     * 图片验证码
+     */
+    @GetMapping("/picturesCode")
+    public void getCode(HttpServletResponse response) {
+        // 随机生成 4 位验证码
+        RandomGenerator randomGenerator = new RandomGenerator("qwertyuiopasdfghjklzxcvbnm0123456789", 5);
+        // 定义图片的显示大小
+        lineCaptcha = CaptchaUtil.createLineCaptcha(110, 36);
+        response.setContentType("image/jpeg");
+        response.setHeader("Pragma", "No-cache");
+        try {
+            // 调用父类的 setGenerator() 方法，设置验证码的类型
+            lineCaptcha.setGenerator(randomGenerator);
+            // 输出到页面
+            lineCaptcha.write(response.getOutputStream());
+            // 关闭流
+            response.getOutputStream().close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /*
     * 查看用户信息
     * */
