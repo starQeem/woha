@@ -18,7 +18,9 @@ public class constant {
     public final static int STATUS_ONE = 1;  //状态值(1)
     public final static int GRADE = 1; //默认用户等级
     public final static int CODE_SIZE = 6; //验证码位数
-    public final static int USER_FREQUENT_LIMIT = 5; //用户输入用户名密码错误次数
+    public final static int PICTURES_CODE_SIZE = 5; //图片验证码长度
+    public final static int PICTURES_CODE_WIDTH = 110; //图片验证码宽
+    public final static int PICTURES_CODE_HEIGHT = 36; //图片验证码高
     public final static String USER_MESSAGE = "未知"; //用户默认信息
     public final static String USER_SIGNATURE = "这个人很懒,什么都没有写。"; //用户默认签名
     public final static String USER_NICK = "用户";  //用户昵称前缀
@@ -43,6 +45,7 @@ public class constant {
     public final static String STORY_LIKED = "woha:story:liked:";  //故事点赞的用户
     public final static String STRATEGY_LIKED = "woha:strategy:liked:";  //攻略点赞的用户
     public final static String COMMENT_LIKED = "woha:comment:liked";  //评论点赞的用户
+    public final static String RANDOM_PICTURES_CODE = "qwertyuiopasdfghjklzxcvbnm0123456789"; //随机图片验证码
     /*
     * 过期时间
     * */
