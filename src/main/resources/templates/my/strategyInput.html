@@ -136,7 +136,7 @@
           document.getElementsByName("firstPicture")[0].value = imageUrl;
         }
         if (type === 'text'){
-          document.getElementsByName("textPicturesAddress")[0].value = "  ![](" + imageUrl + ")";
+          document.getElementsByName("textPicturesAddress")[0].value = "<a target='_blank' href=\" " + imageUrl + "\"><img src=\"" + imageUrl + "\"  alt=\"\"></a>";
           console.log("content: " + content.value);
         }
       }

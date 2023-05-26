@@ -295,12 +295,18 @@
                     <i class="iconfont icon-QQ"></i>
                     <i class="iconfont icon-weixin"></i>
                     <i class="iconfont icon-bilibili-line"></i>
-                </div><br><br>
+                </div><br>
                 <span class="form_span" style="color: red" th:text="${message}" th:if="${message!=null}">请登录</span>
-                <a href="#" style="color: #828885" th:href="@{/login2}">验证码登录</a>
+                <a href="#" style="color: #828885" th:href="@{/login2}">邮箱验证码登录</a>
                 <input type="text" class="form_input" id="username" name="username" placeholder="Username" >
                 <input type="password" class="form_input" id="password" name="password" placeholder="Password">
+                <div style="display: flex; justify-content: space-between;">
+                <input type="password" style="width: 250px" class="form_input" id="code" name="code" placeholder="Code">
+                <a href=""><img th:src="@{/picturesCode}" id="captchaPic" style="height: 50px;width: 100px;border-radius: 10px" onclick="refresh()" alt=""></a>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
                 <button class="form_button button submit" type="submit" onclick="return validateForm()">登录</button>
+                </div>
             </form>
         </div>
 
@@ -325,6 +331,7 @@
         // 获取表单元素的值
         var username = document.forms["b-form"]["username"].value;
         var password = document.forms["b-form"]["password"].value;
+        var code = document.forms["b-form"]["code"].value;
         // 检查用户名
         if (username == "") {
             alert("用户名不能为空");
@@ -343,11 +350,17 @@
             alert("密码不能为中文且必须在7~16位以内!")
             return false;
         }
+        if (code == ""){
+            alert("验证码不能为空");
+            return false;
+        }
         // 校验通过，允许提交表单
         return true;
     }
-    
+
+    function refresh(){
+        location.reload();
+    }
 </script>
 </body>
-
 </html>
