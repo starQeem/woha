@@ -28,7 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-import static com.starQeem.woha.util.constant.*;
+import static com.starQeem.woha.util.constant.USER_FREQUENT;
+import static com.starQeem.woha.util.constant.USER_FREQUENT_LIMIT;
 
 /**
  * @Date: 2023/4/17 0:04
@@ -149,9 +150,9 @@ public class UserController {
     @GetMapping("/picturesCode")
     public void getCode(HttpServletResponse response) {
         // 随机生成 4 位验证码
-        RandomGenerator randomGenerator = new RandomGenerator(RANDOM_PICTURES_CODE, PICTURES_CODE_SIZE);
+        RandomGenerator randomGenerator = new RandomGenerator("qwertyuiopasdfghjklzxcvbnm0123456789", 5);
         // 定义图片的显示大小
-        lineCaptcha = CaptchaUtil.createLineCaptcha(PICTURES_CODE_WIDTH, PICTURES_CODE_HEIGHT);
+        lineCaptcha = CaptchaUtil.createLineCaptcha(110, 36);
         response.setContentType("image/jpeg");
         response.setHeader("Pragma", "No-cache");
         try {
