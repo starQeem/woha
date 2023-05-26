@@ -52,6 +52,9 @@ public class commentController {
         if (comment.getPicturesId()!=null){
             return "redirect:/pictures/picturesdetail/"+comment.getPicturesId();
         }
-        return "redirect:/story/storydetail/"+comment.getStoryId();
+        if (comment.getStoryId()!=null){
+            return "redirect:/story/storydetail/"+comment.getStoryId();
+        }
+        return "redirect:/strategy/strategydetail/"+comment.getStrategyId();
     }
 }

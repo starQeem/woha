@@ -71,7 +71,7 @@
                 ><i class="thumbs up outline icon"
                     th:class="${status==true} ? 'thumbs up icon' : 'thumbs up outline icon'"
                     style="width: 20px"></i></a><!--
-            --><span style="margin-right: 0px;color: #828885" th:text="${liked}">1</span>
+            --><span style="margin-right: 0px;color: #828885" id="liked-count" th:text="${liked}">1</span>
             </div>
             <div style="display: flex; justify-content: center;" th:if="${likedUserThree!=null}">
                 <div th:each="likedUserThree : ${likedUserThree}">
@@ -126,16 +126,16 @@
                                            th:href="@{/my/comment/delete/{commentId}(commentId=${comment.id},storyId=${story.id})}"
                                            onclick="return confirm('确定要删除该评论吗？')">删除</a>
                                         <!-- 点赞 -->
-                                        <a class="reply" style="margin-right: 0px;"
+                                        <a class="reply" style="margin-right: 0px;" data-isparent="true"
                                            data-commentid="1" data-picturesid="1"
                                            th:attr="data-commentid=${comment.id},data-storyId=${story.id}"
                                            onclick="likeComment(this)"
                                         ><i class="thumbs up outline icon"
                                             th:class="${comment.likedUser != null and comment.likedUser.contains(userId.toString()) ? 'thumbs up icon' : 'thumbs up outline icon'}"
                                             style="width: 10px"></i></a><!--
-                    --><span style="margin-right: 0px;color: #828885"
+                    --><span style="margin-right: 0px;color: #828885" id="commentliked-count"
                              th:if="${#strings.isEmpty(comment.likedUser)}" th:text="0">0</span>
-                                        <span style="margin-right: 0px;color: #828885"
+                                        <span style="margin-right: 0px;color: #828885" id="commentliked-count2"
                                               th:unless="${#strings.isEmpty(comment.likedUser)}"
                                               th:with="idArray=${comment.likedUser != null ? comment.likedUser.split(',') : null}"
                                               th:text="${idArray != null ? idArray.length : 0}">1</span>
@@ -178,15 +178,15 @@
                                                     >删除</a>
                                                     <!-- 点赞 -->
                                                     <a class="reply" style="margin-right: 0px;"
-                                                       data-commentid="1" data-picturesid="1"
+                                                       data-commentid="1" data-picturesid="1" data-isparent="false"
                                                        th:attr="data-commentid=${childComment.id},data-storyId=${story.id}"
                                                        onclick="likeComment(this)"
                                                     ><i class="thumbs up outline icon"
                                                         th:class="${childComment.likedUser != null and childComment.likedUser.contains(userId.toString()) ? 'thumbs up icon' : 'thumbs up outline icon'}"
                                                         style="width: 10px"></i></a><!--
-                    --><span style="margin-right: 0px;color: #828885"
+                    --><span style="margin-right: 0px;color: #828885" id="childcommentliked-count"
                              th:if="${#strings.isEmpty(childComment.likedUser)}" th:text="0">0</span>
-                                                    <span style="margin-right: 0px;color: #828885"
+                                                    <span style="margin-right: 0px;color: #828885" id="childcommentliked-count2"
                                                           th:unless="${#strings.isEmpty(childComment.likedUser)}"
                                                           th:with="idArray=${childComment.likedUser != null ? childComment.likedUser.split(',') : null}"
                                                           th:text="${idArray != null ? idArray.length : 0}">1</span>
@@ -328,11 +328,19 @@
         //点赞状态切换
         var icon = element.getElementsByTagName("i")[0];
         var className = icon.getAttribute("class");
+        // 获取 <span> 元素
+        var spanElement = document.getElementById("liked-count");
+        // 获取当前点赞数
+        var storyLiked = parseInt(spanElement.innerText, 10);
         if (className.indexOf("outline") != -1) {
             className = className.replace("outline", "");
+            storyLiked++;
         } else {
             className += " outline";
+            storyLiked--;
         }
+        // 更新文本内容
+        spanElement.innerText = storyLiked;
         icon.setAttribute("class", className);
     }
     /*
@@ -358,11 +366,37 @@
         //点赞状态切换
         var icon = element.getElementsByTagName("i")[0];
         var className = icon.getAttribute("class");
+        var spanElement;
+        // 获取是否为父评论
+        const isParentComment = element.getAttribute("data-isparent") === "true";
+        // 获取 <span> 元素
+        if (isParentComment){
+            if (document.getElementById("commentliked-count")==null){
+                spanElement = document.getElementById("commentliked-count2")
+            }else {
+                spanElement = document.getElementById("commentliked-count");
+            }
+        }else {
+            if (document.getElementById("childcommentliked-count")==null){
+                spanElement = document.getElementById("childcommentliked-count2");
+            }else {
+                spanElement = document.getElementById("childcommentliked-count");
+            }
+        }
+        if (spanElement == null || spanElement === ""){
+            spanElement = "0";
+        }
+        // 获取当前点赞数
+        var commentLiked = parseInt(spanElement.innerText, 10);
         if (className.indexOf("outline") != -1) {
             className = className.replace("outline", "");
+            commentLiked++;
         } else {
+            commentLiked--;
             className += " outline";
         }
+        // 更新文本内容
+        spanElement.innerText = commentLiked;
         icon.setAttribute("class", className);
     }
 </script>
