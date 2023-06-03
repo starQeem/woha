@@ -4,7 +4,7 @@
 
 
 **项目在线地址:**<br>
-<a href="http://wohaqeem.top" target="_blank">(http://wohaqeem.top)</a><br>
+<a href="http://wohaqeem.top" target="_blank">http://wohaqeem.top</a><br>
 
 **主要功能：**
 
