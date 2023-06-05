@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -154,12 +155,9 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
         if (StrUtil.isNotBlank(getStoryDetail)) {
             //不为空,直接返回
             story story = JSONUtil.toBean(getStoryDetail, story.class);
-            QueryWrapper<story> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper2.select("id","views").eq("id",id);
-            story story2 = storyMapper.selectOne(queryWrapper2);
-            Integer views = story2.getViews();
-            story2.setViews(views + 1);
-            getBaseMapper().updateById(story2);  //浏览次数+1
+            UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.setSql("views = views + 1").eq("id", id);
+            storyService.update(updateWrapper);
             //我的任务
             QueryWrapper<userTask> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("user_id", Long.valueOf(user.getId()));
@@ -205,9 +203,9 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
                 stringRedisTemplate.opsForValue().set(STORY_DETAIL + id,"",TIME_BIG,TimeUnit.SECONDS);
                 return null;
             }
-            Integer views = story.getViews();
-            story.setViews(views + 1);
-            getBaseMapper().updateById(story);  //浏览次数+1
+            UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.setSql("views = views + 1").eq("id", id);
+            storyService.update(updateWrapper);
             //将数据库中查询的故事详情写入redis中
             stringRedisTemplate.opsForValue().set(STORY_DETAIL + id, JSONUtil.toJsonStr(story), TIME_MAX + RandomUtil.randomInt(0,300), TimeUnit.SECONDS);
             //我的任务
@@ -259,12 +257,9 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
         if (StrUtil.isNotBlank(getStoryDetail)) {
             //不为空,直接返回
             story story = JSONUtil.toBean(getStoryDetail, story.class);
-            QueryWrapper<story> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper2.select("id","views").eq("id",id);
-            story story2 = storyMapper.selectOne(queryWrapper2);
-            Integer views = story2.getViews();
-            story2.setViews(views + 1);
-            getBaseMapper().updateById(story2);  //浏览次数+1
+            UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.setSql("views = views + 1").eq("id", id);
+            storyService.update(updateWrapper);
             String html = MarkdownUtil.markdownToHtml(story.getContent());
             story.setContent(html);
             return story;
@@ -278,9 +273,9 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
                 stringRedisTemplate.opsForValue().set(STORY_DETAIL + id.toString(),"",TIME_BIG,TimeUnit.SECONDS);
                 return null;
             }
-            Integer views = story.getViews();
-            story.setViews(views + 1);
-            storyService.updateById(story);
+            UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.setSql("views = views + 1").eq("id", id);
+            storyService.update(updateWrapper);
             //将数据库中查询的故事详情写入redis中
             stringRedisTemplate.opsForValue().set(STORY_DETAIL + id.toString(), JSONUtil.toJsonStr(story), TIME_MAX+ RandomUtil.randomInt(0,300), TimeUnit.SECONDS);
             String html = MarkdownUtil.markdownToHtml(story.getContent());

@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -12,10 +13,7 @@ import com.starQeem.woha.dto.userDto;
 import com.starQeem.woha.mapper.commentMapper;
 import com.starQeem.woha.mapper.picturesMapper;
 import com.starQeem.woha.pojo.*;
-import com.starQeem.woha.service.commentService;
-import com.starQeem.woha.service.picturesService;
-import com.starQeem.woha.service.userTaskService;
-import com.starQeem.woha.service.userService;
+import com.starQeem.woha.service.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -166,9 +164,9 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         pictures pictures = picturesMapper.queryPicturesWithUserById(id, Long.valueOf(user.getId()));
-        Integer views = pictures.getViews();
-        pictures.setViews(views + 1);
-        picturesService.updateById(pictures);
+        UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.setSql("views = views + 1").eq("id", id);
+        picturesService.update(updateWrapper);
         return pictures;
     }
 
@@ -182,12 +180,9 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
         if (StrUtil.isNotBlank(getPicturesDetail)) {
             //不为空,直接返回
             pictures pictures = JSONUtil.toBean(getPicturesDetail, pictures.class);
-            QueryWrapper<pictures> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper2.select("id", "views").eq("id", id);
-            pictures pictures2 = picturesMapper.selectOne(queryWrapper2);
-            Integer views = pictures2.getViews();
-            pictures2.setViews(views + 1);
-            getBaseMapper().updateById(pictures2);  //浏览次数+1
+            UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.setSql("views = views + 1").eq("id", id);
+            picturesService.update(updateWrapper);
             //返回图片详情
             return pictures;
         } else if (getPicturesDetail != null) {
@@ -202,9 +197,9 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
             }
             //将数据库中查询出的图片详情写入redis中
             stringRedisTemplate.opsForValue().set(PICTURES_DETAIL + id, JSONUtil.toJsonStr(pictures), TIME_MAX + RandomUtil.randomInt(0, 300), TimeUnit.SECONDS);
-            Integer views = pictures.getViews();
-            pictures.setViews(views + 1);  //浏览次数+1
-            picturesService.updateById(pictures);
+            UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.setSql("views = views + 1").eq("id", id);
+            picturesService.update(updateWrapper);
             //返回图片详情
             return pictures;
         }

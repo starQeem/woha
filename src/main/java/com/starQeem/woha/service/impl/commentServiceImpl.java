@@ -67,9 +67,9 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
             }
         }
         if (comment.getStoryId() != null) {
-            QueryWrapper<story> storyqueryWrapper = new QueryWrapper<>();
-            storyqueryWrapper.select("id", "comment_count","user_id").eq("id", comment.getStoryId());
-            story story = storyMapper.selectOne(storyqueryWrapper);
+            QueryWrapper<story> storyQueryWrapper = new QueryWrapper<>();
+            storyQueryWrapper.select("id", "comment_count","user_id").eq("id", comment.getStoryId());
+            story story = storyMapper.selectOne(storyQueryWrapper);
             Integer count = story.getCommentCount();
             count++;//评论数+1
             story.setCommentCount(count);
@@ -80,9 +80,9 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
             }
         }
         if (comment.getStrategyId() != null) {
-            QueryWrapper<strategy> strategyqueryWrapper = new QueryWrapper<>();
-            strategyqueryWrapper.select("id", "comment_count","user_id").eq("id", comment.getStrategyId());
-            strategy strategy = strategyMapper.selectOne(strategyqueryWrapper);
+            QueryWrapper<strategy> strategyQueryWrapper = new QueryWrapper<>();
+            strategyQueryWrapper.select("id", "comment_count","user_id").eq("id", comment.getStrategyId());
+            strategy strategy = strategyMapper.selectOne(strategyQueryWrapper);
             Integer count = strategy.getCommentCount();
             count++;//评论数+1
             strategy.setCommentCount(count);

@@ -77,14 +77,14 @@ public class UserController {
                         return "redirect:/my";
                     }catch (UnknownAccountException e){ //用户名不存在
                         model.addAttribute("message","用户名不存在!");
-                        return "login";
+                        return "redirect:/login";
                     }catch (IncorrectCredentialsException e){ //密码错误
                         model.addAttribute("message","密码错误!");
-                        return "login";
+                        return "redirect:/login";
                 }
                 }else {
                     model.addAttribute("message","验证码错误!");
-                    return "login";
+                    return "redirect:/login";
                 }
             }else {  //邮箱验证码登录
                 UsernamePasswordToken token = new UsernamePasswordToken(username, code);

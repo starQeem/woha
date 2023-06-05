@@ -47,7 +47,7 @@ public class constant {
     * 过期时间
     * */
     public final static int TIME_MIN = 1;
-    public final static int TIME_SMALL = 20;
+    public final static int TIME_SMALL = 60;
     public final static int TIME_BIG = 180;
     public final static int TIME_MAX = 1800;
     public final static int TIME_CODE = 300;

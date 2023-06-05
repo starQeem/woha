@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -152,12 +153,9 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
         if (StrUtil.isNotBlank(getStrategyDetail)) {
             //不为空,直接返回
             strategy strategy = JSONUtil.toBean(getStrategyDetail, strategy.class);
-            QueryWrapper<strategy> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper2.select("id","views").eq("id",id);
-            strategy strategy2 = strategyMapper.selectOne(queryWrapper2);
-            Integer views = strategy2.getViews();
-            strategy2.setViews(views + 1);
-            strategyService.updateById(strategy2);
+            UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.setSql("views = views + 1").eq("id", id);
+            strategyService.update(updateWrapper);
             String html = MarkdownUtil.markdownToHtml(strategy.getContent());
             strategy.setContent(html);
             return strategy;
@@ -173,9 +171,9 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
             }
             //将数据库中查询的故事详情写入redis中
             stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id, JSONUtil.toJsonStr(strategy), TIME_MAX+ RandomUtil.randomInt(0,300), TimeUnit.SECONDS);
-            Integer views = strategy.getViews();
-            strategy.setViews(views + 1);
-            strategyService.updateById(strategy);
+            UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.setSql("views = views + 1").eq("id", id);
+            strategyService.update(updateWrapper);
             String html = MarkdownUtil.markdownToHtml(strategy.getContent());
             strategy.setContent(html);
             //返回故事详情
@@ -193,12 +191,9 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
         if (StrUtil.isNotBlank(getStrategyDetail)){
             //不为空,直接返回
             strategy strategy = JSONUtil.toBean(getStrategyDetail, strategy.class);
-            QueryWrapper<strategy> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper2.select("id","views").eq("id",id);
-            strategy strategy2 = strategyMapper.selectOne(queryWrapper2);
-            Integer views = strategy2.getViews();
-            strategy2.setViews(views + 1);
-            strategyService.updateById(strategy2);
+            UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.setSql("views = views + 1").eq("id", id);
+            strategyService.update(updateWrapper);
             //我的任务
             QueryWrapper<userTask> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("user_id", userId);
@@ -245,9 +240,9 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
                 stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id,"",TIME_BIG,TimeUnit.SECONDS);
                 return null;
             }
-            Integer views = strategy.getViews();
-            strategy.setViews(views + 1);   //浏览次数+1
-            strategyService.updateById(strategy);
+            UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.setSql("views = views + 1").eq("id", id);
+            strategyService.update(updateWrapper);
             //将数据库中的攻略详情写入redis中
             stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id, JSONUtil.toJsonStr(strategy), TIME_MAX+ RandomUtil.randomInt(0,300), TimeUnit.SECONDS);
             //我的任务
