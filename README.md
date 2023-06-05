@@ -6,20 +6,21 @@
 **项目在线地址:**<br>
 <a href="http://wohaqeem.top" target="_blank">http://wohaqeem.top</a><br>
 
-**主要功能：**
+**功能模块：**
 
-- 广场文章、图片、攻略文章的发布、编辑、删除、展示、评论、点赞和点赞排行榜
-- 评论的发布、删除、点赞和回复
-- 每日、每周任务
-- 登陆、注册功能（支持邮箱验证码登陆注册）
-- 用户关注、取关和查看用户信息
-- 查看贴子回复和评论回复
-- 用户信息修改、密码修改等...
+- 1.用户登录和注册、资料、头像和密码修改
+- 2.评论区发布、删除、点赞和回复
+- 3.广场文、攻略文和图片的发布、编辑、删除、浏览、点赞和评论以及点赞排行榜
+- 4.用户关注、取关和资料查看
+- 5.查看贴子回复和评论回复
+- 6.每日、每周任务
 
-**所用架构**
+**技术架构**
 
 - 前端：html、css、JavaScript、jQuery、ajax
-- 后端：SpringBoot、SpringMVC、MyBatisPlus、Redis、thymeleaf、MySQL、Shiro
+- 后端：SpringBoot、SpringMVC、MyBatisPlus、thymeleaf、Shiro
+- 数据库: MySQL
+- 缓存中间件: Redis
 
 **系列文章** 
 
