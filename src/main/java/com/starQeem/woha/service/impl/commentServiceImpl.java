@@ -6,9 +6,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageInfo;
 import com.starQeem.woha.dto.userDto;
 import com.starQeem.woha.mapper.commentMapper;
-import com.starQeem.woha.mapper.picturesMapper;
-import com.starQeem.woha.mapper.storyMapper;
-import com.starQeem.woha.mapper.strategyMapper;
 import com.starQeem.woha.pojo.*;
 import com.starQeem.woha.service.*;
 import org.apache.shiro.SecurityUtils;
@@ -111,17 +108,17 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
             if (success) {
                 if (comment.getPicturesId() != null) {
                     UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
-                    updateWrapper.eq("id",comment.getPicturesId()).setSql("comment_count = comment_count - 1");  //评论数+1
+                    updateWrapper.eq("id",comment.getPicturesId()).setSql("comment_count = comment_count - 1");  //评论数-1
                     picturesService.update(updateWrapper);
                 }
                 if (comment.getStoryId() != null) {
-                    UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
-                    updateWrapper.eq("id",comment.getStoryId()).setSql("comment_count = comment_count - 1"); //评论数+1
-                    picturesService.update(updateWrapper);
+                    UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
+                    updateWrapper.eq("id",comment.getStoryId()).setSql("comment_count = comment_count - 1"); //评论数-1
+                    storyService.update(updateWrapper);
                 }
                 if (comment.getStrategyId() != null) {
                     UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
-                    updateWrapper.eq("id",comment.getStrategyId()).setSql("comment_count = comment_count - 1"); //评论数+1
+                    updateWrapper.eq("id",comment.getStrategyId()).setSql("comment_count = comment_count - 1"); //评论数-1
                     strategyService.update(updateWrapper);
                 }
             }
@@ -137,9 +134,9 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
                     picturesService.update(updateWrapper);
                 }
                 if (comment.getStoryId() != null) {
-                    UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
+                    UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
                     updateWrapper.eq("id",comment.getStoryId()).setSql("comment_count = comment_count - " + i); //评论数-i
-                    picturesService.update(updateWrapper);
+                    storyService.update(updateWrapper);
                 }
                 if (comment.getStrategyId() != null) {
                     UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();

@@ -26,6 +26,7 @@ public class comment {
     private Long picturesId;  //图片id
     private Long storyId;   //故事id
     private Long parentCommentId;  //子评论id
+    @TableField(exist = false)
     private Long commentUserId;  //回复的人的id
     private Long strategyId;  //攻略id
     private Date createTime;  //创建时间
