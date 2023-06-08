@@ -296,7 +296,7 @@
               </tr>
                 <img src="../../static/images/me.jpg" style="width: 120px;height: 120px;border-radius: 50%;"
                      id="avatarImage" th:src="@{${user.avatar}}" alt="头像">
-              <input name="avatar"  type="hidden" id="avatar" value="avatar" size="68" />
+              <input name="avatar" th:value="${user.avatar}"  type="hidden" id="avatar" value="avatar" size="68" />
               <tr>
                 <td align="center">
                   <div id="form3" name="form3" method="post" action="">
