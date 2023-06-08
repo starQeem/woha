@@ -19,7 +19,7 @@ public interface userService extends IService<user> {
      * @param code     验证码
      * @return boolean
      */
-    boolean saveRegister(String email, String password,String code);
+    boolean saveRegister(String email, String password);
 
     /**
      * 查询我信息

@@ -298,10 +298,10 @@
                 </div><br>
                 <span class="form_span" style="color: red" th:text="${message}" th:if="${message!=null}">请登录</span>
                 <a href="#" style="color: #828885" th:href="@{/login2}">邮箱验证码登录</a>
-                <input type="text" class="form_input" id="username" name="username" placeholder="Username" >
-                <input type="password" class="form_input" id="password" name="password" placeholder="Password">
+                <input type="text" th:value="${username}" class="form_input" id="username" name="username" placeholder="Username" >
+                <input type="password" th:value="${password}" class="form_input" id="password" name="password" placeholder="Password">
                 <div style="display: flex; justify-content: space-between;">
-                <input type="password" style="width: 250px" class="form_input" id="code" name="code" placeholder="Code">
+                <input type="password" th:value="${code}" style="width: 250px" class="form_input" id="code" name="code" placeholder="Code">
                     <a onclick="refreshCode()">
                         <img id="codeImage" src="/picturesCode" style="height: 50px; width: 100px; border-radius: 10px" alt="">
                     </a>

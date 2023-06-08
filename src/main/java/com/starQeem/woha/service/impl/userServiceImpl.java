@@ -43,28 +43,19 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
      * 注册
      * */
     @Override
-    public boolean saveRegister(String email, String password, String code) {
+    public boolean saveRegister(String email, String password) {
         QueryWrapper<user> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("id", "email", "password", "username").eq("username", email);
         user user = userMapper.selectOne(queryWrapper);
         if (user != null) {
             return false;
         } else {
-            //查询验证码
-            String getCode = stringRedisTemplate.opsForValue().get(USER_CODE + email);
-            //将redis中的验证码和前端传递的验证码作比较
-            if (getCode.equals(code)) {
-                //一致
-                user newUser = new user();
-                String md5DigestAsHex = DigestUtils.md5DigestAsHex(password.getBytes());
-                newUser.setUsername(email);
-                newUser.setEmail(email);
-                newUser.setPassword(md5DigestAsHex);
-                return userService.save(newUser);
-            } else {
-                //不一致
-                return false;
-            }
+            user newUser = new user();
+            String md5DigestAsHex = DigestUtils.md5DigestAsHex(password.getBytes());
+            newUser.setUsername(email);
+            newUser.setEmail(email);
+            newUser.setPassword(md5DigestAsHex);
+            return userService.save(newUser);
         }
     }
 

@@ -1,9 +1,12 @@
 package com.starQeem.woha.controller.my;
 
+import com.starQeem.woha.dto.userDto;
 import com.starQeem.woha.pojo.user;
 import com.starQeem.woha.pojo.userTask;
 import com.starQeem.woha.service.userTaskService;
 import com.starQeem.woha.service.userService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

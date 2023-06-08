@@ -297,9 +297,9 @@
         <i class="iconfont icon-bilibili-line"></i>
       </div><br><br>
       <span class="form_span" style="color: red" th:text="${message}" th:if="${message!=null}">请注册</span>
-      <input type="text" class="form_input" id="email" name="email" placeholder="Email" >
-      <input type="password" class="form_input" id="password" name="password" placeholder="Password">
-      <input type="text" class="form_input" id="code" name="code" placeholder="Code">
+      <input type="text" th:value="${email}" class="form_input" id="email" name="email" placeholder="Email" >
+      <input type="password" th:value="${password}" class="form_input" id="password" name="password" placeholder="Password">
+      <input type="text" th:value="${code}" class="form_input" id="code" name="code" placeholder="Code">
       <div style="display: flex; justify-content: space-between;">
         <button class="form_button button submit" type="button" id="sendBtn">验证码</button>&nbsp;&nbsp;&nbsp;&nbsp;
         <button class="form_button button submit" type="submit" onclick="return validateForm()">注册</button>

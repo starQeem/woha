@@ -19,11 +19,7 @@ public class comment {
     private Long id;
     private String content;  //评论内容
     private String commentNickName;  //评论的人的昵称
-    @TableField(exist = false)
-    private String likedUser;  //点赞的用户
     private Integer isAdmin;  //是否为楼主
-    @TableField(exist = false)
-    private Integer liked;  //点赞数
     private Long userId;  //用户id
     private Long picturesId;  //图片id
     private Long storyId;   //故事id
@@ -32,6 +28,10 @@ public class comment {
     private Long strategyId;  //攻略id
     private Date createTime;  //创建时间
     private Date updateTime;   //更新时间
+    @TableField(exist = false)
+    private String likedUser;  //点赞的用户
+    @TableField(exist = false)
+    private Integer liked;  //点赞数
     @TableField(exist = false)
     private user user;
     @TableField(exist = false)

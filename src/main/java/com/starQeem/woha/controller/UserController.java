@@ -9,7 +9,6 @@ import com.starQeem.woha.pojo.user;
 import com.starQeem.woha.service.followService;
 import com.starQeem.woha.service.picturesService;
 import com.starQeem.woha.service.userService;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -28,8 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-import static com.starQeem.woha.util.constant.USER_FREQUENT;
-import static com.starQeem.woha.util.constant.USER_FREQUENT_LIMIT;
+import static com.starQeem.woha.util.constant.USER_CODE;
 
 /**
  * @Date: 2023/4/17 0:04
@@ -44,19 +42,39 @@ public class UserController {
     private picturesService picturesService;
     @Resource
     private followService followService;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
     private LineCaptcha lineCaptcha;
+    private String CODE = null;
+    private String USERNAME = null;
+    private String PASSWORD = null;
+    private String MESSAGE = null;
     /*
      * 跳转到账号密码登录页面
      * */
     @GetMapping("/login")
-    public String login(){
+    public String login(Model model){
+        model.addAttribute("username",USERNAME);
+        model.addAttribute("password",PASSWORD);
+        model.addAttribute("code",CODE);
+        model.addAttribute("message",MESSAGE);
+        CODE = null;
+        USERNAME = null;
+        PASSWORD = null;
+        MESSAGE = null;
         return "login";
     }
     /*
     * 跳转到验证码登录页面
     * */
     @GetMapping("/login2")
-    public String login2(){
+    public String login2(Model model){
+        model.addAttribute("username",USERNAME);
+        model.addAttribute("code",CODE);
+        model.addAttribute("message",MESSAGE);
+        CODE = null;
+        PASSWORD = null;
+        MESSAGE = null;
         return "login2";
     }
     /*
@@ -76,14 +94,21 @@ public class UserController {
                         userService.task();
                         return "redirect:/my";
                     }catch (UnknownAccountException e){ //用户名不存在
-                        model.addAttribute("message","用户名不存在!");
+                        USERNAME = username;
+                        PASSWORD = password;
+                        MESSAGE = "用户名不存在!";
                         return "redirect:/login";
                     }catch (IncorrectCredentialsException e){ //密码错误
-                        model.addAttribute("message","密码错误!");
+                        USERNAME = username;
+                        PASSWORD = password;
+                        MESSAGE = "密码错误!";
                         return "redirect:/login";
                 }
                 }else {
-                    model.addAttribute("message","验证码错误!");
+                    USERNAME = username;
+                    PASSWORD = password;
+                    CODE  = code;
+                    MESSAGE = "验证码错误!";
                     return "redirect:/login";
                 }
             }else {  //邮箱验证码登录
@@ -93,11 +118,15 @@ public class UserController {
                     userService.task();
                     return "redirect:/my";
                 }catch (UnknownAccountException e){ //用户名不存在
-                    model.addAttribute("message","用户名不存在!");
-                    return "login";
+                    USERNAME = username;
+                    CODE  = code;
+                    MESSAGE = "用户名不存在!";
+                    return "redirect:/login2";
                 }catch (IncorrectCredentialsException e){ //验证码错误
-                    model.addAttribute("message","验证码错误!");
-                    return "login";
+                    USERNAME = username;
+                    CODE  = code;
+                    MESSAGE = "验证码错误!";
+                    return "redirect:/login2";
                 }
             }
     }
@@ -114,7 +143,15 @@ public class UserController {
      * 跳转到注册页面
      * */
     @GetMapping("/register")
-    public String register(){
+    public String register(Model model){
+        model.addAttribute("email",USERNAME);
+        model.addAttribute("password",PASSWORD);
+        model.addAttribute("code",CODE);
+        model.addAttribute("message",MESSAGE);
+        CODE = null;
+        USERNAME = null;
+        PASSWORD = null;
+        MESSAGE = null;
         return "register";
     }
     /*
@@ -122,11 +159,22 @@ public class UserController {
      * */
     @PostMapping("/register")
     public String registerInput(RedirectAttributes attributes,String email, String password,String code){
-        boolean success = userService.saveRegister(email, password, code);
+        String getCode = stringRedisTemplate.opsForValue().get(USER_CODE + email);
+        if (!code.equals(getCode)){
+            USERNAME = email;
+            PASSWORD = password;
+            CODE = code;
+            MESSAGE = "验证码错误!";
+            return "redirect:/register";
+        }
+        boolean success = userService.saveRegister(email, password);
         if (success){
             return "redirect:/login";
         }else {
-            attributes.addFlashAttribute("message","注册失败,验证码错误或用户已被注册!");
+            USERNAME = email;
+            PASSWORD = password;
+            CODE = code;
+            MESSAGE = "注册失败,用户已被注册!";
             return "redirect:/register";
         }
     }

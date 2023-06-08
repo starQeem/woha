@@ -298,8 +298,8 @@
                 </div><br><br>
                 <span class="form_span" style="color: red" th:text="${message}" th:if="${message!=null}">请登录</span>
                 <a href="#" style="color: #828885" th:href="@{/login}">账号密码登录</a>
-                <input type="text" class="form_input" id="username" name="username" placeholder="Email" >
-                <input type="text" class="form_input" id="code" name="code" placeholder="Code">
+                <input type="text" th:value="${username}" class="form_input" id="username" name="username" placeholder="Email" >
+                <input type="text" th:value="${code}" class="form_input" id="code" name="code" placeholder="Code">
                 <div style="display: flex; justify-content: space-between;">
                 <button class="form_button button submit" type="button" id="sendBtn">验证码</button>&nbsp;&nbsp;&nbsp;&nbsp;
                 <button class="form_button button submit" type="submit" onclick="return validateForm()">登录</button>
