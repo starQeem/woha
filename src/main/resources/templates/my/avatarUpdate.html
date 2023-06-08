@@ -294,14 +294,10 @@
                   </div>
                 </td>
               </tr>
-              <tr>
-                <td height="48">
-                  <div name="form2" class="a_syahei" id="form2">
-                    <label for="avatar"></label>
-                    <input name="avatar" type="text" id="avatar" th:value="${user.avatar}" value="请输入你的头像地址..." style="text-align:center" size="68" />
-                  </div>
-                </td>
-              </tr>
+              <div >
+                <img src="../../static/images/me.jpg" style="width: 120px;height: 120px;border-radius: 50%;"
+                     id="avatarImage" th:src="@{${user.avatar}}" alt="头像">
+              </div>
               <tr>
                 <td align="center">
                   <div id="form3" name="form3" method="post" action="">
@@ -346,7 +342,11 @@
         var response = JSON.parse(xhr.responseText);
         var imageUrl = response.url; // 获取上传后的图片地址
         console.log("Image URL: " + imageUrl);
-        document.getElementsByName("avatar")[0].value = imageUrl;
+        // document.getElementsByName("avatar")[0].value = imageUrl;
+
+        // 将图片地址赋值给img元素
+        var imgElement = document.getElementById("avatarImage");
+        imgElement.src = imageUrl;
       }
     };
     xhr.send(formData); // 发送请求，上传文件

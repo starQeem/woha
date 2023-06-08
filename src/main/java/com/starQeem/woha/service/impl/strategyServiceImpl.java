@@ -144,7 +144,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
         return isSuccess;
     }
     /*
-     * 百科详情
+     * 攻略详情
      * */
     @Override
     public strategy getStrategyDetailById(Long id) {
