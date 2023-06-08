@@ -1,6 +1,7 @@
 package com.starQeem.woha.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageInfo;
 import com.starQeem.woha.dto.userDto;
@@ -33,11 +34,11 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
     @Resource
     private commentService commentService;
     @Resource
-    private picturesMapper picturesMapper;
+    private picturesService picturesService;
     @Resource
-    private storyMapper storyMapper;
+    private storyService storyService;
     @Resource
-    private strategyMapper strategyMapper;
+    private strategyService strategyService;
     @Resource
     private commentMapper commentMapper;
     @Resource
@@ -54,26 +55,24 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
         comment.setUpdateTime(new Date());
         comment.setCreateTime(new Date());
         if (comment.getPicturesId() != null) {
-            QueryWrapper<pictures> picturesQueryWrapper = new QueryWrapper<>();
-            picturesQueryWrapper.select("id", "comment_count", "user_id").eq("id", comment.getPicturesId());
-            pictures pictures = picturesMapper.selectOne(picturesQueryWrapper);
-            Integer count = pictures.getCommentCount();
-            count++;//评论数+1
-            pictures.setCommentCount(count);
-            picturesMapper.updateById(pictures);
+            QueryWrapper<pictures> storyQueryWrapper = new QueryWrapper<>();
+            storyQueryWrapper.select("id","user_id").eq("id", comment.getPicturesId());
+            pictures pictures = picturesService.getBaseMapper().selectOne(storyQueryWrapper);
+            UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.setSql("comment_count = comment_count + 1"); //评论数+1
+            picturesService.update(updateWrapper);
             if (Objects.equals(pictures.getUserId(), Long.valueOf(user.getId()))) {//判断是否为自己发的帖子
                 //是,is_admin设置为1(表示此评论为楼主评论)
-                comment.setIsAdmin(1);
+                comment.setIsAdmin(STATUS_ONE);
             }
         }
         if (comment.getStoryId() != null) {
             QueryWrapper<story> storyQueryWrapper = new QueryWrapper<>();
-            storyQueryWrapper.select("id", "comment_count","user_id").eq("id", comment.getStoryId());
-            story story = storyMapper.selectOne(storyQueryWrapper);
-            Integer count = story.getCommentCount();
-            count++;//评论数+1
-            story.setCommentCount(count);
-            storyMapper.updateById(story);
+            storyQueryWrapper.select("id","user_id").eq("id", comment.getStoryId());
+            story story = storyService.getBaseMapper().selectOne(storyQueryWrapper);
+            UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.setSql("comment_count = comment_count + 1"); //评论数+1
+            storyService.update(updateWrapper);
             if (Objects.equals(story.getUserId(), Long.valueOf(user.getId()))) {//判断是否为自己发的帖子
                 //是,is_admin设置为1(表示此评论为楼主评论)
                 comment.setIsAdmin(STATUS_ONE);
@@ -81,15 +80,14 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
         }
         if (comment.getStrategyId() != null) {
             QueryWrapper<strategy> strategyQueryWrapper = new QueryWrapper<>();
-            strategyQueryWrapper.select("id", "comment_count","user_id").eq("id", comment.getStrategyId());
-            strategy strategy = strategyMapper.selectOne(strategyQueryWrapper);
-            Integer count = strategy.getCommentCount();
-            count++;//评论数+1
-            strategy.setCommentCount(count);
-            strategyMapper.updateById(strategy);
+            strategyQueryWrapper.select("id","user_id").eq("id", comment.getStrategyId());
+            strategy strategy = strategyService.getBaseMapper().selectOne(strategyQueryWrapper);
+            UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.setSql("comment_count = comment_count + 1"); //评论数+1
+            strategyService.update(updateWrapper);
             if (Objects.equals(strategy.getUserId(), Long.valueOf(user.getId()))) {//判断是否为自己发的帖子
                 //是,is_admin设置为1(表示此评论为楼主评论)
-                comment.setIsAdmin(1);
+                comment.setIsAdmin(STATUS_ONE);
             }
         }
         return commentService.save(comment);
@@ -112,31 +110,19 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
             boolean success = commentService.removeById(id);
             if (success) {
                 if (comment.getPicturesId() != null) {
-                    QueryWrapper<pictures> picturesQueryWrapper = new QueryWrapper<>();
-                    picturesQueryWrapper.select("id", "comment_count").eq("id", comment.getPicturesId());
-                    pictures pictures = picturesMapper.selectOne(picturesQueryWrapper);
-                    Integer count = pictures.getCommentCount();
-                    count--;//评论数-1
-                    pictures.setCommentCount(count);
-                    picturesMapper.updateById(pictures);
+                    UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
+                    updateWrapper.setSql("comment_count = comment_count - 1");  //评论数+1
+                    picturesService.update(updateWrapper);
                 }
                 if (comment.getStoryId() != null) {
-                    QueryWrapper<story> storyQueryWrapper = new QueryWrapper<>();
-                    storyQueryWrapper.select("id", "comment_count").eq("id", comment.getStoryId());
-                    story story = storyMapper.selectOne(storyQueryWrapper);
-                    Integer count = story.getCommentCount();
-                    count--;//评论数-1
-                    story.setCommentCount(count);
-                    storyMapper.updateById(story);
+                    UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
+                    updateWrapper.setSql("comment_count = comment_count - 1"); //评论数+1
+                    picturesService.update(updateWrapper);
                 }
                 if (comment.getStrategyId() != null) {
-                    QueryWrapper<strategy> strategyQueryWrapper = new QueryWrapper<>();
-                    strategyQueryWrapper.select("id", "comment_count").eq("id", comment.getStrategyId());
-                    strategy strategy = strategyMapper.selectOne(strategyQueryWrapper);
-                    Integer count = strategy.getCommentCount();
-                    count--;//评论数-1
-                    strategy.setCommentCount(count);
-                    strategyMapper.updateById(strategy);
+                    UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
+                    updateWrapper.setSql("comment_count = comment_count - 1"); //评论数+1
+                    strategyService.update(updateWrapper);
                 }
             }
             return success;
@@ -146,28 +132,19 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
             int i = commentService.getBaseMapper().delete(queryWrapper);
             if (i > 0) {
                 if (comment.getPicturesId() != null) {
-                    QueryWrapper<pictures> picturesQueryWrapper = new QueryWrapper<>();
-                    picturesQueryWrapper.select("id", "comment_count").eq("id", comment.getPicturesId());
-                    pictures pictures = picturesMapper.selectOne(picturesQueryWrapper);
-                    Integer count = pictures.getCommentCount() - i;  //评论数-i
-                    pictures.setCommentCount(count);
-                    picturesMapper.updateById(pictures);
+                    UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
+                    updateWrapper.setSql("comment_count = comment_count - " + i);  //评论数-i
+                    picturesService.update(updateWrapper);
                 }
                 if (comment.getStoryId() != null) {
-                    QueryWrapper<story> storyQueryWrapper = new QueryWrapper<>();
-                    storyQueryWrapper.select("id", "comment_count").eq("id", comment.getStoryId());
-                    story story = storyMapper.selectOne(storyQueryWrapper);
-                    Integer count = story.getCommentCount() - i;  //评论数-i
-                    story.setCommentCount(count);
-                    storyMapper.updateById(story);
+                    UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
+                    updateWrapper.setSql("comment_count = comment_count - " + i); //评论数-i
+                    picturesService.update(updateWrapper);
                 }
                 if (comment.getStrategyId() != null) {
-                    QueryWrapper<strategy> strategyQueryWrapper = new QueryWrapper<>();
-                    strategyQueryWrapper.select("id", "comment_count").eq("id", comment.getStrategyId());
-                    strategy strategy = strategyMapper.selectOne(strategyQueryWrapper);
-                    Integer count = strategy.getCommentCount() - i;  //评论数-i
-                    strategy.setCommentCount(count);
-                    strategyMapper.updateById(strategy);
+                    UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
+                    updateWrapper.setSql("comment_count = comment_count - " + i); //评论数-i
+                    strategyService.update(updateWrapper);
                 }
                 return true;
             } else {

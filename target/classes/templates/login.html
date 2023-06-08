@@ -302,7 +302,9 @@
                 <input type="password" class="form_input" id="password" name="password" placeholder="Password">
                 <div style="display: flex; justify-content: space-between;">
                 <input type="password" style="width: 250px" class="form_input" id="code" name="code" placeholder="Code">
-                <a href=""><img th:src="@{/picturesCode}" id="captchaPic" style="height: 50px;width: 100px;border-radius: 10px" onclick="refresh()" alt=""></a>
+                    <a onclick="refreshCode()">
+                        <img id="codeImage" src="/picturesCode" style="height: 50px; width: 100px; border-radius: 10px" alt="">
+                    </a>
                 </div>
                 <div style="display: flex; justify-content: space-between;">
                 <button class="form_button button submit" type="submit" onclick="return validateForm()">登录</button>
@@ -358,9 +360,12 @@
         return true;
     }
 
-    function refresh(){
-        location.reload();
+    function refreshCode() {
+        var imageElement = document.getElementById("codeImage");
+        var url = "/picturesCode?" + new Date().getTime(); // 添加时间戳以防止浏览器缓存
+        imageElement.src = url;
     }
+
 </script>
 </body>
 </html>
