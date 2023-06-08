@@ -5,7 +5,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     username: root
-    password:
+    password: wycmzxx888888..
     url: jdbc:mysql://localhost/woha?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
   main:
@@ -20,9 +20,9 @@ spring:
     defaultEncoding: utf-8
 #redis
   redis:
-    host:
+    host: 106.53.103.231
     port: 8862
-    password:
+    password: wycmzxx888888..
     lettuce:
       pool:
         max-active: 10
