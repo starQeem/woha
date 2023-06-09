@@ -90,6 +90,11 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
      * */
     @Override
     public PageInfo<strategy> pageStrategyWithStrategyTypeById(Integer pageNum, int pageSize, Long id, String title) {
+        if (title == null){
+            title = "";
+        }else {
+            pageSize = SEARCH_SIZE;
+        }
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("liked desc");
         PageHelper.orderBy("create_time desc");

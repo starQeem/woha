@@ -37,12 +37,6 @@ public class picturesController {
     * */
     @GetMapping(value = {"","/{pageNum}"})
     public String pictures(@PathVariable(value = "pageNum",required = false)Integer pageNum, String title, Model model){
-        if (pageNum == null){
-            pageNum = PAGE_NUM;
-        }
-        if (title == null){
-            title = "";
-        }
         PageInfo<pictures> pageInfo = picturesService.getPicturesListPageInfo(pageNum, PICTURES_PAGE_SIZE, title);
         model.addAttribute("page",pageInfo);
         return "picture";

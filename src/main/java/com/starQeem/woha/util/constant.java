@@ -43,6 +43,7 @@ public class constant {
     public final static String STORY_LIKED = "woha:story:liked:";  //故事点赞的用户
     public final static String STRATEGY_LIKED = "woha:strategy:liked:";  //攻略点赞的用户
     public final static String COMMENT_LIKED = "woha:comment:liked";  //评论点赞的用户
+    public final static int SEARCH_SIZE = 100000000;
     /*
     * 过期时间
     * */

@@ -90,6 +90,14 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
      * */
     @Override
     public PageInfo<story> getStoryListPageInfo(Integer pageNum, int pageSize, String title) {
+        if (pageNum == null) {
+            pageNum = PAGE_NUM;
+        }
+        if (title == null) {
+            title = "";
+        }else {
+            pageSize = SEARCH_SIZE;
+        }
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("liked desc");
         PageHelper.orderBy("create_time desc");

@@ -33,12 +33,6 @@ public class storyController {
      * */
     @GetMapping(value = {"", "/{pageNum}"})
     public String story(@PathVariable(value = "pageNum", required = false) Integer pageNum, Model model, String title) {
-        if (pageNum == null) {
-            pageNum = PAGE_NUM;
-        }
-        if (title == null) {
-            title = "";
-        }
         PageInfo<story> pageInfo = storyService.getStoryListPageInfo(pageNum, PAGE_SIZE, title);
         model.addAttribute("page", pageInfo);
         return "story";

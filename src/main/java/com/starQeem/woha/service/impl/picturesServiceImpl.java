@@ -66,6 +66,14 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
      * */
     @Override
     public PageInfo<pictures> getPicturesListPageInfo(Integer pageNum, int pageSize, String title) {
+        if (pageNum == null){
+            pageNum = PAGE_NUM;
+        }
+        if (title == null){
+            title = "";
+        }else {
+            pageSize = SEARCH_SIZE;
+        }
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("liked desc");
         PageHelper.orderBy("create_time desc");

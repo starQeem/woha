@@ -36,9 +36,6 @@ public class strategyController {
     public String strategy(@PathVariable(value = "id",required = false)Long id,
                           @RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
                           Model model, String title){
-        if (title == null){
-            title = "";
-        }
         List<strategyType> typeList = strategyTypeService.queryStrategyType();  //查询所有分类
         model.addAttribute("typeList",typeList);
         if (id == null){
