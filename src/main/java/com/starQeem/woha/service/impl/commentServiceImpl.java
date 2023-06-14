@@ -240,7 +240,6 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
         commentList.addAll(storyComment);
         // 对合并出来的集合按照 update_time 属性降序排列
         commentList.sort(Comparator.comparing(comment::getUpdateTime).reversed());
-        commentList.sort(Comparator.comparing(comment::getLiked).reversed());
 
         int total = commentList.size();  //数据总条数
         int fromIndex = (pageNum - 1) * pageSize;  //截止当前页码数的所有数据条数
