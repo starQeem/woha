@@ -69,16 +69,16 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
      * 查询我发布的攻略
      * */
     @Override
-    public PageInfo<strategy> getUserWithStrategyWithStrategyType(Integer pageNum, int pageSize,Long id) {
+    public PageInfo<strategy> getUserWithStrategyWithStrategyType(Integer pageNum, int pageSize, Long id) {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("create_time desc");
-        if (id.equals(0L)){ //查询我发布的攻略
+        if (id.equals(0L)) { //查询我发布的攻略
             List<strategy> strategyList = strategyMapper.getUserWithStrategyWithStrategyType(Long.valueOf(user.getId()));
             PageInfo<strategy> pageInfo = new PageInfo<>(strategyList, pageSize);
             return pageInfo;
-        }else { //查询用户发布的攻略
+        } else { //查询用户发布的攻略
             List<strategy> strategyList = strategyMapper.getUserWithStrategyWithStrategyType(id);
             PageInfo<strategy> pageInfo = new PageInfo<>(strategyList, pageSize);
             return pageInfo;
@@ -90,39 +90,20 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
      * */
     @Override
     public PageInfo<strategy> pageStrategyWithStrategyTypeById(Integer pageNum, int pageSize, Long id, String title) {
-        if (title == null){
+        if (title == null) {
             title = "";
-        }else {
+        } else {
             pageSize = SEARCH_SIZE;
         }
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("liked desc");
         PageHelper.orderBy("create_time desc");
-        //查询redis中有没有列表
-        String getStrategyList = stringRedisTemplate.opsForValue().get(STRATEGY_LIST + id + ":" + pageNum);
-        if (StrUtil.isNotBlank(getStrategyList) && StrUtil.isBlank(title)) {
-            //有列表,直接返回redis中查到的数据
-            JSONObject jsonObj = JSONUtil.parseObj(getStrategyList);
-            // 将JSONObject对象转换为PageInfo<Pictures>对象
-            PageInfo<strategy> pageInfo = (PageInfo<strategy>) jsonObj.toBean(PageInfo.class);
-            //返回分页集合
-            return pageInfo;
-        } else {
-            //没有列表,查询数据库
-            List<strategy> strategyList = strategyMapper.pageStrategyWithStrategyTypeById(id, title);
-            //将数据库中的列表信息存入redis中
-            PageInfo<strategy> pageInfo = new PageInfo<>(strategyList, pageSize);
-            if (StrUtil.isBlank(title)){
-                JSONObject jsonObj = JSONUtil.parseObj(pageInfo);
-                // 将JSONObject对象转换为PageInfo<Story>对象
-                PageInfo<strategy> strategyListPageInfo = (PageInfo<strategy>) jsonObj.toBean(PageInfo.class);
-                String redisStrategyList = JSONUtil.toJsonStr(strategyListPageInfo);
-                stringRedisTemplate.opsForValue().set(STRATEGY_LIST + id + ":" +pageNum,
-                        redisStrategyList, TIME_SMALL, TimeUnit.SECONDS);
-            }
-            //返回分页集合
-            return pageInfo;
-        }
+        //查询数据库
+        List<strategy> strategyList = strategyMapper.pageStrategyWithStrategyTypeById(id, title);
+        PageInfo<strategy> pageInfo = new PageInfo<>(strategyList, pageSize);
+        //返回分页集合
+        return pageInfo;
+
     }
 
     /*
@@ -143,11 +124,12 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
         boolean isSuccess = strategyService.updateById(strategy);
         //删除缓存
         String redisStrategyDetail = stringRedisTemplate.opsForValue().get(STRATEGY_DETAIL + strategy.getId());
-        if (StrUtil.isNotBlank(redisStrategyDetail)){
+        if (StrUtil.isNotBlank(redisStrategyDetail)) {
             stringRedisTemplate.delete(STRATEGY_DETAIL + strategy.getId());
         }
         return isSuccess;
     }
+
     /*
      * 攻略详情
      * */
@@ -164,18 +146,18 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
             String html = MarkdownUtil.markdownToHtml(strategy.getContent());
             strategy.setContent(html);
             return strategy;
-        }else if (getStrategyDetail != null){
+        } else if (getStrategyDetail != null) {
             return null;
         } else {
             //从数据库中查询故事详情
             strategy strategy = strategyMapper.getStrategyDetailById(id);
-            if (strategy == null){
+            if (strategy == null) {
                 //缓存空字符串
-                stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id,"",TIME_BIG,TimeUnit.SECONDS);
+                stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id, "", TIME_BIG, TimeUnit.SECONDS);
                 return null;
             }
             //将数据库中查询的故事详情写入redis中
-            stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id, JSONUtil.toJsonStr(strategy), TIME_MAX+ RandomUtil.randomInt(0,300), TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id, JSONUtil.toJsonStr(strategy), TIME_MAX + RandomUtil.randomInt(0, 300), TimeUnit.SECONDS);
             UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
             updateWrapper.setSql("views = views + 1").eq("id", id);
             strategyService.update(updateWrapper);
@@ -193,7 +175,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
     public strategy queryStrategyDetailById(Long id, Long userId) {
         //查询redis中的攻略详情
         String getStrategyDetail = stringRedisTemplate.opsForValue().get(STRATEGY_DETAIL + id);
-        if (StrUtil.isNotBlank(getStrategyDetail)){
+        if (StrUtil.isNotBlank(getStrategyDetail)) {
             //不为空,直接返回
             strategy strategy = JSONUtil.toBean(getStrategyDetail, strategy.class);
             UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
@@ -235,21 +217,21 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
             String html = MarkdownUtil.markdownToHtml(strategy.getContent());
             strategy.setContent(html);
             return strategy;
-        }else if (getStrategyDetail != null){
+        } else if (getStrategyDetail != null) {
             return null;
         } else {
             //从数据库中查询攻略详情
             strategy strategy = strategyMapper.getStrategyDetailById(id);
-            if (strategy == null){
+            if (strategy == null) {
                 //缓存空字符串
-                stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id,"",TIME_BIG,TimeUnit.SECONDS);
+                stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id, "", TIME_BIG, TimeUnit.SECONDS);
                 return null;
             }
             UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
             updateWrapper.setSql("views = views + 1").eq("id", id);
             strategyService.update(updateWrapper);
             //将数据库中的攻略详情写入redis中
-            stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id, JSONUtil.toJsonStr(strategy), TIME_MAX+ RandomUtil.randomInt(0,300), TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id, JSONUtil.toJsonStr(strategy), TIME_MAX + RandomUtil.randomInt(0, 300), TimeUnit.SECONDS);
             //我的任务
             QueryWrapper<userTask> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("user_id", userId);
@@ -301,9 +283,9 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
         // 创建一个Map来存储likedUserIds的键值对
         Map<String, String> likedUserIdsMap;
         likedUserIdsMap = (Map<String, String>) likedUserIds;
-        for (comment commentList : strategyComments){  //遍历所有评论
-            for (Map.Entry<String, String> commentLiked : likedUserIdsMap.entrySet()){  //遍历所有点赞
-                if (commentList.getId().toString().equals(commentLiked.getKey())){  //判断点赞的key和评论的id是否相等
+        for (comment commentList : strategyComments) {  //遍历所有评论
+            for (Map.Entry<String, String> commentLiked : likedUserIdsMap.entrySet()) {  //遍历所有点赞
+                if (commentList.getId().toString().equals(commentLiked.getKey())) {  //判断点赞的key和评论的id是否相等
                     commentList.setLikedUser(commentLiked.getValue());  //相等则把点赞的用户赋值给评论对象
                 }
             }
@@ -349,25 +331,16 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
      * */
     @Override
     public List<strategy> getStrategyListFive() {
-        //查询redis中是否存在攻略列表
-        String getStrategyFiveList = stringRedisTemplate.opsForValue().get(STRATEGY_FIVE_LIST);
-        if (StrUtil.isNotBlank(getStrategyFiveList)) {
-            //存在,直接返回
-            List<strategy> strategyList = JSONUtil.toList(JSONUtil.parseArray(getStrategyFiveList), strategy.class);
-            return strategyList;
-        } else {
-            //不存在,查询数据库
-            QueryWrapper<strategy> queryWrapper = new QueryWrapper<>();
-            queryWrapper.select("id", "title", "update_time")
-                    .orderByDesc("update_time")
-                    .orderByDesc("liked")
-                    .last("limit 5");
-            List<strategy> strategyList = strategyMapper.selectList(queryWrapper);
-            //将查询出的数据存入redis中
-            stringRedisTemplate.opsForValue().set(STRATEGY_FIVE_LIST, JSONUtil.toJsonStr(strategyList), TIME_SMALL, TimeUnit.SECONDS);
-            //返回图片列表
-            return strategyList;
-        }
+        //查询数据库
+        QueryWrapper<strategy> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("id", "title", "update_time")
+                .orderByDesc("update_time")
+                .orderByDesc("liked")
+                .last("limit 5");
+        List<strategy> strategyList = strategyMapper.selectList(queryWrapper);
+        //返回图片列表
+        return strategyList;
+
     }
 
     /*
@@ -383,12 +356,12 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
         commentService.remove(queryWrapperComment);
         //删除缓存
         String redisStrateDetail = stringRedisTemplate.opsForValue().get(STRATEGY_DETAIL + id);
-        if (StrUtil.isNotBlank(redisStrateDetail)){
+        if (StrUtil.isNotBlank(redisStrateDetail)) {
             stringRedisTemplate.delete(STRATEGY_DETAIL + id);
         }
         //删除攻略的点赞信息
-        Object redisStrategyLikedUser = stringRedisTemplate.opsForZSet().range(STRATEGY_LIKED + id,0,-1);
-        if (redisStrategyLikedUser != null){
+        Object redisStrategyLikedUser = stringRedisTemplate.opsForZSet().range(STRATEGY_LIKED + id, 0, -1);
+        if (redisStrategyLikedUser != null) {
             stringRedisTemplate.delete(STRATEGY_LIKED + id);
         }
         return false;
@@ -413,7 +386,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
     @Override
     public List<user> getLikedUserThree(Long id) {
         Set<String> range = stringRedisTemplate.opsForZSet().range(STRATEGY_LIKED + id.toString(), 0, 2);
-        if (!range.isEmpty()){
+        if (!range.isEmpty()) {
             String firstThree = String.join(",", range);
             QueryWrapper<user> queryWrapper = new QueryWrapper<>();
             queryWrapper.select("id", "avatar")
@@ -421,7 +394,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
                     .last("ORDER BY FIELD(id, " + firstThree + ")");
             List<user> ThreeUserLikedList = userService.getBaseMapper().selectList(queryWrapper);
             return ThreeUserLikedList;
-        }else {
+        } else {
             return null;
         }
     }

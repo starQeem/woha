@@ -66,40 +66,22 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
      * */
     @Override
     public PageInfo<pictures> getPicturesListPageInfo(Integer pageNum, int pageSize, String title) {
-        if (pageNum == null){
+        if (pageNum == null) {
             pageNum = PAGE_NUM;
         }
-        if (title == null){
+        if (title == null) {
             title = "";
-        }else {
+        } else {
             pageSize = SEARCH_SIZE;
         }
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("liked desc");
         PageHelper.orderBy("create_time desc");
-        //查询redis中有没有列表
-        String getPicturesListJson = stringRedisTemplate.opsForValue().get(PICTURES_LIST + pageNum);
-        if (StrUtil.isNotBlank(getPicturesListJson) && StrUtil.isBlank(title)) {
-            //有列表,直接返回redis中查到的数据
-            JSONObject jsonObj = JSONUtil.parseObj(getPicturesListJson);
-            // 将JSONObject对象转换为PageInfo<Pictures>对象
-            PageInfo<pictures> pageInfo = (PageInfo<pictures>) jsonObj.toBean(PageInfo.class);
-            return pageInfo;
-        } else {
-            //没有列表,查询数据库
-            List<pictures> picturesList = picturesMapper.getPicturesListPageInfo(title);
-            //将数据库中的列表信息存入redis中
-            PageInfo<pictures> pageInfo = new PageInfo<>(picturesList, pageSize);
-            if (StrUtil.isBlank(title)) {
-                JSONObject jsonObj = JSONUtil.parseObj(pageInfo);
-                // 将JSONObject对象转换为PageInfo<Story>对象
-                PageInfo<pictures> picturesListPageInfo = (PageInfo<pictures>) jsonObj.toBean(PageInfo.class);
-                String redisPicturesList = JSONUtil.toJsonStr(picturesListPageInfo);
-                stringRedisTemplate.opsForValue().set(PICTURES_LIST + pageNum, redisPicturesList, TIME_SMALL, TimeUnit.SECONDS);
-            }
-            //将List集合丢到分页对象里
-            return pageInfo;
-        }
+        //查询数据库
+        List<pictures> picturesList = picturesMapper.getPicturesListPageInfo(title);
+        PageInfo<pictures> pageInfo = new PageInfo<>(picturesList, pageSize);
+        //将List集合丢到分页对象里
+        return pageInfo;
     }
 
     /*
@@ -233,11 +215,11 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
         // 创建一个Map来存储likedUserIds的键值对
         Map<String, String> likedUserIdsMap;
         likedUserIdsMap = (Map<String, String>) likedUserIds;
-        for (comment commentList : picturesComments){  //遍历所有评论
-            for (Map.Entry<String, String> commentLiked : likedUserIdsMap.entrySet()){  //遍历所有点赞
-                 if (commentList.getId().toString().equals(commentLiked.getKey())){  //判断点赞的key和评论的id是否相等
-                     commentList.setLikedUser(commentLiked.getValue());  //相等则把点赞的用户赋值给评论对象
-                 }
+        for (comment commentList : picturesComments) {  //遍历所有评论
+            for (Map.Entry<String, String> commentLiked : likedUserIdsMap.entrySet()) {  //遍历所有点赞
+                if (commentList.getId().toString().equals(commentLiked.getKey())) {  //判断点赞的key和评论的id是否相等
+                    commentList.setLikedUser(commentLiked.getValue());  //相等则把点赞的用户赋值给评论对象
+                }
             }
         }
         return picturesComments;
@@ -286,24 +268,15 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
      * */
     @Override
     public List<pictures> getPicturesListFiveBylike() {
-        //查询redis中是否存在图片列表
-        String getPicturesFiveList = stringRedisTemplate.opsForValue().get(PICTURES_FIVE_LIST);
-        if (StrUtil.isNotBlank(getPicturesFiveList)) {
-            //存在,直接返回
-            List<pictures> picturesList = JSONUtil.toList(JSONUtil.parseArray(getPicturesFiveList), pictures.class);
-            return picturesList;
-        } else {
-            //不存在,查询数据库
-            QueryWrapper<pictures> queryWrapper = new QueryWrapper<>();
-            queryWrapper.select("id", "pictures_address").
-                    orderByDesc("liked").
-                    last("limit 5");
-            List<pictures> picturesList = picturesMapper.selectList(queryWrapper);
-            //将查询出的数据存入redis中
-            stringRedisTemplate.opsForValue().set(PICTURES_FIVE_LIST, JSONUtil.toJsonStr(picturesList), TIME_SMALL, TimeUnit.SECONDS);
-            //返回图片列表
-            return picturesList;
-        }
+        //查询数据库
+        QueryWrapper<pictures> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("id", "pictures_address").
+                orderByDesc("liked").
+                last("limit 5");
+        List<pictures> picturesList = picturesMapper.selectList(queryWrapper);
+        //返回图片列表
+        return picturesList;
+
     }
 
     /*

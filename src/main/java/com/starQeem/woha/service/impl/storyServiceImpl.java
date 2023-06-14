@@ -69,16 +69,16 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
      * 根据用户id查询故事列表
      * */
     @Override
-    public PageInfo<story> queryMyStory(Integer pageNum, int PAGE_SIZE,Long id) {
+    public PageInfo<story> queryMyStory(Integer pageNum, int PAGE_SIZE, Long id) {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         PageHelper.startPage(pageNum, PAGE_SIZE);
         PageHelper.orderBy("create_time desc");
-        if (id.equals(0L)){
+        if (id.equals(0L)) {
             List<story> storyList = storyMapper.getUserWithStory(Long.valueOf(user.getId()));
             PageInfo<story> pageInfo = new PageInfo<>(storyList, PAGE_SIZE);
             return pageInfo;
-        }else {
+        } else {
             List<story> storyList = storyMapper.getUserWithStory(id);
             PageInfo<story> pageInfo = new PageInfo<>(storyList, PAGE_SIZE);
             return pageInfo;
@@ -95,36 +95,19 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
         }
         if (title == null) {
             title = "";
-        }else {
+        } else {
             pageSize = SEARCH_SIZE;
         }
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("liked desc");
         PageHelper.orderBy("create_time desc");
-        //查询redis中有没有列表
-        String getStoryListJson = stringRedisTemplate.opsForValue().get(STORY_LIST + pageNum);
-        if (StrUtil.isNotBlank(getStoryListJson) && StrUtil.isBlank(title)) {//判断查询出来的数据是否不为空且title为空（title不为空时为搜索，搜索直接走数据库）
-            //有列表,直接返回redis中查到的数据
-            JSONObject jsonObj = JSONUtil.parseObj(getStoryListJson);
-            // 将JSONObject对象转换为PageInfo<Pictures>对象
-            PageInfo<story> pageInfo = (PageInfo<story>) jsonObj.toBean(PageInfo.class);
-            //返回分页集合
-            return pageInfo;
-        } else {
-            //没有列表,查询数据库
-            List<story> storyList = storyMapper.getStory(title);
-            //将数据库中的列表信息存入redis中
-            PageInfo<story> pageInfo = new PageInfo<>(storyList, pageSize);
-            if (StrUtil.isBlank(title)){
-                JSONObject jsonObj = JSONUtil.parseObj(pageInfo);
-                // 将JSONObject对象转换为PageInfo<Story>对象
-                PageInfo<story> storyListPageInfo = (PageInfo<story>) jsonObj.toBean(PageInfo.class);
-                String storyListJson = JSONUtil.toJsonStr(storyListPageInfo);
-                stringRedisTemplate.opsForValue().set(STORY_LIST + pageNum, storyListJson, TIME_SMALL, TimeUnit.SECONDS);
-            }
-            //将List集合丢到分页对象里
-            return pageInfo;
-        }
+        //查询数据库
+        List<story> storyList = storyMapper.getStory(title);
+        //将数据库中的列表信息存入redis中
+        PageInfo<story> pageInfo = new PageInfo<>(storyList, pageSize);
+        //将List集合丢到分页对象里
+        return pageInfo;
+
     }
 
     /*
@@ -137,7 +120,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
         boolean isSuccess = storyService.updateById(story);
         //删除故事缓存
         String redisStoryDetail = stringRedisTemplate.opsForValue().get(STORY_DETAIL + story.getId());
-        if (StrUtil.isNotBlank(redisStoryDetail)){
+        if (StrUtil.isNotBlank(redisStoryDetail)) {
             stringRedisTemplate.delete(STORY_DETAIL + story.getId());
         }
         return isSuccess;
@@ -202,20 +185,20 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
             String html = MarkdownUtil.markdownToHtml(story.getContent());
             story.setContent(html);
             return story;
-        }else if (getStoryDetail != null){
+        } else if (getStoryDetail != null) {
             return null;
-        }else {
+        } else {
             //从数据库中查询故事详情
             story story = storyMapper.getStoryById(id);
-            if (story == null){
-                stringRedisTemplate.opsForValue().set(STORY_DETAIL + id,"",TIME_BIG,TimeUnit.SECONDS);
+            if (story == null) {
+                stringRedisTemplate.opsForValue().set(STORY_DETAIL + id, "", TIME_BIG, TimeUnit.SECONDS);
                 return null;
             }
             UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
             updateWrapper.setSql("views = views + 1").eq("id", id);
             storyService.update(updateWrapper);
             //将数据库中查询的故事详情写入redis中
-            stringRedisTemplate.opsForValue().set(STORY_DETAIL + id, JSONUtil.toJsonStr(story), TIME_MAX + RandomUtil.randomInt(0,300), TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(STORY_DETAIL + id, JSONUtil.toJsonStr(story), TIME_MAX + RandomUtil.randomInt(0, 300), TimeUnit.SECONDS);
             //我的任务
             QueryWrapper<userTask> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("user_id", Long.valueOf(user.getId()));
@@ -271,21 +254,21 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
             String html = MarkdownUtil.markdownToHtml(story.getContent());
             story.setContent(html);
             return story;
-        }else if (getStoryDetail != null){
+        } else if (getStoryDetail != null) {
             return null;
-        }else {
+        } else {
             //从数据库中查询故事详情
             story story = storyMapper.getStoryById(id);
-            if (story == null){
+            if (story == null) {
                 //缓存空字符串
-                stringRedisTemplate.opsForValue().set(STORY_DETAIL + id.toString(),"",TIME_BIG,TimeUnit.SECONDS);
+                stringRedisTemplate.opsForValue().set(STORY_DETAIL + id.toString(), "", TIME_BIG, TimeUnit.SECONDS);
                 return null;
             }
             UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
             updateWrapper.setSql("views = views + 1").eq("id", id);
             storyService.update(updateWrapper);
             //将数据库中查询的故事详情写入redis中
-            stringRedisTemplate.opsForValue().set(STORY_DETAIL + id.toString(), JSONUtil.toJsonStr(story), TIME_MAX+ RandomUtil.randomInt(0,300), TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(STORY_DETAIL + id.toString(), JSONUtil.toJsonStr(story), TIME_MAX + RandomUtil.randomInt(0, 300), TimeUnit.SECONDS);
             String html = MarkdownUtil.markdownToHtml(story.getContent());
             story.setContent(html);
             //返回故事详情
@@ -305,9 +288,9 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
         // 创建一个Map来存储likedUserIds的键值对
         Map<String, String> likedUserIdsMap;
         likedUserIdsMap = (Map<String, String>) likedUserIds;
-        for (comment commentList : storyComments){  //遍历所有评论
-            for (Map.Entry<String, String> commentLiked : likedUserIdsMap.entrySet()){  //遍历所有点赞
-                if (commentList.getId().toString().equals(commentLiked.getKey())){  //判断点赞的key和评论的id是否相等
+        for (comment commentList : storyComments) {  //遍历所有评论
+            for (Map.Entry<String, String> commentLiked : likedUserIdsMap.entrySet()) {  //遍历所有点赞
+                if (commentList.getId().toString().equals(commentLiked.getKey())) {  //判断点赞的key和评论的id是否相等
                     commentList.setLikedUser(commentLiked.getValue());  //相等则把点赞的用户赋值给评论对象
                 }
             }
@@ -353,25 +336,16 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
      * */
     @Override
     public List<story> getStoryListFive() {
-        //查询redis中是否存在故事列表
-        String getStoryFiveList = stringRedisTemplate.opsForValue().get(STORY_FIVE_LIST);
-        if (StrUtil.isNotBlank(getStoryFiveList)) {
-            //存在,直接返回
-            List<story> storyList = JSONUtil.toList(JSONUtil.parseArray(getStoryFiveList), story.class);
-            return storyList;
-        } else {
-            //不存在,查询数据库
-            QueryWrapper<story> queryWrapper = new QueryWrapper<>();
-            queryWrapper.select("id", "title", "update_time").
-                    orderByDesc("update_time").
-                    orderByDesc("liked").
-                    last("limit 5");
-            List<story> storyList = storyMapper.selectList(queryWrapper);
-            //将查询出的数据存入redis中
-            stringRedisTemplate.opsForValue().set(STORY_FIVE_LIST, JSONUtil.toJsonStr(storyList), TIME_SMALL, TimeUnit.SECONDS);
-            //返回图片列表
-            return storyList;
-        }
+        //查询数据库
+        QueryWrapper<story> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("id", "title", "update_time").
+                orderByDesc("update_time").
+                orderByDesc("liked").
+                last("limit 5");
+        List<story> storyList = storyMapper.selectList(queryWrapper);
+        //返回图片列表
+        return storyList;
+
     }
 
     /*
@@ -387,12 +361,12 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
         commentService.remove(queryWrapperComment);
         //删除故事缓存
         String redisStoryDetail = stringRedisTemplate.opsForValue().get(STORY_DETAIL + id);
-        if (StrUtil.isNotBlank(redisStoryDetail)){
+        if (StrUtil.isNotBlank(redisStoryDetail)) {
             stringRedisTemplate.delete(STORY_DETAIL + id);
         }
         //删除故事的点赞信息
-        Object redisStoryLikedUser = stringRedisTemplate.opsForZSet().range(STORY_LIKED + id,0,-1);
-        if (redisStoryLikedUser != null){
+        Object redisStoryLikedUser = stringRedisTemplate.opsForZSet().range(STORY_LIKED + id, 0, -1);
+        if (redisStoryLikedUser != null) {
             stringRedisTemplate.delete(STORY_LIKED + id);
         }
         return false;
@@ -417,7 +391,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
     @Override
     public List<user> getLikedUserThree(Long id) {
         Set<String> range = stringRedisTemplate.opsForZSet().range(STORY_LIKED + id.toString(), 0, 2);
-        if (!range.isEmpty()){
+        if (!range.isEmpty()) {
             String firstThree = String.join(",", range);
             QueryWrapper<user> queryWrapper = new QueryWrapper<>();
             queryWrapper.select("id", "avatar")
@@ -425,7 +399,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
                     .last("ORDER BY FIELD(id, " + firstThree + ")");
             List<user> ThreeUserLikedList = userService.getBaseMapper().selectList(queryWrapper);
             return ThreeUserLikedList;
-        }else {
+        } else {
             return null;
         }
     }

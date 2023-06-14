@@ -13,8 +13,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.starQeem.woha.util.constant.STRATEGY_TYPE_LIST;
-import static com.starQeem.woha.util.constant.TIME_SMALL;
+import static com.starQeem.woha.util.constant.*;
 
 /**
  * @Date: 2023/4/22 19:46
@@ -39,7 +38,7 @@ public class strategyTypeServiceImpl extends ServiceImpl<strategyTypeMapper, str
             List<strategyType> strategyTypeList = strategyTypeService.list();
             //将数据库中的列表信息存入redis中
             String strategyTypeListJson = JSONUtil.toJsonStr(strategyTypeList);
-            stringRedisTemplate.opsForValue().set(STRATEGY_TYPE_LIST,strategyTypeListJson,TIME_SMALL, TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(STRATEGY_TYPE_LIST,strategyTypeListJson,TIME_MAX, TimeUnit.SECONDS);
             return strategyTypeList;
         }
     }
