@@ -48,7 +48,8 @@
         from strategy s
         join user u on s.user_id = u.id
         join strategy_type s_t on s.type_id = s_t.id
-        where ((s.title like concat('%',#{title},'%')) or (s.content like concat('%',#{title},'%'))) and (s_t.id = #{id});
+        where ((s.title like concat('%',#{title},'%')) or (s.content like concat('%',#{title},'%'))) and (s_t.id = #{id})
+        order by liked,update_time,views,comment_count desc
     </select>
     <select id="getStrategyDetailById" resultMap="BaseResultMap">
         select s.id,s.title,s.content,s.first_picture,s.update_time,s.views,

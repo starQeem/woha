@@ -75,8 +75,6 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
             pageSize = SEARCH_SIZE;
         }
         PageHelper.startPage(pageNum, pageSize);
-        PageHelper.orderBy("liked desc");
-        PageHelper.orderBy("create_time desc");
         //查询数据库
         List<pictures> picturesList = picturesMapper.getPicturesListPageInfo(title);
         PageInfo<pictures> pageInfo = new PageInfo<>(picturesList, pageSize);

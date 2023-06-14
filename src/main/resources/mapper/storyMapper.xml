@@ -47,7 +47,8 @@
                u.nick_name user_nick_name,u.id user_id,u.avatar user_avatar
         from story s
         join user u on s.user_id = u.id
-        where (s.title like concat('%',#{title},'%')) or (s.content like concat('%',#{title},'%'));
+        where (s.title like concat('%',#{title},'%')) or (s.content like concat('%',#{title},'%'))
+        order by liked,update_time,views,comment_count desc
     </select>
     <select id="getStoryById" resultMap="BaseResultMap">
         select s.id,s.title,s.content,s.first_picture,s.update_time,s.views,

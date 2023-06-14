@@ -96,8 +96,6 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
             pageSize = SEARCH_SIZE;
         }
         PageHelper.startPage(pageNum, pageSize);
-        PageHelper.orderBy("liked desc");
-        PageHelper.orderBy("create_time desc");
         //查询数据库
         List<strategy> strategyList = strategyMapper.pageStrategyWithStrategyTypeById(id, title);
         PageInfo<strategy> pageInfo = new PageInfo<>(strategyList, pageSize);

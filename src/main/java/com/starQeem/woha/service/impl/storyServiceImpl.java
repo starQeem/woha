@@ -99,15 +99,12 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
             pageSize = SEARCH_SIZE;
         }
         PageHelper.startPage(pageNum, pageSize);
-        PageHelper.orderBy("liked desc");
-        PageHelper.orderBy("create_time desc");
         //查询数据库
         List<story> storyList = storyMapper.getStory(title);
         //将数据库中的列表信息存入redis中
         PageInfo<story> pageInfo = new PageInfo<>(storyList, pageSize);
         //将List集合丢到分页对象里
         return pageInfo;
-
     }
 
     /*
