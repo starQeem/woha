@@ -53,4 +53,8 @@ public class constant {
     public final static int TIME_MAX = 1800;
     public final static int TIME_CODE = 300;
     public final static int TIME_LOGIN_FREQUENT = 7200;
+    public final static int TYPE_ONE = 1;
+    public final static int TYPE_TWO = 2;
+    public final static int TYPE_THREE = 3;
+    public final static Long DEFAULT_CAP = 0L;
 }

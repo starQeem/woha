@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageInfo;
+import com.starQeem.woha.config.email;
 import com.starQeem.woha.dto.userDto;
 import com.starQeem.woha.mapper.commentMapper;
 import com.starQeem.woha.pojo.*;
@@ -11,16 +12,17 @@ import com.starQeem.woha.service.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.starQeem.woha.util.constant.COMMENT_LIKED;
-import static com.starQeem.woha.util.constant.STATUS_ONE;
+import static com.starQeem.woha.util.constant.*;
 
 /**
  * @Date: 2023/4/29 17:47
@@ -40,20 +42,24 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
     private commentMapper commentMapper;
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+    @Resource
+    private sendEmailService sendEmailService;
 
     /*
      * 评论发布
      * */
     @Override
-    public boolean Comment(comment comment) {
+    public boolean Comment(comment comment) throws MessagingException {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         comment.setUserId(Long.valueOf(user.getId()));
         comment.setUpdateTime(new Date());
         comment.setCreateTime(new Date());
+        String title = "";
+        Integer type = STATUS_ZERO;
         if (comment.getPicturesId() != null) {
             QueryWrapper<pictures> storyQueryWrapper = new QueryWrapper<>();
-            storyQueryWrapper.select("id","user_id").eq("id", comment.getPicturesId());
+            storyQueryWrapper.select("id","user_id","title").eq("id", comment.getPicturesId());
             pictures pictures = picturesService.getBaseMapper().selectOne(storyQueryWrapper);
             UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("id",pictures.getId()).setSql("comment_count = comment_count + 1"); //评论数+1
@@ -62,10 +68,12 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
                 //是,is_admin设置为1(表示此评论为楼主评论)
                 comment.setIsAdmin(STATUS_ONE);
             }
+            title = pictures.getTitle();
+            type = TYPE_ONE;
         }
         if (comment.getStoryId() != null) {
             QueryWrapper<story> storyQueryWrapper = new QueryWrapper<>();
-            storyQueryWrapper.select("id","user_id").eq("id", comment.getStoryId());
+            storyQueryWrapper.select("id","user_id","title").eq("id", comment.getStoryId());
             story story = storyService.getBaseMapper().selectOne(storyQueryWrapper);
             UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("id",story.getId()).setSql("comment_count = comment_count + 1"); //评论数+1
@@ -74,10 +82,12 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
                 //是,is_admin设置为1(表示此评论为楼主评论)
                 comment.setIsAdmin(STATUS_ONE);
             }
+            title = story.getTitle();
+            type = TYPE_TWO;
         }
         if (comment.getStrategyId() != null) {
             QueryWrapper<strategy> strategyQueryWrapper = new QueryWrapper<>();
-            strategyQueryWrapper.select("id","user_id").eq("id", comment.getStrategyId());
+            strategyQueryWrapper.select("id","user_id","title").eq("id", comment.getStrategyId());
             strategy strategy = strategyService.getBaseMapper().selectOne(strategyQueryWrapper);
             UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("id",strategy.getId()).setSql("comment_count = comment_count + 1"); //评论数+1
@@ -86,10 +96,15 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
                 //是,is_admin设置为1(表示此评论为楼主评论)
                 comment.setIsAdmin(STATUS_ONE);
             }
+            title = strategy.getTitle();
+            type = TYPE_THREE;
+        }
+        //回复评论时发邮箱提醒
+        if (comment.getCommentUserId()!=null && !Objects.equals(comment.getCommentUserId(), comment.getUserId())){
+            sendEmailService.sendEmail(comment,title,type);
         }
         return commentService.save(comment);
     }
-
     /*
      * 评论删除
      * */

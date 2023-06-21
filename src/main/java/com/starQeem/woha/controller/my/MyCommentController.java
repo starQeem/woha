@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
 
 import static com.starQeem.woha.util.constant.COMMENT_PAGE_SIZE;
 import static com.starQeem.woha.util.constant.PAGE_NUM;
@@ -25,7 +26,7 @@ public class MyCommentController {
     * 我的评论发布
     * */
     @PostMapping
-    public String CommentInput(comment comment){
+    public String CommentInput(comment comment) throws MessagingException {
         commentService.Comment(comment);
         if (comment.getPicturesId() != null){
             return "redirect:/my/pictures/mypicturesdetail/"+comment.getPicturesId();

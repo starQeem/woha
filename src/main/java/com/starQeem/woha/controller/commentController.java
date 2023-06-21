@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
 
 /**
  * @Date: 2023/5/1 11:43
@@ -25,7 +26,7 @@ public class commentController {
      * 评论区发布
      * */
     @PostMapping
-    public String commentInput(comment comment) {
+    public String commentInput(comment comment) throws MessagingException {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         if (user != null){

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.pagehelper.PageInfo;
 import com.starQeem.woha.pojo.comment;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public interface commentService extends IService<comment> {
      * @param comment 评论
      * @return boolean
      */
-    boolean Comment(comment comment);
+    boolean Comment(comment comment) throws MessagingException;
 
     /**
      * 删除评论
