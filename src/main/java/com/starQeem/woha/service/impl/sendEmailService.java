@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.starQeem.woha.config.email;
 import com.starQeem.woha.pojo.comment;
 import com.starQeem.woha.pojo.user;
+import com.starQeem.woha.service.commentService;
 import com.starQeem.woha.service.userService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ public class sendEmailService {
     @Resource
     private userService userService;
     @Resource
+    private commentService commentService;
+    @Resource
     private email email;
     @Async
     public void sendEmail(comment comment, String title, Integer type) throws MessagingException {
@@ -33,7 +36,11 @@ public class sendEmailService {
         QueryWrapper<user> queryWrapper2 = new QueryWrapper<>();
         queryWrapper2.select("id","nick_name").eq("id",comment.getUserId());
         user user2 = userService.getBaseMapper().selectOne(queryWrapper2);
+        //回复的评论
+        QueryWrapper<comment> commentQueryWrapper = new QueryWrapper<>();
+        commentQueryWrapper.select("id","content").eq("id",comment.getParentCommentId());
+        comment commentInfo = commentService.getBaseMapper().selectOne(commentQueryWrapper);
         //发送提醒邮件
-        email.sendVerificationCommentHint(EMAIL_FORM,user1.getEmail(),user2.getNickName(),comment,title,type);
+        email.sendVerificationCommentHint(EMAIL_FORM,user1.getEmail(),user2.getNickName(),comment,title,type,commentInfo.getContent());
     }
 }

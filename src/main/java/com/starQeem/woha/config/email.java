@@ -26,7 +26,7 @@ public class email {
         simpleMailMessage.setSubject("喔哈星");   //邮件标题
         javaMailSender.send(simpleMailMessage);  //发送
     }
-    public void sendVerificationCommentHint(String form, String to, String nickName, comment comment, String title, Integer type) throws MessagingException {
+    public void sendVerificationCommentHint(String form, String to, String nickName, comment comment, String title, Integer type,String commentContent) throws MessagingException {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom(form);   //发送邮件的邮箱号
         simpleMailMessage.setTo(to);   //接收邮件的邮箱号
@@ -40,7 +40,7 @@ public class email {
         if (type == TYPE_THREE){
             suffix = "strategy/strategydetail/" + comment.getStrategyId();
         }
-        simpleMailMessage.setText("您在喔哈星的[" + title +"]中发布的评论有新的回复,回复用户:[" + nickName + "] 回复信息:[" + comment.getContent() +"] 前去查看: wohaqeem.top/" + suffix);   //邮件内容
+        simpleMailMessage.setText("您在喔哈星的[" + title +"]中发布的评论:["+ commentContent +"]有新的回复,回复用户:[" + nickName + "] 回复信息:[" + comment.getContent() +"] 前去查看: wohaqeem.top/" + suffix);   //邮件内容
         simpleMailMessage.setSubject("喔哈星");   //邮件标题
         javaMailSender.send(simpleMailMessage);  //发送
     }
