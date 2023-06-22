@@ -1,11 +1,17 @@
 <!doctype html>
-<html xmlns:th="http://www.w3.org/1999/xhtml"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:shiro="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
-    <title>我的</title>
-    <style type="text/css">
+    <title>后台管理</title>
+    <link rel=stylesheet type=text/css href="../../static/css/video.css" th:href="@{/css/video.css}">
+    <link rel="stylesheet" href="../../static/lib/semantic/dist/semantic.min.css" th:href="@{/lib/semantic/dist/semantic.min.css}">
+    <link href="../../static/images/me.png" th:href="@{/images/me.png}" rel="icon" type="image/x-ico">
+    <link rel="stylesheet" href="../../static/css/me.css" th:href="@{/css/me.css}">
+    <link rel="stylesheet" href="../../static/css/follow.css" th:href="@{/css/follow.css}">
+    <link rel="stylesheet" href="../../static/css/grade.css" th:href="@{/css/grade.css}">
+    <!-- 看板娘 -->
+    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
+    <style>
         body {
             background-image: url("/images/bj2.png") !important;
             background-attachment:fixed;
@@ -21,16 +27,7 @@
             color: lightgoldenrodyellow;
         }
     </style>
-    <link rel=stylesheet type=text/css href="../../static/css/mystyle.css" th:href="@{/css/mystyle.css}">
-    <link rel=stylesheet type=text/css href="../../static/css/mybanner.css" th:href="@{/css/mybanner.css}">
-    <link rel="stylesheet" href="../../static/css/grade.css" th:href="@{/css/grade.css}">
-    <link rel="stylesheet" href="../../static/css/mymessage.css" th:href="@{/css/mymessage.css}">
-    <link rel="stylesheet" href="../../static/lib/aplayer/APlayer.min.css" th:href="@{/lib/aplayer/APlayer.min.css}">
-    <link rel="stylesheet" href="../../static/lib/semantic/dist/semantic.min.css" th:href="@{/lib/semantic/dist/semantic.min.css}">
-    <link rel="stylesheet" href="../../static/css/me.css" th:href="@{/css/me.css}">
-    <link href="../../static/images/me.png" th:href="@{/images/me.png}" rel="icon" type="image/x-ico">
-    <!-- 看板娘 -->
-    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
+
 </head>
 <body>
 <div class="father">
@@ -50,10 +47,10 @@
             </div>
         </div>
     </header>
-    <!-- banner代码开始 -->
-    <div class="banner">
-        <img src="../../static/images/more03.jpg" th:src="@{/images/more03.jpg}" width="1000" height="230">
-        <div style="display: flex; justify-content: center;font-family: KaiTi;font-size: 17px">
+    <br>
+    <!-- banner代码END -->
+    <div class="text01">
+        <div style="display: flex; justify-content: center;font-size: 17px">
             <a href="#" style="color: #90532b" th:href="@{/my}">主页</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/story/mystory}">广场</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/pictures/mypictures}">图片</a>&nbsp;
@@ -63,33 +60,34 @@
             <a href="#" style="color: #90532b" th:href="@{/my/fans}">粉丝</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/comment/info}">回复</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/comment/comment}">评论</a>
-         </div>
-        <br>
-        <div style="font-family: KaiTi;font-size: 18px">&nbsp;&nbsp;
-            <a href="" style="color: #90532b" th:href="@{/my/mymessageUpdate}">编辑资料</a>
-            <a href="" style="color: #90532b" th:href="@{/my/avatar}">修改头像</a>
-            <a href="" style="color: #90532b" th:href="@{/my/password}">修改密码</a>
-            <shiro:hasPermission name="user:admin">
-                <a href="" style="color: #90532b" th:href="@{/admin}">后台管理</a>
-            </shiro:hasPermission>
+
         </div>
-    </div><br><br>
-    <div class="text01" style="display: flex; justify-content: center;">
-            <div class="details" >
-                <div class="user-info" style="display: flex;">
-                <div class="avatar">
-                    <img src="../../static/images/me.jpg" th:src="@{${user.avatar}}" alt="头像">
-                </div>
-                <div style="margin-left: 10px;">
-                    <p th:text="|昵称:${user.nickName}|">昵称: Qeem</p>
-                    <p th:text="|等级:${'Lv' + grade.grade}|">等级: Lv4</p>
-                    <p th:text="|性别:${user.sex}|">性别：女</p>
-                    <p th:text="|爱好:${user.hobby}|">爱好：火星</p>
-                    <p th:text="|邮箱:${user.email}|">邮箱：2572277647</p>
-                    <p th:text="|签名:${user.signature}|">签名：掵運崾伱晟苌の埘堠，總哙侒排①些讓伱卟順吢の亽彧亊刺激伱。</p>
-                </div>
+        <br>
+        <a href="#" th:href="@{/admin}" style="color: #0ea432;font-size: 17px;font-family: KaiTi">用户管理</a>
+        <a href="#" th:href="@{/admin/strategyType}" style="color: #0ea432;font-size: 17px;font-family: KaiTi">攻略类型管理</a>
+        <div>
+            <div class="ui center aligned attached segment m-rgba zt zt-max">
+                <div class="follow-list">
+                    <ul th:each="user :${userList}">
+                        <li>
+                            <div class="userAvatar">
+                                <img th:src="@{${user.avatar}}" src="../../static/images/me.jpg" alt="用户头像">
+                            </div>
+                            <div class="info">
+                                <a target="_blank" href="#" th:href="@{/user/{id}(id=${user.id})}" th:text="${user.nickName}">昵称</a>
+                                <br>
+                                <span th:text="${user.username}">2572277647@qq.com</span>
+                            </div>
+                            <div style="float: right;">
+                                <a href="" th:href="@{/admin/status/{id}(id=${user.id})}" th:if="${user.status==1}" style="color: red;font-family: KaiTi;font-size: 17px">禁用</a>
+                                <a href="" th:href="@{/admin/status/{id}(id=${user.id})}" th:unless="${user.status==1}" style="color: teal;font-family: KaiTi;font-size: 17px">启用</a>
+                            </div>
+                        </li>
+                        <hr align="center" width="100%" color="#F0F0F0" size="2">
+                    </ul>
                 </div>
             </div>
+        </div>
     </div>
     <div class="footer">
         <table width="100%" border="0">
@@ -109,5 +107,7 @@
 </div>
 <!-- 看板娘 -->
 <script src="../static/live2d-widget/autoload.js" th:src="@{/live2d-widget/autoload.js}"></script>
+<script>
+</script>
 </body>
 </html>

@@ -13,10 +13,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -86,9 +83,12 @@ public class MyStrategyController {
     * 百科删除
     * */
     @RequestMapping("/strategyDelete/{id}")
-    public String strategyDeleteById(@PathVariable("id")Long id){
+    public String strategyDeleteById(@PathVariable("id")Long id, @RequestParam(value = "pageNum",required = false)Integer pageNum){
         strategyService.removeStrategyById(id);
-        return "redirect:/my/strategy/mystrategy";
+        if (pageNum == null){
+            return "redirect:/strategy";
+        }
+        return "redirect:/my/strategy/mystrategy/" + pageNum;
     }
     /*
     * 攻略详情

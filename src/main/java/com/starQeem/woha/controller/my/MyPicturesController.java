@@ -11,10 +11,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
@@ -83,9 +80,12 @@ public class MyPicturesController {
     * 图片删除
     * */
     @RequestMapping("/mypicturesDelete/{id}")
-    public String mypicturesDelete(@PathVariable("id")Long id){
+    public String mypicturesDelete(@PathVariable("id")Long id, @RequestParam(value = "pageNum",required = false)Integer pageNum){
         picturesService.removePicturesById(id);
-        return "redirect:/my/pictures/mypictures";
+        if (pageNum == null){
+            return "redirect:/pictures";
+        }
+        return "redirect:/my/pictures/mypictures/" + pageNum;
     }
     /*
     * 图片详情

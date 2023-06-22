@@ -1,5 +1,7 @@
 package com.starQeem.woha.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -10,6 +12,7 @@ import lombok.Data;
 @Data
 @TableName(value = "strategy_type")
 public class strategyType {
+    @TableId(type = IdType.AUTO)
     private Long id;  //主键id
     private String name;  //攻略类型名称
 }

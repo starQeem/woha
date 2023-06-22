@@ -83,7 +83,7 @@
          th:href="@{/my/pictures/mypicturesUpdate/{id}(id=${pictures.id})}"
          class="header">编辑</a>
       <a href="#" style="color: #90532b;font-family: KaiTi;font-size: 14px"
-         th:href="@{/my/pictures/mypicturesDelete/{id}(id=${pictures.id})}"
+         th:href="@{/my/pictures/mypicturesDelete/{id}(id=${pictures.id},pageNum=${page.pageNum})}"
          class="header">删除</a>
     </div>
   </div>

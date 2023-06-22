@@ -24,6 +24,8 @@ public class user {
     private String email;  //邮箱
     private String signature;  //签名
     private String avatar;  //头像
+    private String perms; //用户权限
+    private Integer status;
     @TableField(exist = false)
     private userTask userTask;
     @TableField(exist = false)

@@ -1,5 +1,7 @@
 <!doctype html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:shiro="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <title>我的</title>
@@ -67,6 +69,9 @@
             <a href="" style="color: #90532b" th:href="@{/my/mymessageUpdate}">编辑资料</a>
             <a href="" style="color: #90532b" th:href="@{/my/avatar}">修改头像</a>
             <a href="" style="color: #90532b" th:href="@{/my/password}">修改密码</a>
+            <shiro:hasPermission name="user:admin">
+                <a href="" style="color: #90532b" th:href="@{/admin}">后台管理</a>
+            </shiro:hasPermission>
         </div>
     </div><br><br>
     <div class="text01" style="display: flex; justify-content: center;">

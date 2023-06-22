@@ -27,18 +27,11 @@ public class constant {
             ".sucaijishi.com%2fuploadfile%2f2016%2f0203%2f20160203022632945.png&ehk=4PjlDtyiv" +
             "WKN7CP%2b5JlcgUiuD1nyme8IaxbNbPnANIw%3d&risl=&pid=ImgRaw&r=0";
     public final static String USER_CODE = "woha:user:code:"; //注册验证码
-    public final static String USER_FREQUENT = "woha:user:frequent:"; //登录失败次数
     public final static String EMAIL_FORM = "2572277647@qq.com";  //邮箱发送者
-    public final static String STORY_LIST = "woha:story:";  //广场
-    public final static String PICTURES_LIST = "woha:pictures:"; //图片
-    public final static String STRATEGY_LIST = "woha:strategy:"; //攻略
     public final static String STRATEGY_TYPE_LIST = "woha:strategy:type"; //攻略分类
     public final static String PICTURES_DETAIL = "woha:pictures:detail:"; //图片详情
     public final static String STORY_DETAIL = "woha:story:detail:";  //故事详情
     public final static String STRATEGY_DETAIL = "woha:strategy:detail:";  //攻略详情
-    public final static String STORY_FIVE_LIST ="woha:story:five";  //五条故事数据
-    public final static String PICTURES_FIVE_LIST = "woha:pictures:five";  //五条图片数据
-    public final static String STRATEGY_FIVE_LIST = "woha:strategy:five"; //五条攻略数据
     public final static String PICTURES_LIKED = "woha:pictures:liked:";  //图片点赞的用户
     public final static String STORY_LIKED = "woha:story:liked:";  //故事点赞的用户
     public final static String STRATEGY_LIKED = "woha:strategy:liked:";  //攻略点赞的用户
@@ -52,9 +45,8 @@ public class constant {
     public final static int TIME_BIG = 180;
     public final static int TIME_MAX = 1800;
     public final static int TIME_CODE = 300;
-    public final static int TIME_LOGIN_FREQUENT = 7200;
+    public final static int TIME_STARTEGY = 7200;
     public final static int TYPE_ONE = 1;
     public final static int TYPE_TWO = 2;
     public final static int TYPE_THREE = 3;
-    public final static Long DEFAULT_CAP = 0L;
 }

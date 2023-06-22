@@ -10,4 +10,5 @@ import lombok.Data;
 public class userDto {
     private Integer id;   //主键id
     private String username;   //用户名
+    private String perms; //用户权限
 }

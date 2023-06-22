@@ -82,6 +82,12 @@ public class UserController {
      * */
     @PostMapping("/login")
     public String loginInput(String username, String password,String code,Model model) {
+        //查询账号状态
+        boolean UserStatus = userService.getUserStatus(username);
+        if (!UserStatus){
+            MESSAGE = "账号已被禁用,请联系管理员!";
+            return "redirect:/login";
+        }
         //获取当前用户
         Subject subject = SecurityUtils.getSubject();
             if (password != null){ //用户名密码登录
@@ -90,6 +96,7 @@ public class UserController {
                     String md5DigestAsHex = DigestUtils.md5DigestAsHex(password.getBytes());
                     UsernamePasswordToken token = new UsernamePasswordToken(username, md5DigestAsHex);
                     try{
+                        userDto userDto = (userDto) subject.getPrincipal();
                         subject.login(token);  //执行登录的方法,如果没有异常说明ok了
                         userService.task();
                         return "redirect:/my";

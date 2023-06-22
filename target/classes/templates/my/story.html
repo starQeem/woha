@@ -101,7 +101,7 @@
                                         <a style="font-family: KaiTi;font-size: 14px" href="#" target="_blank" th:href="@{/my/story/mystoryUpdate/{id}(id=${story.id})}" class="header">编辑</a>
                                     </div>
                                     <div class="item">
-                                        <a style="font-family: KaiTi;font-size: 14px" href="#" th:href="@{/my/story/mystoryDelete/{id}(id=${story.id})}" class="header">删除</a>
+                                        <a style="font-family: KaiTi;font-size: 14px" href="#" th:href="@{/my/story/mystoryDelete/{id}(id=${story.id},pageNum=${page.pageNum})}" class="header">删除</a>
                                     </div>
                                 </div>
                             </div>

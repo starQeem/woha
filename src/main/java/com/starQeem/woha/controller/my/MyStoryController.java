@@ -11,10 +11,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
@@ -80,9 +77,12 @@ public class MyStoryController {
      * 故事删除
      * */
     @RequestMapping("/mystoryDelete/{id}")
-    public String mystoryDeleteById(@PathVariable("id")Long id){
+    public String mystoryDeleteById(@PathVariable("id")Long id, @RequestParam(value = "pageNum",required = false)Integer pageNum){
         storyService.removeStoryById(id);
-        return "redirect:/my/story/mystory";
+        if (pageNum == null){
+            return "redirect:/story";
+        }
+        return "redirect:/my/story/mystory/" + pageNum;
     }
     /*
      * 故事详情

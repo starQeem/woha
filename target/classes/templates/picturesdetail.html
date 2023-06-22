@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:shiro="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -89,6 +91,11 @@
       <div style="display: flex; justify-content: center;">
         <span th:if="${likeMessage}" th:text="${likeMessage}" style="color: red;">诶嘿</span>
       </div>
+      <shiro:hasPermission name="user:admin">
+        <div style="display: flex; justify-content: center;font-size: 15px">
+          <a href="#" th:href="@{/my/pictures/mypicturesDelete/{id}(id=${pictures.id})}"  style="color: red;">帖子违规?点击删除</a>
+        </div>
+      </shiro:hasPermission>
       <br>
       <div class="ui bottom attached segment">
         <!--评论区域列表-->

@@ -27,14 +27,15 @@ public class ShiroConfig {
         * anon:无需认证就可以访问
         * authc:必须认证了才能访问
         * user:必须拥有  记住我  功能才能用
-        * parms:拥有对某个资源的权限才能访问
+        * perms:拥有对某个资源的权限才能访问
         * role:拥有某个角色权限才能访问
         * */
         LinkedHashMap<String,String> filterMap = new LinkedHashMap<>();
         //拦截
-        filterMap.put("/my/*","authc");
+        filterMap.put("/admin", "perms[user:admin]"); //拥有管理员权限才能访问
+        filterMap.put("/admin/**", "perms[user:admin]"); //拥有管理员权限才能访问
+        filterMap.put("/my/**","authc");
         filterMap.put("/my","authc");
-        filterMap.put("/my/admin", "roles[admin]"); // 需要 admin 角色才能访问
         bean.setFilterChainDefinitionMap(filterMap);
         //设置登录的请求
         bean.setLoginUrl("/login");

@@ -7,6 +7,7 @@ import com.starQeem.woha.service.userService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.SessionManager;
@@ -23,8 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.starQeem.woha.util.constant.CODE_SIZE;
-import static com.starQeem.woha.util.constant.USER_CODE;
+import static com.starQeem.woha.util.constant.*;
 
 /**
  * @Date: 2023/5/18 10:55
@@ -40,6 +40,19 @@ public class UserRealm extends AuthorizingRealm {
     //授权
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        System.out.println("执行了=>授权");
+        //拿到当前登录的对象
+        Subject subject = SecurityUtils.getSubject();
+        userDto userDto = (userDto) subject.getPrincipal();
+        QueryWrapper<user> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("id","perms").eq("id", userDto.getId());
+        user user = userService.getBaseMapper().selectOne(queryWrapper);
+        if (user.getPerms() != null && user.getPerms().equals("admin")){
+            SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+            System.out.println("执行了=>授权管理员权限");
+            info.addStringPermission("user:admin");  //授权管理员权限
+            return info;
+        }
         return null;
     }
     //认证
@@ -49,7 +62,7 @@ public class UserRealm extends AuthorizingRealm {
         if (userToken.getPassword().length > CODE_SIZE){
             //用户名,密码  数据库中取
             QueryWrapper<user> queryWrapper = new QueryWrapper<>();
-            queryWrapper.select("id","username","password").eq("username",userToken.getUsername());
+            queryWrapper.select("id","username","password","perms","status").eq("username",userToken.getUsername());
             user user = userService.getBaseMapper().selectOne(queryWrapper);
             if (user == null){
                 return null;  //抛出异常 UnknownAccountException
@@ -67,7 +80,7 @@ public class UserRealm extends AuthorizingRealm {
                 return null;  //抛出异常 UnknownAccountException
             }
             QueryWrapper<user> queryWrapper = new QueryWrapper<>();
-            queryWrapper.select("id","username").eq("username", userToken.getUsername());
+            queryWrapper.select("id","username","perms").eq("username", userToken.getUsername());
             user user = userService.getBaseMapper().selectOne(queryWrapper);
             userDto userDto = new userDto();
             userDto.setId(user.getId());

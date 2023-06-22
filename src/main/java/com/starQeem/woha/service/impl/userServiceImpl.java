@@ -18,6 +18,7 @@ import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.starQeem.woha.util.constant.*;
@@ -55,6 +56,7 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
             newUser.setUsername(email);
             newUser.setEmail(email);
             newUser.setPassword(md5DigestAsHex);
+            newUser.setStatus(STATUS_ONE);
             return userService.save(newUser);
         }
     }
@@ -201,4 +203,40 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
             return false;
         }
     }
+
+    /**
+     * 更新用户状态
+     *
+     * @param id id
+     */
+    @Override
+    public void updateStatus(Long id) {
+        QueryWrapper<user> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("id","status").eq("id",id);
+        user user = userMapper.selectOne(queryWrapper);
+        if (user.getStatus() == STATUS_ONE){
+            user.setStatus(STATUS_ZERO);
+        }else {
+            user.setStatus(STATUS_ONE);
+        }
+        userMapper.updateById(user);
+    }
+
+    /**
+     * 得到用户状态
+     *
+     * @param username 用户名
+     * @return boolean
+     */
+    @Override
+    public boolean getUserStatus(String username) {
+        QueryWrapper<user> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username",username);
+        user user = userMapper.selectOne(queryWrapper);
+        if (user.getStatus() == STATUS_ONE){
+            return true;
+        }
+        return false;
+    }
+
 }
