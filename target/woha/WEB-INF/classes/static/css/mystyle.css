@@ -25,14 +25,26 @@
 .nav .title {
 	height: 40px;
 	width: 725px;
-	margin-right: auto;
-	margin-left: auto;
-	font-family: "微软雅黑";
-	font-size: 13px;
+	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: KaiTi;
+	font-size: 15px;
 	line-height: 40px;
-	color: #FFF;
-	text-align:center;
+	color: #fff;
 }
+
+.nav .title .a {
+	font-family: KaiTi;
+	width: 70px;
+}
+
+.nav .title .a2 {
+	font-family: KaiTi;
+	width: 100px;
+}
+
 .banner { /* 此段banner图选择器设置宽度、高度，定位方式为相对定位，并设置DIV布局居中 */
 	width: 915px;
 	height: 270px;

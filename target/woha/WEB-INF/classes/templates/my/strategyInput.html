@@ -9,19 +9,20 @@
   <link rel="stylesheet" href="../../static/css/me.css" th:href="@{/css/me.css}">
   <style>
     body {
-      background-color: #ededed;
-      margin-left: 0px;
-      margin-top: 0px;
-    }
-    .title a.selected {
-      text-decoration: underline;
+      background-image: url("/images/blogbj.jpg") !important;
+      background-attachment:fixed;
+      background-size: 100%;
+      no-repeat: center top;
+      font: 14px/1.5 Tahoma,Helvetica,Arial,'KaiTi',sans-serif;
+      height: 100%;
+      width: 100%;
     }
   </style>
 </head>
 <body>
 <br>
 <!--中间内容-->
-<div  class="">
+<div  class="m-opacity">
   <div class="ui container">
     <div class="ui form">
       <div class="required field">
@@ -39,7 +40,7 @@
       <div class="required field">
         <div class="ui left labeled input">
           <label class="ui teal basic label">文本图地址</label>
-          <input type="text" name="textPicturesAddress" placeholder="文本图地址">
+          <input style="font-family:KaiTi" type="text" name="textPicturesAddress" placeholder="文本图地址">
         </div>
       </div>
     </div><br>
@@ -52,7 +53,7 @@
             <i class="dropdown icon"></i>
             <div class="text">标题</div>
           </div>
-          <input type="text" name="title" placeholder="标题" >
+          <input style="font-family: KaiTi" type="text" name="title" placeholder="标题" >
         </div>
       </div>
 
@@ -83,7 +84,7 @@
         <div class="required field">
           <div class="ui left labeled input">
             <label class="ui teal basic label">首图</label>
-            <input type="text" name="firstPicture" placeholder="首图引用地址">
+            <input style="font-family: KaiTi" type="text" name="firstPicture" placeholder="首图引用地址">
           </div>
         </div>
       </div>
@@ -94,8 +95,8 @@
       <div class="ui error message"></div>
 
       <div class="ui right aligned container">
-        <button type="button" class="ui button" onclick="window.history.go(-1)" >返回</button>
-        <button type="button" id="publish-btn" class="ui teal button">发布</button>
+        <button style="font-family:KaiTi" type="button" class="ui button" onclick="window.history.go(-1)" >返回</button>
+        <button style="font-family: KaiTi" type="button" id="publish-btn" class="ui teal button">发布</button>
       </div>
 
     </form>

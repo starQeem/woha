@@ -11,14 +11,17 @@
   <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
   <link rel="stylesheet" href="../static/css/grade.css" th:href="@{/css/grade.css}">
   <link rel="stylesheet" href="../static/css/liked.css" th:href="@{/css/liked.css}">
+  <!-- 看板娘 -->
+  <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
   <style>
     body {
-      background-color: #ededed;
-      margin-left: 0px;
-      margin-top: 0px;
-    }
-    .title a.selected {
-      text-decoration: underline;
+      background-image: url("/images/blogbj.jpg") !important;
+      background-attachment:fixed;
+      background-size: 100%;
+      no-repeat: center top;
+      font: 14px/1.5 Tahoma,Helvetica,Arial,'KaiTi',sans-serif;
+      height: 100%;
+      width: 100%;
     }
   </style>
 </head>
@@ -29,7 +32,7 @@
        style="width: 100%;height: 100%;">
   <div class="m-bg-class_cover">
     <div class="ui container" style="position: relative ;bottom: -540px;">
-      <h2 class="m-font-size-title-large" align="center" th:text="${pictures.title}">标题</h2>
+      <h2 style="font-family: KaiTi" class="m-font-size-title-large" align="center" th:text="${pictures.title}">标题</h2>
       <div class="ui container" align="center">
         <div class="ui horizontal link list" align="center">
           <div class="item">
@@ -48,7 +51,7 @@
 </div>
 
 <!--中间内容-->
-<div id="waypoint" class="m-margin- animated fadeIn">
+<div id="waypoint" class="m-margin- animated fadeIn m-opacity">
   <div class="ui container m-opacity box-shadow-max">
     <!--内容-->
     <div class="ui attached padded segment">
@@ -92,7 +95,7 @@
         <div id="comment-container" class="ui teal segment">
           <div onload="myfunction()">
             <div class="ui threaded comments" style="max-width: 100%;">
-              <h3 class="ui dividing header">评论</h3>
+              <h3 style="font-family: KaiTi" class="ui dividing header">评论</h3>
               <div class="comment" th:each="comment : ${commentsList}" th:if="${comment.parentCommentId == -1}">
                 <div class="content">
                   <a class="avatar">
@@ -206,12 +209,12 @@
           <input type="hidden" name="picturesId" th:value="${pictures.id}">
           <input type="hidden" name="parentCommentId" value="-1">
           <div class="field">
-            <textarea id="comment-textarea" name="content" placeholder="请输入评论信息..."></textarea>
+            <textarea style="font-family: KaiTi" id="comment-textarea" name="content" placeholder="请输入评论信息..."></textarea>
           </div>
           <div class="fields">
             <div class="field  m-margin-bottom-small m-mobile-wide">
               <button type="button" id="submit-comment-btn" class="ui teal button m-mobile-wide"
-                      style="width:100px;height: 40px">
+                      style="width:100px;height: 40px;font-family: KaiTi">
                 <i class="edit icon"></i>发布
               </button>
               <span th:if="${message}" th:text="${message}" style="color: red;">诶嘿</span>
@@ -239,8 +242,6 @@
 <br>
 <br>
 
-<!--    动态线条-->
-<script type="text/javascript" color="47,79,79" opacity='0.7' zIndex="-2" count="150" src="https://cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
 <script src="../../static/lib/jquery-3.2.1/jquery-3.2.1.min.js" th:src="@{/lib/jquery-3.2.1/jquery-3.2.1.min.js}"></script>
 <script src="../../static/lib/semantic/dist/semantic.min.js" th:src="@{/lib/semantic/dist/semantic.min.js}"></script>
 <script src="../../static/lib/scrollTo/jquery.scrollTo.min.js" th:src="@{/lib/scrollTo/jquery.scrollTo.min.js}"></script>
@@ -248,6 +249,8 @@
 <script src="../../static/lib/prism/prism.js" th:src="@{/lib/prism/prism.js}"></script>
 <script src="../../static/lib/tocbot/tocbot.min.js" th:src="@{/lib/tocbot/tocbot.min.js}"></script>
 <script src="../../static/lib/waypoints/jquery.waypoints.min.js" th:src="@{/lib/waypoints/jquery.waypoints.min.js}"></script>
+<!-- 看板娘 -->
+<script src="../static/live2d-widget/autoload.js" th:src="@{/live2d-widget/autoload.js}"></script>
 
 
 <script>

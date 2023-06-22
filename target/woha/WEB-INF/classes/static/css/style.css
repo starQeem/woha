@@ -31,11 +31,21 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	font-family: "微软雅黑";
-	font-size: 13px;
+	font-family: KaiTi;
+	font-size: 15px;
 	line-height: 40px;
 	color: #fff;
 }
+.nav .title .a {
+	font-family: KaiTi;
+	width: 70px;
+}
+
+.nav .title .a2 {
+	font-family: KaiTi;
+	width: 100px;
+}
+
 .banner { /* 此段banner图选择器设置宽度、高度，定位方式为相对定位，并设置DIV布局居中 */
 	width: 915px;
 	height: 350px;
@@ -120,7 +130,7 @@ a:active {
 	width: 230px;
 	margin-top: 8px;
 	margin-left: 11px;
-	font-family: "微软雅黑";
+	font-family: KaiTi;
 	font-size: 14px;
 	line-height: 30px;
 	font-weight: bold;
@@ -128,12 +138,13 @@ a:active {
 }
 .text01 .main1 {
 	background-color: #edf8ff;
-	height: 210px;
+	height: 250px;
 	width: 310px;
 	float: left;
 	padding: 20px;
 	line-height: 22px;
 	color: #3c3c3c;
+	font-size: 13px;
 }
 .text01 .right {
 	float: left;
@@ -141,6 +152,8 @@ a:active {
 	width: 310px;
 	border: 1px solid #eeeeee;
 	background-color: #f8f8f8;
+	font-family: KaiTi;
+	font-size: 20px;
 }
 .text01 .right .m-156-130 {/* 图标小盒子属性设置  */
 	float: left;
@@ -181,7 +194,7 @@ a:active {
 	 box-shadow: 0px 0px 4px 4px rgba(152,152,152,0.1);/* 设置一个阴影 颜色 透明度 */
 }
 .dabiaoti {
-	font-family: "Lucida Console", Monaco, monospace;
+	font-family: KaiTi, Monaco, monospace;
 	font-size: 15px;
 	font-weight: bold;
 	color: #000;

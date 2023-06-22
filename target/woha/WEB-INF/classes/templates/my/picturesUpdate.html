@@ -9,19 +9,20 @@
     <link rel="stylesheet" href="../../static/css/me.css" th:href="@{/css/me.css}">
     <style>
         body {
-            background-color: #ededed;
-            margin-left: 0px;
-            margin-top: 0px;
-        }
-        .title a.selected {
-            text-decoration: underline;
+            background-image: url("/images/blogbj.jpg") !important;
+            background-attachment:fixed;
+            background-size: 100%;
+            no-repeat: center top;
+            font: 14px/1.5 Tahoma,Helvetica,Arial,'KaiTi',sans-serif;
+            height: 100%;
+            width: 100%;
         }
     </style>
 </head>
 <body>
 <br><br><br><br><br>
 <!--中间内容-->
-<div  class="">
+<div  class="m-opacity">
     <div class="ui container">
         <div class="ui form">
             <div class="required field">
@@ -40,7 +41,7 @@
                         <i class="dropdown icon"></i>
                         <div class="text" >标题</div>
                     </div>
-                    <input type="text" name="title" placeholder="标题" th:value="*{title}">
+                    <input style="font-family: KaiTi" type="text" name="title" placeholder="标题" th:value="*{title}">
                 </div>
             </div>
             <div class="required field">
@@ -49,15 +50,15 @@
             <div class="required field">
                 <div class="ui left labeled input">
                     <label class="ui teal basic label">图片</label>
-                    <input type="text" name="picturesAddress" placeholder="图片地址" th:value="*{picturesAddress}">
+                    <input style="font-family: KaiTi" type="text" name="picturesAddress" placeholder="图片地址" th:value="*{picturesAddress}">
                 </div>
             </div>
 
             <div class="ui error message"></div>
 
             <div class="ui right aligned container">
-                <a type="button" class="ui button" th:href="@{/my/pictures/mypictures}" >返回</a>
-                <button type="button" id="publish-btn" class="ui teal button">发布</button>
+                <a style="font-family: KaiTi" type="button" class="ui button" th:href="@{/my/pictures/mypictures}" >返回</a>
+                <button style="font-family: KaiTi" type="button" id="publish-btn" class="ui teal button">发布</button>
             </div>
 
         </form>

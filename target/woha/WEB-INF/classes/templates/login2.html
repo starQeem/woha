@@ -27,6 +27,7 @@
             font-size: 12px;
             background-color: #ecf0f3;
             color: #a0a5a8;
+            font-family: KaiTi;
         }
 
         .shell {
@@ -301,8 +302,8 @@
                 <input type="text" th:value="${username}" class="form_input" id="username" name="username" placeholder="Email" >
                 <input type="text" th:value="${code}" class="form_input" id="code" name="code" placeholder="Code">
                 <div style="display: flex; justify-content: space-between;">
-                <button class="form_button button submit" type="button" id="sendBtn">验证码</button>&nbsp;&nbsp;&nbsp;&nbsp;
-                <button class="form_button button submit" type="submit" onclick="return validateForm()">登录</button>
+                <button class="form_button button submit" type="button" id="sendBtn" style="font-family: KaiTi">验证码</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="form_button button submit" type="submit" onclick="return validateForm()" style="font-family: KaiTi">登录</button>
                 </div>
             </form>
         </div>
@@ -313,7 +314,7 @@
             <div class="switch_container" id="switch-c1">
                 <h2 class="switch_title title" style="letter-spacing: 0;">你好 朋友！</h2>
                 <p class="switch_description description">去注册一个账号，成为尊贵的粉丝会员，让我们踏入奇妙的旅途！</p>
-                <a th:href="@{/register}"><button class="switch_button button switch-btn">注册</button></a>
+                <a th:href="@{/register}"><button class="switch_button button switch-btn" style="font-family: KaiTi">注册</button></a>
             </div>
         </div>
     </div>

@@ -1,13 +1,14 @@
 package com.starQeem.woha.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.LinkedHashMap;
+import java.util.*;
 
 /**
  * @Date: 2023/5/18 10:54
@@ -33,6 +34,7 @@ public class ShiroConfig {
         //拦截
         filterMap.put("/my/*","authc");
         filterMap.put("/my","authc");
+        filterMap.put("/my/admin", "roles[admin]"); // 需要 admin 角色才能访问
         bean.setFilterChainDefinitionMap(filterMap);
         //设置登录的请求
         bean.setLoginUrl("/login");
@@ -58,4 +60,5 @@ public class ShiroConfig {
     public ShiroDialect getShiroDialect(){
         return new ShiroDialect();
     }
+
 }
