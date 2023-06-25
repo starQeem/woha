@@ -82,7 +82,7 @@
                 </div>
                 <div style=" text-align: center; font-size: 16PX;  display: block; ">
                     <i class="user outline outline icon m-font-size-text-mini" style="vertical-align: top;color: #90532b"></i>
-                    <a href="#" th:text="${pictures.user.nickName}" style="color: #90532b;font-size: 15px">Qeem</a>
+                    <a href="#" target="_blank" th:href="@{/user/{id}(id=${pictures.user.id})}" th:text="${pictures.user.nickName}" style="color: #90532b;font-size: 15px">Qeem</a>
                     <i class="calendar icon m-font-size-text-mini" style="vertical-align: top;color: #90532b"></i>
                     <span th:text="${#dates.format(pictures.updateTime,'yyyy-MM-dd HH:mm')}"
                           class="m-font-size-text-mini" style="color: #90532b">2020-01-01</span>
@@ -132,11 +132,13 @@
                             <h3 style="font-family: KaiTi" class="ui dividing header">评论</h3>
                             <div class="comment" th:each="comment : ${commentsList}" th:if="${comment.parentCommentId == -1}">
                                 <div class="content">
-                                    <a class="avatar">
+                                    <a class="avatar" target="_blank" th:href="@{/user/{id}(id=${comment.user.id})}">
                                         <img src="../../static/images/avatar.png" th:src="@{${comment.user.avatar}}">
                                     </a>
                                     <a class="author">
-                                        <span th:text="${comment.user.nickName}">Matt</span><!--
+                                        <a href="#" target="_blank" style="color: black" th:href="@{/user/{id}(id=${comment.user.id})}">
+                                            <span th:text="${comment.user.nickName}">Matt</span>
+                                        </a><!--
                                 --><h5 th:class="'level level-' + ${comment.userTask.grade}"
                                        th:text="${'Lv' + comment.userTask.grade}"
                                        style="margin-left: 0px; display: inline-block;">Lv4</h5>
@@ -182,12 +184,14 @@
                                          th:each="childComment : ${commentsList}"
                                          th:if="${childComment.parentCommentId == comment.id}">
                                         <div class="comment">
-                                            <a class="avatar">
+                                            <a class="avatar" target="_blank" th:href="@{/user/{id}(id=${childComment.user.id})}">
                                                 <img src="../../static/images/me.jpg" th:src="@{${childComment.user.avatar}}">
                                             </a>
                                             <div class="content">
                                                 <a class="author">
-                                                    <span th:text="${childComment.user.nickName}">小红</span><!--
+                                                    <a href="#" style="color: black" target="_blank" th:href="@{/user/{id}(id=${childComment.user.id})}">
+                                                        <span th:text="${childComment.user.nickName}">小红</span>
+                                                    </a><!--
                                 --><h5 th:class="'level level-' + ${childComment.userTask.grade}"
                                        th:text="${'Lv' + childComment.userTask.grade}"
                                        style="margin-left: 0px; display: inline-block;">Lv4</h5>
