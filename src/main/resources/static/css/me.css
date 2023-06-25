@@ -182,7 +182,7 @@ body{
 }
 
 .m-margin-{
-    margin-top:-4em !important;
+   /* margin-top:-4em !important;*/
 }
 
 .m-margin--{
@@ -479,9 +479,9 @@ body{
     margin-bottom: 15px;
     border-radius: 2px;
     background-color: #fff;
-    box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, .05);
+/*    box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, .05);
     -webkit-box-shadow: #000000 0px 0px 10px;
-    -moz-box-shadow: #000000 0px 0px 10px;
+    -moz-box-shadow: #000000 0px 0px 10px;*/
 }
 
 #picture-main {

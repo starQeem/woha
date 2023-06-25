@@ -52,7 +52,7 @@
             <a href="#" style="color: #90532b" th:href="@{/my}">主页</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/story/mystory}">广场</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/pictures/mypictures}">图片</a>&nbsp;
-            <a href="#" style="color: #90532b" th:href="@{/my/strategy/mystrategy}">攻略</a>&nbsp;
+            <a href="#" style="color: #90532b;text-decoration: underline;" th:href="@{/my/strategy/mystrategy}">攻略</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/task}">任务</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/follow}">关注</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/fans}">粉丝</a>&nbsp;
@@ -100,7 +100,7 @@
                                         <a style="font-family: KaiTi;font-size: 14px" href="#" target="_blank" th:href="@{/my/strategy/strategyUpdate/{id}(id=${strategy.id})}" class="header">编辑</a>
                                     </div>
                                     <div class="item">
-                                        <a style="font-family: KaiTi;font-size: 14px" href="#" th:href="@{/my/strategy/strategyDelete/{id}(id=${strategy.id})}" class="header">删除</a>
+                                        <a style="font-family: KaiTi;font-size: 14px" href="#" th:href="@{/my/strategy/strategyDelete/{id}(id=${strategy.id},pageNum=${page.pageNum})}" class="header">删除</a>
                                     </div>
                                 </div>
                             </div>

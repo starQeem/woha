@@ -259,3 +259,88 @@ a.black:active {
 	margin-top: 10px;
 	color: #999999;
 }
+.content{ line-height: 26px; padding: 5px;}
+.cp-ly{width:926px; background:url(../../static/images/cp-ly.jpg) left top no-repeat; padding-top:47px;} 
+.cp-ly-nr{   margin:0 auto; height:130px; border-bottom:1px solid #ccc; overflow: hidden; padding: 34px 0 20px 0; _padding: 0; line-height:22px;}
+.ly-tx{ float: left; border-radius: 6px 6px 6px 6px; width: 50px; height: 50px; overflow: hidden; margin-right: 10px;}
+.lx-xx{padding: 0 0 0 60px; overflow: visible;}
+.ly-text{height: 60px; background: url(../../static/images/textareabg.png) repeat-x 0 0 #FFFFFF; border: 1px solid #d7d7d7; border-radius: 4px 4px 4px 4px; padding: 7px; position: relative; overflow: hidden; cursor: text;}
+.lywb{background: none repeat scroll 0 0 #FFFFFF; padding: 0; box-shadow: 0 0; color: #BDBBBB; border: 0; z-index: 90; overflow: hidden; float: left; font-size: 13px; font-family: 'Microsoft YaHei',arial,tahoma,宋体,sans-serif; resize: none; height: 60px; width:523px; display: block; outline: none; word-wrap: break-word; margin: 0; line-height:20px;}
+.ly-shu{ position:absolute; right:0; bottom:0; color:#999; text-align:center; padding-left:5px;padding-right:5px; font-size:14px; font-family:"微软雅黑";}
+.ly-aniu{height: 40px; overflow: hidden; padding-top:6px; _margin-top: 0;}
+.ly-aniu-fb{background: url(../../static/images/buttonLarge.png) repeat-x  0 0 ; border: 1px solid #d0cfcf; border-radius: 5px 5px 5px 5px; color: #666; cursor: pointer; float: right; font-size: 13px; font-weight: bold; height: 24px; line-height: 21px; margin: 4px 0 0; padding: 3px 25px 1px; text-align: center; text-shadow: 0 1px 0 #FFFFFF;}
+.ly-aniu a:hover {color:#B5090B !important;}
+.cp-ly-nr-bm{ width:926px;  margin:0 auto;}
+.cp-ly-nr-bm-1{border-bottom: 1px solid #D7D7D7; padding: 15px 0;}
+.cp-ly-nr-bm-2{position: relative; float: left; border-radius: 6px 6px 6px 6px; width: 50px; height: 50px; margin-right: 10px;}
+.txxx{border: 0 none; box-shadow: 0 1px 5px rgba(0, 0, 0, 0.22); border-radius: 4px; width: 50px; height: 50px;}
+.ykkk{cursor: pointer; text-decoration: none; background: url(../../static/images/semail.png) no-repeat 0 0 ; background-position: 0 0; opacity: 1; display: block; float: left; height: 16px !important; line-height: 100px; opacity: 0.8; overflow: hidden; width: 16px !important;}
+
+.ykname{color: #2B8CE6; cursor: pointer; float: left; text-decoration: none; padding-right: 6px;}
+.ykkang{color: #303030; font-size: 13px; line-height: 18px; height: 20px;}
+.ykkang a{ color:black;}
+.ly_cmt_txt{color: #303030; font-size: 13px; line-height: 18px; word-wrap: break-word; text-align: left;}
+.yk-js{color: #999999; float: left; font-size: 11px; padding: 0 10px 0 0;}
+
+.dd{background: url(../../static/images/downDig2.png) no-repeat  0 0 ; cursor: pointer; display: block; float: right; height: 13px; margin-right: 4px; margin-top: 3px; width: 13px;}
+.ddd{color: #999999; cursor: pointer; display: block; float: right; font-size: 11px; padding: 0 10px 0 0;}
+.cc{background: url(../../static/images/upDig2.png) no-repeat scroll 0 0 transparent; cursor: pointer; display: block; float: right; height: 13px; margin-right: 4px; margin-top: 0px; width: 13px;}
+.ccc{color: #999999; cursor: pointer; display: block; float: right; font-size: 11px; padding: 0 10px 0 0;}
+.ff{color: #999999; cursor: pointer; display: block; float: right; font-size: 11px; padding: 0 4px 0 0;}
+.ff2{color: #999999; cursor: pointer; display: block; float: right; font-size: 11px; padding: 0 4px 0 0;}
+.fff{background:url(../../static/images/rpy2.png) no-repeat scroll 0px 0px transparent; cursor: pointer; display: block; float: right; height: 13px; margin-right: 4px; margin-top: 0px; width: 14px;}
+.ly_cmt_exp{padding: 5px 5px 0 0; line-height: 14px;}
+.hf{float:right; width:926PX; display:none;}
+
+.hfh{padding-left: 48px;}
+
+.fieldX{margin-top: 20PX; height: 40PX;}
+.label {
+position: absolute; left: 0; TOP:0;width: 108PX; height: 36PX; line-height: 36px; color: #fff; border-radius: 5PX; background: #907466; text-align: center;
+}
+.label-R {
+position: absolute; left: 103PX; TOP:0;font-family: KaiTi;border-top-left-radius: 0;border-bottom-left-radius: 0; border: 1PX SOLID rgba(144 116 102);border-left-color: transparent; width: 893PX; height: 36PX;border-radius: 5PX;
+}
+.label-R2 {
+position: absolute; left: 103PX; TOP:0;font-family: KaiTi;border-top-left-radius: 0;border-bottom-left-radius: 0; border: 1PX SOLID rgba(144 116 102);border-left-color: transparent; width: 400PX; height: 36PX;border-radius: 5PX;
+}
+.label-fl{position: absolute;left: 104PX; width: 345px;height: 36px;border: 1px solid #907466;}
+
+.tj-button {
+	BORDER-RADIUS: 5PX;
+	height: 36PX;
+	border: 0;
+	width: 180PX;
+    background-color: #907466;
+    color: #FFF;
+    text-shadow: none;
+    background-image: none
+}
+
+.tj-button {
+    box-shadow: 0 0 0 0 rgba(34, 36, 38, .15) inset
+}
+
+.utj-buttonbutton:hover, .ui.teal.buttons .button:hover {
+    background-color: #6a4a3a;
+    color: #FFF;
+    text-shadow: none
+}
+
+.tj-button:focus, .ui.teal.buttons .button:focus {
+    background-color: #6a4a3a;
+    color: #FFF;
+    text-shadow: none
+}
+
+.tj-button:active, .ui.teal.buttons .button:active {
+   background-color: #6a4a3a;
+    color: #FFF;
+    text-shadow: none
+}
+
+.tj-button:active {
+background-color: #6a4a3a;
+    color: #FFF;
+    text-shadow: none
+}

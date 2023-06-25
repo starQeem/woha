@@ -20,6 +20,16 @@
             /*text-decoration: underline;*/
             color: lightgoldenrodyellow;
         }
+
+        .select-options option {
+            display: block;
+            background-color: #ffffff;
+            color: #000000;
+            padding: 5px;
+        }
+
+        /* 样式调整和动画效果根据需要自定义 */
+
     </style>
     <link rel=stylesheet type=text/css href="../../static/css/mystyle.css" th:href="@{/css/mystyle.css}">
     <link rel=stylesheet type=text/css href="../../static/css/mybanner.css" th:href="@{/css/mybanner.css}">
@@ -54,7 +64,7 @@
     <div class="banner">
         <img src="../../static/images/more03.jpg" th:src="@{/images/more03.jpg}" width="1000" height="230">
         <div style="display: flex; justify-content: center;font-family: KaiTi;font-size: 17px">
-            <a href="#" style="color: #90532b" th:href="@{/my}">主页</a>&nbsp;
+            <a href="#" style="color: #90532b;text-decoration: underline;" th:href="@{/my}">主页</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/story/mystory}">广场</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/pictures/mypictures}">图片</a>&nbsp;
             <a href="#" style="color: #90532b" th:href="@{/my/strategy/mystrategy}">攻略</a>&nbsp;

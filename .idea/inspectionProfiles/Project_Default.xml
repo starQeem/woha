@@ -18,7 +18,7 @@
     <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myValues">
         <value>
-          <list size="17">
+          <list size="18">
             <item index="0" class="java.lang.String" itemvalue="th:href" />
             <item index="1" class="java.lang.String" itemvalue="th:value" />
             <item index="2" class="java.lang.String" itemvalue="th:action" />
@@ -36,6 +36,23 @@
             <item index="14" class="java.lang.String" itemvalue="th:unless" />
             <item index="15" class="java.lang.String" itemvalue="th:with" />
             <item index="16" class="java.lang.String" itemvalue="th:attr" />
+            <item index="17" class="java.lang.String" itemvalue="th:data-value" />
+          </list>
+        </value>
+      </option>
+      <option name="myCustomValuesEnabled" value="true" />
+    </inspection_tool>
+    <inspection_tool class="HtmlUnknownTag" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myValues">
+        <value>
+          <list size="7">
+            <item index="0" class="java.lang.String" itemvalue="nobr" />
+            <item index="1" class="java.lang.String" itemvalue="noembed" />
+            <item index="2" class="java.lang.String" itemvalue="comment" />
+            <item index="3" class="java.lang.String" itemvalue="noscript" />
+            <item index="4" class="java.lang.String" itemvalue="embed" />
+            <item index="5" class="java.lang.String" itemvalue="script" />
+            <item index="6" class="java.lang.String" itemvalue="shiro:haspermission" />
           </list>
         </value>
       </option>
