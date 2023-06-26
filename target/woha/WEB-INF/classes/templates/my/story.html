@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
-    <title>我的文章</title>
+    <title>问答</title>
     <link rel=stylesheet type=text/css href="../../static/css/video.css" th:href="@{/css/video.css}">
     <link rel="stylesheet" href="../../static/lib/semantic/dist/semantic.min.css" th:href="@{/lib/semantic/dist/semantic.min.css}">
     <link href="../../static/images/me.png" th:href="@{/images/me.png}" rel="icon" type="image/x-ico">
@@ -36,11 +36,11 @@
         <div class="nav">
             <div class="title">
                 <a href="index.html" th:href="@{/}" class="a"><i class="mini home icon"></i>&nbsp;首页</a>
-                <a href="more.html" th:href="@{/story}" class="a2"><i class="mini paper plane outline icon"></i>&nbsp;喔哈广场</a>
-                <a href="story.html" th:href="@{/strategy}" class="a2"><i class="mini book icon"></i>&nbsp;喔哈攻略</a>
-                <a href="picture.html" th:href="@{/pictures}" class="a2"><i class="mini image outline icon"></i>&nbsp;美图壁纸</a>
+                <a href="more.html" th:href="@{/story}" class="a"><i class="mini paper plane outline icon"></i>&nbsp;问答</a>
+                <a href="story.html" th:href="@{/strategy}" class="a"><i class="mini book icon"></i>&nbsp;文章</a>
+                <a href="picture.html" th:href="@{/pictures}" class="a"><i class="mini image outline icon"></i>&nbsp;壁纸</a>
+                <a href="message.html" target="_blank" th:href="@{/my}" class="selected a"><i class="mini info icon"></i>我的</a>
                 <a href="more.html" th:href="@{/more}" class="a2"><i class="mini comment alternate outline icon"></i>&nbsp;联系我们</a>
-                <a href="message.html" target="_blank" th:href="@{/my}" class="selected a2"><i class="mini info icon"></i>我的喔哈</a>
                 <a href="message.html" th:href="@{/logout}"><i class="mini sign out alternate icon"></i>&nbsp;注销</a>
             </div>
         </div>

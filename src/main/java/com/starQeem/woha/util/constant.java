@@ -18,7 +18,8 @@ public class constant {
     public final static int STATUS_ONE = 1;  //状态值(1)
     public final static int GRADE = 1; //默认用户等级
     public final static int CODE_SIZE = 6; //验证码位数
-    public final static int USER_FREQUENT_LIMIT = 5; //用户输入用户名密码错误次数
+    public final static int PICTURES_CODE_LENGTH = 5;  //图片验证码长度
+    public final static String PICTURES_CODE_RANDOM = "qwertyuiopasdfghjklzxcvbnm0123456789";
     public final static String USER_MESSAGE = "未知"; //用户默认信息
     public final static String USER_SIGNATURE = "这个人很懒,什么都没有写。"; //用户默认签名
     public final static String USER_NICK = "用户";  //用户昵称前缀

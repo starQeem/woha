@@ -19,15 +19,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
-import static com.starQeem.woha.util.constant.USER_CODE;
+import static com.starQeem.woha.util.constant.*;
 
 /**
  * @Date: 2023/4/17 0:04
@@ -81,7 +81,7 @@ public class UserController {
      * 登录
      * */
     @PostMapping("/login")
-    public String loginInput(String username, String password,String code,Model model) {
+    public String loginInput(String username, String password,String code) {
         //查询账号状态
         boolean UserStatus = userService.getUserStatus(username);
         if (!UserStatus){
@@ -96,7 +96,6 @@ public class UserController {
                     String md5DigestAsHex = DigestUtils.md5DigestAsHex(password.getBytes());
                     UsernamePasswordToken token = new UsernamePasswordToken(username, md5DigestAsHex);
                     try{
-                        userDto userDto = (userDto) subject.getPrincipal();
                         subject.login(token);  //执行登录的方法,如果没有异常说明ok了
                         userService.task();
                         return "redirect:/my";
@@ -165,7 +164,7 @@ public class UserController {
      * 注册
      * */
     @PostMapping("/register")
-    public String registerInput(RedirectAttributes attributes,String email, String password,String code){
+    public String registerInput(String email, String password,String code){
         String getCode = stringRedisTemplate.opsForValue().get(USER_CODE + email);
         if (!code.equals(getCode)){
             USERNAME = email;
@@ -205,7 +204,7 @@ public class UserController {
     @GetMapping("/picturesCode")
     public void getCode(HttpServletResponse response) {
         // 随机生成 4 位验证码
-        RandomGenerator randomGenerator = new RandomGenerator("qwertyuiopasdfghjklzxcvbnm0123456789", 5);
+        RandomGenerator randomGenerator = new RandomGenerator(PICTURES_CODE_RANDOM, PICTURES_CODE_LENGTH);
         // 定义图片的显示大小
         lineCaptcha = CaptchaUtil.createLineCaptcha(110, 36);
         response.setContentType("image/jpeg");
@@ -231,7 +230,7 @@ public class UserController {
         Subject subject = SecurityUtils.getSubject();
         userDto Iuser = (userDto) subject.getPrincipal();
         if (Iuser != null){
-            if (id == Long.valueOf(Iuser.getId())){   //判断是否为查询自己的信息
+            if (Objects.equals(id, Long.valueOf(Iuser.getId()))){   //判断是否为查询自己的信息
                 model.addAttribute("ifnone",false);//是，隐藏关注和未关注按钮
             }else {
                 //不是，查询是否关注

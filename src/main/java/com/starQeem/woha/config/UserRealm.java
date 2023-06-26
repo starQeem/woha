@@ -54,7 +54,7 @@ public class UserRealm extends AuthorizingRealm {
         if (userToken.getPassword().length > CODE_SIZE){
             //用户名,密码  数据库中取
             QueryWrapper<user> queryWrapper = new QueryWrapper<>();
-            queryWrapper.select("id","username","password","perms","status").eq("username",userToken.getUsername());
+            queryWrapper.select("id","username","password","perms").eq("username",userToken.getUsername());
             user user = userService.getBaseMapper().selectOne(queryWrapper);
             if (user == null){
                 return null;  //抛出异常 UnknownAccountException
@@ -63,8 +63,7 @@ public class UserRealm extends AuthorizingRealm {
             userDto.setId(user.getId());
             userDto.setUsername(user.getUsername());
             //密码认证(shiro做~)
-            SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(userDto, user.getPassword(), "");
-            return authenticationInfo;  //用户名密码登录
+            return new SimpleAuthenticationInfo(userDto, user.getPassword(), ""); //用户名密码登录
         }else {
             //验证码登录
             String getCode = stringRedisTemplate.opsForValue().get(USER_CODE + userToken.getUsername());
