@@ -37,7 +37,7 @@
   <div class="nav">
     <div class="title">
       <a href="index.html" th:href="@{/}" class="a"><i class="mini home icon"></i>&nbsp;首页</a>
-      <a href="more.html" th:href="@{/story}" class="a"><i class="mini paper plane outline icon"></i>&nbsp;问答</a>
+      <a href="more.html" th:href="@{/story}" class="a"><i class="mini question circle outline icon"></i>&nbsp;问答</a>
       <a href="story.html" th:href="@{/strategy}" class="a"><i class="mini book icon"></i>&nbsp;文章</a>
       <a href="picture.html" th:href="@{/pictures}" class="selected a"><i class="mini image outline icon"></i>&nbsp;壁纸</a>
       <a href="message.html" target="_blank" th:href="@{/my}" class="a"><i class="mini info icon"></i>我的</a>
@@ -71,12 +71,25 @@
     </div>
   </div>
 </div>
-  <!--分页-->
-  <div class="pagination">
-    <a class="prev" style="color: #90532b" th:href="@{/pictures/{pageNum}(pageNum=${page.prePage})}"
-       th:if="${page.hasPreviousPage}">上一页</a>
-    <a class="next" style="color: #90532b" th:href="@{/pictures/{pageNum}(pageNum=${page.nextPage})}"
-       th:if="${page.hasNextPage}">下一页</a>
+  <!--分页--><br>
+  <div style="font-family: KaiTi; display: flex; justify-content: center;">
+    <div style="display: flex;  width: 860px">
+      <div class="two wide column" style=" float: left;">
+        <a class="item" style="color: #90532b" th:href="@{/pictures/{pageNum}(pageNum=${page.prePage})}"
+           th:if="${page.hasPreviousPage}" >上一页</a>
+      </div>
+      <!--导航条-->
+      <div class="two wide column" style="flex-grow: 1; display: flex; justify-content: center;">
+      <span th:each="num : ${page.navigatepageNums}" >&nbsp;
+        <a th:if="${page.pageNum == num}" style="color: #FF8C00" th:href="@{'/pictures/'+${num}}" th:text="'['+${num}+']'">2</a>
+        <a style="color: #90532b" th:if="${page.pageNum != num}" th:href="@{'/pictures/'+${num}}" th:text="${num}">2</a>
+      </span>
+      </div>
+      <div class="two wide column" style=" float: right;">
+        <a class="item" style="color: #90532b" th:href="@{/pictures/{pageNum}(pageNum=${page.nextPage})}"
+           th:if="${page.hasNextPage}">下一页</a>
+      </div>
+    </div>
   </div>
   <div class="footer">
     <table width="100%" border="0">

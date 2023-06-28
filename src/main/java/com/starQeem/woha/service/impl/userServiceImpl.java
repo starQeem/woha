@@ -3,9 +3,13 @@ package com.starQeem.woha.service.impl;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.starQeem.woha.config.email;
 import com.starQeem.woha.dto.userDto;
+import com.starQeem.woha.mapper.picturesMapper;
 import com.starQeem.woha.mapper.userMapper;
+import com.starQeem.woha.pojo.pictures;
 import com.starQeem.woha.pojo.user;
 import com.starQeem.woha.pojo.userTask;
 import com.starQeem.woha.service.userTaskService;
@@ -237,6 +241,32 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
             return true;
         }
         return false;
+    }
+
+    /**
+     * 获取用户列表
+     *
+     * @param pageNum 页面num
+     * @param title   标题
+     * @return {@link PageInfo}<{@link user}>
+     */
+    @Override
+    public PageInfo<user> getUserList(Integer pageNum, String nickName) {
+        int pageSize = PAGE_SIZE;
+        if (pageNum == null){
+            pageNum = PAGE_NUM;
+        }
+        if (nickName == null) {
+            nickName = "";
+        } else {
+            pageSize = SEARCH_SIZE;
+        }
+        PageHelper.startPage(pageNum, pageSize);
+        //查询数据库
+        List<user> userList = userMapper.getUserList(nickName);
+        PageInfo<user> pageInfo = new PageInfo<>(userList, pageSize);
+        //将List集合丢到分页对象里
+        return pageInfo;
     }
 
 }

@@ -13,6 +13,7 @@
         <result property="email" column="email" jdbcType="VARCHAR"/>
         <result property="signature" column="signature" jdbcType="VARCHAR"/>
         <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
         <association property="userTask" javaType="com.starQeem.woha.pojo.userTask">
             <id property="id" column="user_task_id"/>
             <result property="grade" column="user_task_grade"/>
@@ -47,5 +48,10 @@
         join user u on f.user_id = u.id
         join user_task u_d on u_d.user_id = u.id
         where f.follow_user_id = #{userId};
+    </select>
+    <select id="getUserList" resultMap="BaseResultMap">
+        select id,nick_name,avatar,username,status
+        from user
+        where (nick_name like concat('%',#{nickName},'%'))
     </select>
 </mapper>

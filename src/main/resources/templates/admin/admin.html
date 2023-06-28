@@ -38,12 +38,20 @@
         <div class="nav">
             <div class="title">
                 <a href="index.html" th:href="@{/}" class="a"><i class="mini home icon"></i>&nbsp;首页</a>
-                <a href="more.html" th:href="@{/story}" class="a2"><i class="mini paper plane outline icon"></i>&nbsp;喔哈广场</a>
-                <a href="story.html" th:href="@{/strategy}" class="a2"><i class="mini book icon"></i>&nbsp;喔哈攻略</a>
-                <a href="picture.html" th:href="@{/pictures}" class="a2"><i class="mini image outline icon"></i>&nbsp;美图壁纸</a>
+                <a href="more.html" th:href="@{/story}" class="a"><i class="mini question circle outline icon"></i>&nbsp;问答</a>
+                <a href="story.html" th:href="@{/strategy}" class="a"><i class="mini book icon"></i>&nbsp;文章</a>
+                <a href="picture.html" th:href="@{/pictures}" class="a"><i class="mini image outline icon"></i>&nbsp;壁纸</a>
+                <a href="message.html" target="_blank" th:href="@{/my}" class="selected a"><i class="mini info icon"></i>我的</a>
                 <a href="more.html" th:href="@{/more}" class="a2"><i class="mini comment alternate outline icon"></i>&nbsp;联系我们</a>
-                <a href="message.html" target="_blank" th:href="@{/my}" class="selected a2"><i class="mini info icon"></i>我的喔哈</a>
                 <a href="message.html" th:href="@{/logout}"><i class="mini sign out alternate icon"></i>&nbsp;注销</a>
+                &nbsp;&nbsp;
+                <form name="search" action="#" th:action="@{/admin}" method="get" target="_blank"
+                      class="right m-item item ui secondary basic  m-mobile-hide">
+                    <div class="ui icon transparent input m-margin-tb-tiny" style="color: whitesmoke;width: 190px">
+                        <input style="color: whitesmoke;font-family: KaiTi" type="text" name="nickName" placeholder="输入昵称搜索用户...." th:value="${title}">
+                        <i onclick="document.forms['search'].submit()" class="search link icon"></i>
+                    </div>
+                </form>
             </div>
         </div>
     </header>
@@ -63,12 +71,12 @@
 
         </div>
         <br>
-        <a href="#" th:href="@{/admin}" style="color: #0ea432;font-size: 17px;font-family: KaiTi">用户管理</a>
-        <a href="#" th:href="@{/admin/strategyType}" style="color: #0ea432;font-size: 17px;font-family: KaiTi">攻略类型管理</a>
+        <a href="#" th:href="@{/admin}" style="color: #0ea432;font-size: 17px;font-family: KaiTi">用户状态管理</a>
+        <a href="#" th:href="@{/admin/strategyType}" style="color: #0ea432;font-size: 17px;font-family: KaiTi">文章类型管理</a>
         <div>
             <div class="ui center aligned attached segment m-rgba zt zt-max">
                 <div class="follow-list">
-                    <ul th:each="user :${userList}">
+                    <ul th:each="user :${page.list}">
                         <li>
                             <div class="userAvatar">
                                 <img th:src="@{${user.avatar}}" src="../../static/images/me.jpg" alt="用户头像">
@@ -80,11 +88,31 @@
                             </div>
                             <div style="float: right;">
                                 <a href="" th:href="@{/admin/status/{id}(id=${user.id})}" th:if="${user.status==1}" style="color: red;font-family: KaiTi;font-size: 17px">禁用</a>
-                                <a href="" th:href="@{/admin/status/{id}(id=${user.id})}" th:unless="${user.status==1}" style="color: teal;font-family: KaiTi;font-size: 17px">启用</a>
+                                <a href="" th:href="@{/admin/status/{id}(id=${user.id})}" th:if="${user.status==0}" style="color: teal;font-family: KaiTi;font-size: 17px">启用</a>
                             </div>
                         </li>
                         <hr align="center" width="100%" color="#F0F0F0" size="2">
                     </ul>
+                </div>
+            </div>
+        </div>
+        <!--分页--><br>
+        <div style="font-family: KaiTi; display: flex; justify-content: center;">
+            <div style="display: flex;  width: 860px">
+                <div class="two wide column" style=" float: left;">
+                    <a class="item" style="color: #90532b" th:href="@{/admin/{pageNum}(pageNum=${page.prePage})}"
+                       th:if="${page.hasPreviousPage}" >上一页</a>
+                </div>
+                <!--导航条-->
+                <div class="two wide column" style="flex-grow: 1; display: flex; justify-content: center;">
+                  <span th:each="num : ${page.navigatepageNums}" >&nbsp;
+                    <a th:if="${page.pageNum == num}" style="color: #FF8C00" th:href="@{'/admin/'+${num}}" th:text="'['+${num}+']'">2</a>
+                    <a style="color: #90532b" th:if="${page.pageNum != num}" th:href="@{'/admin/'+${num}}" th:text="${num}">2</a>
+                  </span>
+                </div>
+                <div class="two wide column" style=" float: right;">
+                    <a class="item" style="color: #90532b" th:href="@{/admin/{pageNum}(pageNum=${page.nextPage})}"
+                       th:if="${page.hasNextPage}">下一页</a>
                 </div>
             </div>
         </div>

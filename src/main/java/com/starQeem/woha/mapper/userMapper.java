@@ -3,6 +3,7 @@ package com.starQeem.woha.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.starQeem.woha.pojo.user;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,4 +16,5 @@ public interface userMapper extends BaseMapper<user> {
     user getUserWithGrade(Long id);
     List<user> getFollowUser(Long userId);
     List<user> getFansUser(Long userId);
+    List<user> getUserList(@Param("nickName") String nickName);
 }

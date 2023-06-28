@@ -1,6 +1,5 @@
 package com.starQeem.woha.util;
 
-import com.sun.org.apache.bcel.internal.generic.PUSH;
 
 /**
  * @Date: 2023/5/6 9:14
@@ -9,7 +8,7 @@ import com.sun.org.apache.bcel.internal.generic.PUSH;
 public class constant {
     public final static int PAGE_SIZE = 8;  //数据条数
     public final static int PICTURES_PAGE_SIZE = 9;  //图片数据条数
-    public final static int COMMENT_PAGE_SIZE = 15;  //查看回复的数据条数
+    public final static int COMMENT_PAGE_SIZE = 10;  //查看回复的数据条数
     public final static int PAGE_NUM = 1;  //默认页码
     public final static int TASK_DAY_EXPERIENCE = 10;   //每日任务经验值
     public final static int TASK_WEEK_EXPERIENCE = 50;   //每周任务经验值

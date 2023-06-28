@@ -1,6 +1,7 @@
 package com.starQeem.woha.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.pagehelper.PageInfo;
 import com.starQeem.woha.pojo.user;
 
 import javax.mail.MessagingException;
@@ -87,4 +88,13 @@ public interface userService extends IService<user> {
      * @return boolean
      */
     boolean getUserStatus(String username);
+
+    /**
+     * 获取用户列表
+     *
+     * @param pageNum 页面num
+     * @param title   标题
+     * @return {@link PageInfo}<{@link user}>
+     */
+    PageInfo<user> getUserList(Integer pageNum, String title);
 }

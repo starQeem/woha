@@ -227,6 +227,12 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
         pageInfo.setPageSize(pageSize);
         // 计算总页数
         int totalPages = (int) Math.ceil((double) total / pageSize);
+
+        int[] nums = new int[totalPages];
+        for (int i = 0; i < totalPages; i++) {
+            nums[i] = i + 1;
+        }
+        pageInfo.setNavigatepageNums(nums); //存入页码数组
         // 判断是否有上一页和下一页
         boolean hasPreviousPage = pageNum > 1;
         boolean hasNextPage = pageNum < totalPages;
@@ -270,6 +276,12 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
 
         // 计算总页数
         int totalPages = (int) Math.ceil((double) total / pageSize);
+
+        int[] nums = new int[totalPages];
+        for (int i = 0; i < totalPages; i++) {
+            nums[i] = i + 1;
+        }
+        pageInfo.setNavigatepageNums(nums); //存入页码数组
 
         // 判断是否有上一页和下一页
         boolean hasPreviousPage = pageNum > 1;

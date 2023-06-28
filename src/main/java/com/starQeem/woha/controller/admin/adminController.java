@@ -31,10 +31,10 @@ public class adminController {
      * @param model 模型
      * @return {@link String}
      */
-    @GetMapping
-    public String admin(Model model){
-        List<user> userList =userService.list();
-        model.addAttribute("userList",userList);
+    @GetMapping(value = {"","/{pageNum}"})
+    public String admin(Model model,@PathVariable(value = "pageNum",required = false)Integer pageNum,String nickName){
+        PageInfo<user> pageInfo =userService.getUserList(pageNum,nickName);
+        model.addAttribute("page",pageInfo);
         return "admin/admin";
     }
 

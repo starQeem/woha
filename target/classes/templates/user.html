@@ -36,7 +36,7 @@
         <div class="nav">
             <div class="title" style="font-family: KaiTi">
                 <a href="index.html" th:href="@{/}" class="a"><i class="mini home icon"></i>&nbsp;首页</a>
-                <a href="more.html" th:href="@{/story}" class="a"><i class="mini paper plane outline icon"></i>&nbsp;问答</a>
+                <a href="more.html" th:href="@{/story}" class="a"><i class="mini question circle outline icon"></i>&nbsp;问答</a>
                 <a href="story.html" th:href="@{/strategy}" class="a"><i class="mini book icon"></i>&nbsp;文章</a>
                 <a href="picture.html" th:href="@{/pictures}" class="a"><i class="mini image outline icon"></i>&nbsp;壁纸</a>
                 <a href="message.html" target="_blank" th:href="@{/my}" class="a"><i class="mini info icon"></i>我的</a>
@@ -76,9 +76,9 @@
         <hr align="center"  width="90%" color="#90532b" size="2">
     </div><br>
     <div style="text-align: right;font-size: 8px">
-        <a href="#" target="_blank" th:href="@{/story/user/{id}(id=${user.id})}" style="color: #90532b;font-family: KaiTi;font-size: 14px">ta发布的帖子>
+        <a href="#" target="_blank" th:href="@{/story/user/{id}(id=${user.id})}" style="color: #90532b;font-family: KaiTi;font-size: 14px">ta发布的问答>
         </a>&nbsp;
-        <a href="#" target="_blank" th:href="@{/strategy/user/{id}(id=${user.id})}" style="color: #90532b;font-family: KaiTi;font-size: 14px">ta发布的攻略>
+        <a href="#" target="_blank" th:href="@{/strategy/user/{id}(id=${user.id})}" style="color: #90532b;font-family: KaiTi;font-size: 14px">ta发布的文章>
         </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     </div>
     <div class="text01">
