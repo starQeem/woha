@@ -15,6 +15,7 @@ import com.starQeem.woha.mapper.strategyMapper;
 import com.starQeem.woha.pojo.*;
 import com.starQeem.woha.service.*;
 import com.starQeem.woha.util.MarkdownUtil;
+import com.starQeem.woha.util.updateGradeUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -70,18 +71,19 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
      * */
     @Override
     public PageInfo<strategy> getUserWithStrategyWithStrategyType(Integer pageNum, int pageSize, Long id) {
+        if (pageNum == null){
+            pageNum = PAGE_NUM;
+        }
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("create_time desc");
         if (id.equals(0L)) { //查询我发布的攻略
             List<strategy> strategyList = strategyMapper.getUserWithStrategyWithStrategyType(Long.valueOf(user.getId()));
-            PageInfo<strategy> pageInfo = new PageInfo<>(strategyList, pageSize);
-            return pageInfo;
+            return new PageInfo<>(strategyList, pageSize);
         } else { //查询用户发布的攻略
             List<strategy> strategyList = strategyMapper.getUserWithStrategyWithStrategyType(id);
-            PageInfo<strategy> pageInfo = new PageInfo<>(strategyList, pageSize);
-            return pageInfo;
+            return new PageInfo<>(strategyList, pageSize);
         }
     }
 
@@ -98,9 +100,8 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
         PageHelper.startPage(pageNum, pageSize);
         //查询数据库
         List<strategy> strategyList = strategyMapper.pageStrategyWithStrategyTypeById(id, title);
-        PageInfo<strategy> pageInfo = new PageInfo<>(strategyList, pageSize);
         //返回分页集合
-        return pageInfo;
+        return new PageInfo<>(strategyList, pageSize);
 
     }
 
@@ -187,30 +188,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
                 userTask.setDailytaskStrategy(STATUS_ONE);  //设置为已经完成状态
                 Integer experience = userTask.getExperience();
                 userTask.setExperience(experience + TASK_DAY_EXPERIENCE);  //经验+
-                if (userTask.getExperience() >= GRADE_SIX) {
-                    userTask.setGrade(6);
-                } else {
-                    switch (userTask.getExperience() / 100) {
-                        case 9:
-                        case 8:
-                        case 7:
-                            userTask.setGrade(5);
-                            break;
-                        case 6:
-                        case 5:
-                            userTask.setGrade(4);
-                            break;
-                        case 4:
-                            userTask.setGrade(3);
-                            break;
-                        case 3:
-                            userTask.setGrade(2);
-                            break;
-                        default:
-                            userTask.setGrade(1);
-                    }
-                }
-                userTaskService.updateById(userTask);
+                updateGradeUtils.updateGrade(userTask); //更新等级
             }
             String html = MarkdownUtil.markdownToHtml(strategy.getContent());
             strategy.setContent(html);
@@ -238,30 +216,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
                 userTask.setDailytaskStrategy(STATUS_ONE);  //设置为已经完成状态
                 Integer experience = userTask.getExperience();
                 userTask.setExperience(experience + TASK_DAY_EXPERIENCE);  //经验+
-                if (userTask.getExperience() >= GRADE_SIX) {
-                    userTask.setGrade(6);
-                } else {
-                    switch (userTask.getExperience() / 100) {
-                        case 9:
-                        case 8:
-                        case 7:
-                            userTask.setGrade(5);
-                            break;
-                        case 6:
-                        case 5:
-                            userTask.setGrade(4);
-                            break;
-                        case 4:
-                            userTask.setGrade(3);
-                            break;
-                        case 3:
-                            userTask.setGrade(2);
-                            break;
-                        default:
-                            userTask.setGrade(1);
-                    }
-                }
-                userTaskService.updateById(userTask);
+                updateGradeUtils.updateGrade(userTask); //更新等级
             }
             String html = MarkdownUtil.markdownToHtml(strategy.getContent());
             strategy.setContent(html);
@@ -335,9 +290,8 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
                 .orderByDesc("update_time")
                 .orderByDesc("liked")
                 .last("limit 5");
-        List<strategy> strategyList = strategyMapper.selectList(queryWrapper);
         //返回图片列表
-        return strategyList;
+        return strategyMapper.selectList(queryWrapper);
 
     }
 
@@ -390,8 +344,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
             queryWrapper.select("id", "avatar")
                     .apply("FIND_IN_SET(id, {0})", firstThree)
                     .last("ORDER BY FIELD(id, " + firstThree + ")");
-            List<user> ThreeUserLikedList = userService.getBaseMapper().selectList(queryWrapper);
-            return ThreeUserLikedList;
+            return userService.getBaseMapper().selectList(queryWrapper);
         } else {
             return null;
         }

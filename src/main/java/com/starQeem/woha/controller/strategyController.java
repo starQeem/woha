@@ -52,9 +52,6 @@ public class strategyController {
     @GetMapping(value = {"/user/{id}","/user/{id}/{pageNum}"})
     public String UserStrategy(@RequestParam(value = "pageNum",required = false)Integer pageNum,
                                @PathVariable("id") Long id,Model model){
-        if (pageNum == null){
-            pageNum = PAGE_NUM;
-        }
         PageInfo<strategy> pageInfo = strategyService.getUserWithStrategyWithStrategyType(pageNum, PAGE_SIZE, id);
         model.addAttribute("page",pageInfo);
         model.addAttribute("userStrategy","1");
@@ -100,7 +97,7 @@ public class strategyController {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         if (user != null){
-            boolean status = strategyService.liked(id, Long.valueOf(user.getId()));
+            strategyService.liked(id, Long.valueOf(user.getId()));
         }
         return "redirect:/strategy/strategydetail/" + id;
     }

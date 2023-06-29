@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.starQeem.woha.util.constant.PAGE_NUM;
 import static com.starQeem.woha.util.constant.PICTURES_PAGE_SIZE;
 
 
@@ -76,7 +75,7 @@ public class picturesController {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         if (user != null){
-            boolean status = picturesService.liked(id, Long.valueOf(user.getId()));
+            picturesService.liked(id, Long.valueOf(user.getId()));
         }
         return "redirect:/pictures/picturesdetail/" + id;
     }

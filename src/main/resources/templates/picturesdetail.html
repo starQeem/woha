@@ -57,7 +57,7 @@
         <a href="more.html" th:href="@{/story}" class="a"><i class="mini question circle outline icon"></i>&nbsp;问答</a>
         <a href="story.html" th:href="@{/strategy}" class="a"><i class="mini book icon"></i>&nbsp;文章</a>
         <a href="picture.html" th:href="@{/pictures}" class="selected a"><i class="mini image outline icon"></i>&nbsp;壁纸</a>
-        <a href="message.html" target="_blank" th:href="@{/my}" class="a"><i class="mini info icon"></i>我的</a>
+        <a href="message.html" th:href="@{/my}" class="a"><i class="mini info icon"></i>我的</a>
         <a href="more.html" th:href="@{/more}" class="a2"><i class="mini comment alternate outline icon"></i>&nbsp;联系我们</a>
         <div shiro:guest class="a">
           <a href="message.html" th:href="@{/login}"><i class="mini sign in alternate icon"></i>&nbsp;登录</a>
@@ -94,7 +94,6 @@
           <div id="content" class="typo  typo-selection"
                th:utext="${pictures.content}">
           </div>
-          文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容
         </div><br><br>
 
         <!-- 点赞按钮 -->
@@ -126,7 +125,7 @@
         </div>
         <shiro:hasPermission name="user:admin">
           <div style="display: flex; justify-content: center;font-size: 15px">
-            <a href="#" th:href="@{/my/pictures/mypicturesDelete/{id}(id=${pictures.id})}"  style="color: red;">帖子违规?点击删除</a>
+            <a href="#" onclick="return confirm('确定要删除该贴子吗？')" th:href="@{/my/pictures/mypicturesDelete/{id}(id=${pictures.id})}"  style="color: red;">帖子违规?点击删除</a>
           </div>
         </shiro:hasPermission>
         <br>

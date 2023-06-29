@@ -35,10 +35,7 @@ public class MyStrategyController {
     * */
     @GetMapping(value = {"/mystrategy","/mystrategy/{pageNum}"})
     public String strategy(@PathVariable(value = "pageNum",required = false)Integer pageNum,Model model){
-        if (pageNum == null){
-            pageNum = PAGE_NUM;
-        }
-        PageInfo<strategy> pageInfo = strategyService.getUserWithStrategyWithStrategyType(pageNum, PAGE_SIZE,Long.valueOf(STATUS_ZERO));
+        PageInfo<strategy> pageInfo = strategyService.getUserWithStrategyWithStrategyType(pageNum, PAGE_SIZE, (long) STATUS_ZERO);
         model.addAttribute("page",pageInfo);
         return "my/strategy";
     }
@@ -46,7 +43,7 @@ public class MyStrategyController {
     * 跳转到百科发布页面
     * */
     @GetMapping("/strategyInput")
-    public String getstrategyInput(Model model){
+    public String getStrategyInput(Model model){
         List<strategyType> typeList = strategyTypeService.list();
         model.addAttribute("typeList",typeList);
         return "my/strategyInput";
@@ -63,7 +60,7 @@ public class MyStrategyController {
     * 跳转到百科编辑页面
     * */
     @GetMapping("/strategyUpdate/{id}")
-    public String getstrategyUpdate(@PathVariable("id") Long id,Model model){
+    public String getStrategyUpdate(@PathVariable("id") Long id,Model model){
         strategy strategy = strategyService.getUserWithStrategyWithStrategyTypeById(id);
         List<strategyType> typeList = strategyTypeService.list();
         model.addAttribute("strategy", strategy);

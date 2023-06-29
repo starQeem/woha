@@ -292,11 +292,11 @@
         <div class="container b-container" id="b-container">
             <form method="post" th:action="@{/login}" class="form" id="b-form">
                 <h2 class="form_title title">登入账号</h2>
-                <div class="form_icons">
-                    <i class="iconfont icon-QQ"></i>
-                    <i class="iconfont icon-weixin"></i>
-                    <i class="iconfont icon-bilibili-line"></i>
-                </div><br><br>
+<!--                <div class="form_icons">-->
+<!--                    <i class="iconfont icon-QQ"></i>-->
+<!--                    <i class="iconfont icon-weixin"></i>-->
+<!--                    <i class="iconfont icon-bilibili-line"></i>-->
+<!--                </div><br><br>-->
                 <span class="form_span" style="color: red" th:text="${message}" th:if="${message!=null}">请登录</span>
                 <a href="#" style="color: #828885" th:href="@{/login}">账号密码登录</a>
                 <input type="text" th:value="${username}" class="form_input" id="username" name="username" placeholder="Email" >

@@ -11,7 +11,6 @@ import javax.annotation.Resource;
 import javax.mail.MessagingException;
 
 import static com.starQeem.woha.util.constant.COMMENT_PAGE_SIZE;
-import static com.starQeem.woha.util.constant.PAGE_NUM;
 
 /**
  * @Date: 2023/4/29 17:49
@@ -27,6 +26,9 @@ public class MyCommentController {
     * */
     @PostMapping
     public String CommentInput(comment comment) throws MessagingException {
+        if (comment.getStoryId() == null && comment.getStrategyId() == null && comment.getPicturesId() == null){
+            return null;
+        }
         commentService.Comment(comment);
         if (comment.getPicturesId() != null){
             return "redirect:/my/pictures/mypicturesdetail/"+comment.getPicturesId();
@@ -44,6 +46,9 @@ public class MyCommentController {
                                         @RequestParam(value = "picturesId", required = false) Long picturesId,
                                         @RequestParam(value = "storyId", required = false) Long storyId,
                                         @RequestParam(value = "strategyId",required = false)Long strategyId){
+        if (picturesId == null && storyId == null && strategyId == null){
+            return null;
+        }
         commentService.removeComment(id);
         if (picturesId != null){
             return "redirect:/my/pictures/mypicturesdetail/"+picturesId;
@@ -58,9 +63,6 @@ public class MyCommentController {
     * */
     @GetMapping(value = {"/info","/info/{pageNum}"})
     public String info(@PathVariable(value = "pageNum",required = false)Integer pageNum, Model model){
-        if (pageNum == null){
-            pageNum = PAGE_NUM;
-        }
         PageInfo<comment> pageInfo = commentService.info(pageNum,COMMENT_PAGE_SIZE);
         model.addAttribute("page",pageInfo);
         return "my/info";
@@ -70,9 +72,6 @@ public class MyCommentController {
     * */
     @GetMapping(value = {"/comment","/comment/{pageNum}"})
     public String comment(@PathVariable(value = "pageNum",required = false)Integer pageNum,Model model){
-        if (pageNum == null){
-            pageNum = PAGE_NUM;
-        }
         PageInfo<comment> pageInfo = commentService.comment(pageNum,COMMENT_PAGE_SIZE);
         model.addAttribute("page",pageInfo);
         return "my/comment";

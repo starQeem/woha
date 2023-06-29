@@ -33,13 +33,10 @@ public class MyPicturesController {
     @Resource
     private picturesMapper picturesMapper;
     /*
-    * 查询美图
+    * 查询壁纸
     * */
     @GetMapping(value = {"/mypictures","/mypictures/{pageNum}"})
-    public String mypictures(@PathVariable(value = "pageNum",required = false)Integer pageNum, Model model){
-        if (pageNum == null){
-            pageNum = PAGE_NUM;
-        }
+    public String myPictures(@PathVariable(value = "pageNum",required = false)Integer pageNum, Model model){
         PageInfo<pictures> pageInfo = picturesService.queryPictures(pageNum, PICTURES_PAGE_SIZE);
         model.addAttribute("page",pageInfo);
         return "my/pictures";
@@ -48,14 +45,14 @@ public class MyPicturesController {
     * 跳转到新增图片页面
     * */
     @GetMapping("/mypicturesInput")
-    public String getmypicturesInput(){
+    public String getMyPicturesInput(){
         return "my/picturesInput";
     }
     /*
     * 新增图片
     * */
     @PostMapping("/mypicturesInput")
-    public String mypicturesInput(pictures pictures, RedirectAttributes attributes){
+    public String myPicturesInput(pictures pictures){
         picturesService.savePictures(pictures);
         return "redirect:/my/pictures/mypictures";
     }
@@ -63,7 +60,7 @@ public class MyPicturesController {
     * 跳转到图片修改页面
     * */
     @GetMapping("/mypicturesUpdate/{id}")
-    public String getmypicturesUpdate(@PathVariable("id")Long id,Model model){
+    public String getMyPicturesUpdate(@PathVariable("id")Long id,Model model){
         pictures pictures = picturesMapper.selectById(id);
         model.addAttribute("pictures",pictures);
         return "my/picturesUpdate";
@@ -72,7 +69,7 @@ public class MyPicturesController {
     * 图片编辑
     * */
     @PostMapping("/mypicturesUpdate")
-    public String mypicturesUpdate(pictures pictures){
+    public String myPicturesUpdate(pictures pictures){
         picturesService.updatePictures(pictures);
         return "redirect:/my/pictures/mypictures";
     }
@@ -91,7 +88,7 @@ public class MyPicturesController {
     * 图片详情
     * */
     @GetMapping("/mypicturesdetail/{id}")
-    public String mypicturesdetail(@PathVariable("id")Long id, Model model){
+    public String myPicturesDetail(@PathVariable("id")Long id, Model model){
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         Integer liked = picturesService.getLikedCount(id);

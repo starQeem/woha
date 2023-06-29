@@ -14,6 +14,7 @@ import com.starQeem.woha.mapper.commentMapper;
 import com.starQeem.woha.mapper.picturesMapper;
 import com.starQeem.woha.pojo.*;
 import com.starQeem.woha.service.*;
+import com.starQeem.woha.util.updateGradeUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -52,13 +53,15 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
      * */
     @Override
     public PageInfo<pictures> queryPictures(Integer pageNum, int pageSize) {
+        if (pageNum == null){
+            pageNum = PAGE_NUM;
+        }
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("create_time desc");
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         List<pictures> picturesList = picturesMapper.getUserWithPictures(Long.valueOf(user.getId()));
-        PageInfo<pictures> pageInfo = new PageInfo<>(picturesList, pageSize);
-        return pageInfo;
+        return new PageInfo<>(picturesList, pageSize);
     }
 
     /*
@@ -77,9 +80,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
         PageHelper.startPage(pageNum, pageSize);
         //查询数据库
         List<pictures> picturesList = picturesMapper.getPicturesListPageInfo(title);
-        PageInfo<pictures> pageInfo = new PageInfo<>(picturesList, pageSize);
-        //将List集合丢到分页对象里
-        return pageInfo;
+        return new PageInfo<>(picturesList, pageSize);
     }
 
     /*
@@ -101,30 +102,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
             Integer experience = userTask.getExperience(); //未完成
             userTask.setExperience(experience + TASK_WEEK_EXPERIENCE);
             userTask.setWeeklytaskPictures(STATUS_ONE);   //设置为已完成状态
-            if (userTask.getExperience() >= GRADE_SIX) {  //判断用户经验值达到的等级
-                userTask.setGrade(6);
-            } else {
-                switch (userTask.getExperience() / 100) {
-                    case 9:
-                    case 8:
-                    case 7:
-                        userTask.setGrade(5);
-                        break;
-                    case 6:
-                    case 5:
-                        userTask.setGrade(4);
-                        break;
-                    case 4:
-                        userTask.setGrade(3);
-                        break;
-                    case 3:
-                        userTask.setGrade(2);
-                        break;
-                    default:
-                        userTask.setGrade(1);
-                }
-            }
-            userTaskService.updateById(userTask);
+            updateGradeUtils.updateGrade(userTask);  //更新等级
         }
         return picturesService.save(pictures);
     }

@@ -292,11 +292,11 @@
   <div class="container a-container" id="a-container">
     <form method="post" th:action="@{/register}" class="form" id="a-form">
       <h2 class="form_title title">注册账号</h2>
-      <div class="form_icons">
-        <i class="iconfont icon-QQ"></i>
-        <i class="iconfont icon-weixin"></i>
-        <i class="iconfont icon-bilibili-line"></i>
-      </div><br><br>
+<!--      <div class="form_icons">-->
+<!--        <i class="iconfont icon-QQ"></i>-->
+<!--        <i class="iconfont icon-weixin"></i>-->
+<!--        <i class="iconfont icon-bilibili-line"></i>-->
+<!--      </div><br><br>-->
       <span class="form_span" style="color: red" th:text="${message}" th:if="${message!=null}">请注册</span>
       <input type="text" th:value="${email}" class="form_input" id="email" name="email" placeholder="Email" >
       <input type="password" th:value="${password}" class="form_input" id="password" name="password" placeholder="Password">

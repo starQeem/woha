@@ -25,7 +25,7 @@ public class followController {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         if (user != null){
-            followService.savefollow(Long.valueOf(user.getId()),id);
+            followService.saveFollow(Long.valueOf(user.getId()),id);
             return "redirect:/user/{id}";
         }else {
             return "redirect:/login";  //未登录跳转到登录页面

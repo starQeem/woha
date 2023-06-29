@@ -15,6 +15,7 @@ import com.starQeem.woha.mapper.storyMapper;
 import com.starQeem.woha.pojo.*;
 import com.starQeem.woha.service.*;
 import com.starQeem.woha.util.MarkdownUtil;
+import com.starQeem.woha.util.updateGradeUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -70,18 +71,19 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
      * */
     @Override
     public PageInfo<story> queryMyStory(Integer pageNum, int PAGE_SIZE, Long id) {
+        if (pageNum == null){
+            pageNum = PAGE_NUM;
+        }
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         PageHelper.startPage(pageNum, PAGE_SIZE);
         PageHelper.orderBy("create_time desc");
         if (id.equals(0L)) {
             List<story> storyList = storyMapper.getUserWithStory(Long.valueOf(user.getId()));
-            PageInfo<story> pageInfo = new PageInfo<>(storyList, PAGE_SIZE);
-            return pageInfo;
+            return new PageInfo<>(storyList, PAGE_SIZE);
         } else {
             List<story> storyList = storyMapper.getUserWithStory(id);
-            PageInfo<story> pageInfo = new PageInfo<>(storyList, PAGE_SIZE);
-            return pageInfo;
+            return new PageInfo<>(storyList, PAGE_SIZE);
         }
     }
 
@@ -101,10 +103,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
         PageHelper.startPage(pageNum, pageSize);
         //查询数据库
         List<story> storyList = storyMapper.getStory(title);
-        //将数据库中的列表信息存入redis中
-        PageInfo<story> pageInfo = new PageInfo<>(storyList, pageSize);
-        //将List集合丢到分页对象里
-        return pageInfo;
+        return new PageInfo<>(storyList, pageSize);
     }
 
     /*
@@ -154,30 +153,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
                 Integer experience = userTask.getExperience();
                 userTask.setExperience(experience + TASK_DAY_EXPERIENCE);  //经验+
                 userTask.setDailytaskStory(STATUS_ONE);  //设置为完成状态
-                if (userTask.getExperience() >= GRADE_SIX) {
-                    userTask.setGrade(6);
-                } else {
-                    switch (userTask.getExperience() / 100) {
-                        case 9:
-                        case 8:
-                        case 7:
-                            userTask.setGrade(5);
-                            break;
-                        case 6:
-                        case 5:
-                            userTask.setGrade(4);
-                            break;
-                        case 4:
-                            userTask.setGrade(3);
-                            break;
-                        case 3:
-                            userTask.setGrade(2);
-                            break;
-                        default:
-                            userTask.setGrade(1);
-                    }
-                }
-                userTaskService.updateById(userTask);
+                updateGradeUtils.updateGrade(userTask);  //更新等级
             }
             String html = MarkdownUtil.markdownToHtml(story.getContent());
             story.setContent(html);
@@ -204,30 +180,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
                 Integer experience = userTask.getExperience();
                 userTask.setExperience(experience + TASK_DAY_EXPERIENCE);  //经验+
                 userTask.setDailytaskStory(STATUS_ONE);  //设置为完成状态
-                if (userTask.getExperience() >= GRADE_SIX) {
-                    userTask.setGrade(6);
-                } else {
-                    switch (userTask.getExperience() / 100) {
-                        case 9:
-                        case 8:
-                        case 7:
-                            userTask.setGrade(5);
-                            break;
-                        case 6:
-                        case 5:
-                            userTask.setGrade(4);
-                            break;
-                        case 4:
-                            userTask.setGrade(3);
-                            break;
-                        case 3:
-                            userTask.setGrade(2);
-                            break;
-                        default:
-                            userTask.setGrade(1);
-                    }
-                }
-                userTaskService.updateById(userTask);
+                updateGradeUtils.updateGrade(userTask);  //更新等级
             }
             String html = MarkdownUtil.markdownToHtml(story.getContent());
             story.setContent(html);
@@ -258,14 +211,14 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
             story story = storyMapper.getStoryById(id);
             if (story == null) {
                 //缓存空字符串
-                stringRedisTemplate.opsForValue().set(STORY_DETAIL + id.toString(), "", TIME_BIG, TimeUnit.SECONDS);
+                stringRedisTemplate.opsForValue().set(STORY_DETAIL + id,"", TIME_BIG, TimeUnit.SECONDS);
                 return null;
             }
             UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
             updateWrapper.setSql("views = views + 1").eq("id", id);
             storyService.update(updateWrapper);
             //将数据库中查询的故事详情写入redis中
-            stringRedisTemplate.opsForValue().set(STORY_DETAIL + id.toString(), JSONUtil.toJsonStr(story), TIME_MAX + RandomUtil.randomInt(0, 300), TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(STORY_DETAIL + id,JSONUtil.toJsonStr(story), TIME_MAX + RandomUtil.randomInt(0, 300), TimeUnit.SECONDS);
             String html = MarkdownUtil.markdownToHtml(story.getContent());
             story.setContent(html);
             //返回故事详情
@@ -339,9 +292,8 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
                 orderByDesc("update_time").
                 orderByDesc("liked").
                 last("limit 5");
-        List<story> storyList = storyMapper.selectList(queryWrapper);
         //返回图片列表
-        return storyList;
+        return storyMapper.selectList(queryWrapper);
 
     }
 
@@ -394,8 +346,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
             queryWrapper.select("id", "avatar")
                     .apply("FIND_IN_SET(id, {0})", firstThree)
                     .last("ORDER BY FIELD(id, " + firstThree + ")");
-            List<user> ThreeUserLikedList = userService.getBaseMapper().selectList(queryWrapper);
-            return ThreeUserLikedList;
+            return userService.getBaseMapper().selectList(queryWrapper);
         } else {
             return null;
         }

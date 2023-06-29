@@ -24,11 +24,8 @@ public class MyFollowController {
     * 我的关注
     * */
     @GetMapping("/follow")
-    public String follow(Model model,String nickName){
-        if (nickName == null){
-           nickName = "";
-        }
-        List<user> userList = followService.getfollowList();
+    public String follow(Model model){
+        List<user> userList = followService.getFollowList();
         model.addAttribute("userList",userList);
         return "my/follow";
     }
@@ -36,10 +33,7 @@ public class MyFollowController {
     * 我的粉丝
     * */
     @GetMapping("/fans")
-    public String fans(Model model,String nickName){
-        if (nickName == null){
-            nickName = "";
-        }
+    public String fans(Model model){
         List<user> userList = followService.getFansList();
         model.addAttribute("userList",userList);
         return "my/fans";

@@ -17,7 +17,7 @@ public interface followService extends IService<follow> {
      * @param userId   用户id
      * @param followId 需要关注的用户id
      */
-    void savefollow(Long userId,Long followId);
+    void saveFollow(Long userId,Long followId);
 
     /**
      * 是否关注用户
@@ -33,7 +33,7 @@ public interface followService extends IService<follow> {
      *
      * @return {@link List}<{@link user}>
      */
-    List<user> getfollowList();
+    List<user> getFollowList();
 
     /**
      * 查询关注我的列表

@@ -71,7 +71,7 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
     @Override
     public void sendCode(String email) throws MessagingException {
         //生成6位随机验证码
-        String code = RandomUtil.randomNumbers(6);
+        String code = RandomUtil.randomNumbers(CODE_SIZE);
         System.out.println(code);
         emailComponent.sendVerificationCode(EMAIL_FORM, email, code);  //发送验证码
         //将验证码存入redis中
@@ -103,7 +103,7 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
             queryUser.setHobby(USER_MESSAGE);
         }
         if (queryUser.getNickName() == null || queryUser.getNickName().equals("")) {
-            queryUser.setNickName(USER_NICK + RandomUtil.randomString(10));
+            queryUser.setNickName(USER_NICK + RandomUtil.randomString(DEFAULT_USER_NICK_NAME_SIZE));
         }
         if (queryUser.getAvatar() == null || queryUser.getAvatar().equals("")) {
             queryUser.setAvatar(USER_AVATAR);
@@ -123,8 +123,7 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
         queryWrapper
                 .select("id", "nick_name", "sex", "email", "signature", "hobby")
                 .eq("id", Long.valueOf(user.getId()));
-        user userMessage = userMapper.selectOne(queryWrapper);
-        return userMessage;
+        return userMapper.selectOne(queryWrapper);
     }
 
     /*
@@ -164,8 +163,7 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
      * */
     @Override
     public user getUserWithGrade(Long id) {
-        user user = userMapper.getUserWithGrade(id);
-        return user;
+        return userMapper.getUserWithGrade(id);
     }
 
     /*
@@ -247,7 +245,6 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
      * 获取用户列表
      *
      * @param pageNum 页面num
-     * @param title   标题
      * @return {@link PageInfo}<{@link user}>
      */
     @Override
@@ -264,9 +261,8 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
         PageHelper.startPage(pageNum, pageSize);
         //查询数据库
         List<user> userList = userMapper.getUserList(nickName);
-        PageInfo<user> pageInfo = new PageInfo<>(userList, pageSize);
         //将List集合丢到分页对象里
-        return pageInfo;
+        return new PageInfo<>(userList, pageSize);
     }
 
 }

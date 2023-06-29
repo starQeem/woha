@@ -29,13 +29,13 @@ public class followServiceImpl extends ServiceImpl<followMapper, follow> impleme
     * 关注和取关
     * */
     @Override
-    public void savefollow(Long userId,Long followId) {
+    public void saveFollow(Long userId,Long followId) {
         QueryWrapper<follow> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",userId).eq("follow_user_id",followId);
-        follow getfollow = followService.getBaseMapper().selectOne(queryWrapper);
+        follow getFollow = followService.getBaseMapper().selectOne(queryWrapper);
         follow follow = new follow();
-        if (getfollow != null){
-            followService.removeById(getfollow.getId());   //已关注,删除关注记录
+        if (getFollow != null){
+            followService.removeById(getFollow.getId());   //已关注,删除关注记录
         }else {
             follow.setUserId(userId);
             follow.setFollowUserId(followId);
@@ -60,7 +60,7 @@ public class followServiceImpl extends ServiceImpl<followMapper, follow> impleme
     * 查询关注列表
     * */
     @Override
-    public List<user> getfollowList() {
+    public List<user> getFollowList() {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         return userMapper.getFollowUser(Long.valueOf(user.getId()));

@@ -9,6 +9,7 @@ import com.starQeem.woha.dto.userDto;
 import com.starQeem.woha.mapper.commentMapper;
 import com.starQeem.woha.pojo.*;
 import com.starQeem.woha.service.*;
+import com.starQeem.woha.util.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -50,6 +51,9 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
      * */
     @Override
     public boolean Comment(comment comment) throws MessagingException {
+        if (comment.getPicturesId() ==null && comment.getStrategyId() == null && comment.getStoryId() == null){
+            return false;
+        }
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         comment.setUserId(Long.valueOf(user.getId()));
@@ -142,7 +146,7 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
             //是父评论且有子评论,父评论和子评论一起删除
             queryWrapper.eq("parent_comment_id", id).or(wrapper -> wrapper.eq("id", id));
             int i = commentService.getBaseMapper().delete(queryWrapper);
-            if (i > 0) {
+                if (i > 0) {
                 if (comment.getPicturesId() != null) {
                     UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
                     updateWrapper.eq("id",comment.getPicturesId()).setSql("comment_count = comment_count - " + i);  //评论数-i
@@ -180,13 +184,7 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
             boolean isLiked = likedUserIds.toString().contains(userId.toString());
             //判断是否点过赞
             if (isLiked){//点过赞,取消赞
-                String[] idArray = likedUserIds.toString().split(",");
-                // 将字符串数组转换成 Stream<String> 对象
-                Stream<String> idStream = Arrays.stream(idArray);
-                // 过滤掉要删除的 ID
-                Stream<String> filteredIdStream = idStream.filter(id -> !id.equals(String.valueOf(userId)));
-                // 将过滤后的字符串数组转换成以逗号分隔的字符串
-                String newIds = filteredIdStream.collect(Collectors.joining(","));
+                String newIds = StringUtils.delULikeId(likedUserIds.toString(), userId);
                 stringRedisTemplate.opsForHash().put(COMMENT_LIKED,commentId.toString(),newIds);
             }else {//没点过赞
                 if (likedUserIds.equals("")) {
@@ -202,15 +200,52 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
     * */
     @Override
     public PageInfo<comment> info(Integer pageNum, int pageSize) {
+        if (pageNum == null){
+            pageNum = PAGE_NUM;
+        }
+        //获取用户信息
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
+
         List<comment> commentPicturesInfo = commentMapper.commentPicturesInfo(Long.valueOf(user.getId()));
         List<comment> commentStrategyInfo = commentMapper.commentStrategyInfo(Long.valueOf(user.getId()));
         List<comment> commentStoryInfo = commentMapper.commentStoryInfo(Long.valueOf(user.getId()));
+        return mergeList(commentPicturesInfo, commentStrategyInfo, commentStoryInfo, pageNum, pageSize);
+    }
+    /*
+     * 我的所有文章的评论
+     * */
+    @Override
+    public PageInfo<comment> comment(Integer pageNum, int pageSize) {
+        if (pageNum == null){
+            pageNum = PAGE_NUM;
+        }
+        //获取用户信息
+        Subject subject = SecurityUtils.getSubject();
+        userDto user = (userDto) subject.getPrincipal();
+
+        List<comment> picturesComment = commentMapper.picturesComment(Long.valueOf(user.getId()));//图片文章评论
+        List<comment> strategyComment = commentMapper.strategyComment(Long.valueOf(user.getId()));//攻略文章评论
+        List<comment> storyComment = commentMapper.storyComment(Long.valueOf(user.getId()));//广场文章评论
+        return mergeList(picturesComment,strategyComment,storyComment,pageNum,pageSize);
+
+    }
+
+    /**
+     * 合并集合列表并分页
+     *
+     * @param commentList1 评论list1
+     * @param commentList2 注释用于
+     * @param commentList3 评论list3
+     * @param pageNum      页面num
+     * @param pageSize     页面大小
+     * @return {@link PageInfo}<{@link comment}>
+     */
+    private PageInfo<comment> mergeList(List<comment> commentList1,List<comment> commentList2,List<comment> commentList3,Integer pageNum,int pageSize){
         List<comment> commentList = new ArrayList<>();
-        commentList.addAll(commentPicturesInfo);
-        commentList.addAll(commentStrategyInfo);
-        commentList.addAll(commentStoryInfo);
+        commentList.addAll(commentList1);
+        commentList.addAll(commentList2);
+        commentList.addAll(commentList3);
         // 按照 update_time 属性降序排列
         commentList.sort(Comparator.comparing(comment::getUpdateTime).reversed());
 
@@ -220,7 +255,7 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
 
         List<comment> pagedCommentList = commentList.subList(fromIndex, toIndex);
 
-        PageInfo<comment> pageInfo = new PageInfo<>();  
+        PageInfo<comment> pageInfo = new PageInfo<>();
         pageInfo.setList(pagedCommentList);
         pageInfo.setTotal(total);
         pageInfo.setPageNum(pageNum);
@@ -239,58 +274,6 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
 
         pageInfo.setHasPreviousPage(hasPreviousPage);
         pageInfo.setHasNextPage(hasNextPage);
-
-        return pageInfo;
-    }
-    /*
-     * 我的所有文章的评论
-     * */
-    @Override
-    public PageInfo<comment> comment(Integer pageNum, int pageSize) {
-        //获取用户信息
-        Subject subject = SecurityUtils.getSubject();
-        userDto user = (userDto) subject.getPrincipal();
-
-        List<comment> picturesComment = commentMapper.picturesComment(Long.valueOf(user.getId()));//图片文章评论
-        List<comment> strategyComment = commentMapper.strategyComment(Long.valueOf(user.getId()));//攻略文章评论
-        List<comment> storyComment = commentMapper.storyComment(Long.valueOf(user.getId()));//广场文章评论
-        //将3个查询结果的集合合并为1个
-        List<comment> commentList = new ArrayList<>();
-        commentList.addAll(picturesComment);
-        commentList.addAll(strategyComment);
-        commentList.addAll(storyComment);
-        // 对合并出来的集合按照 update_time 属性降序排列
-        commentList.sort(Comparator.comparing(comment::getUpdateTime).reversed());
-
-        int total = commentList.size();  //数据总条数
-        int fromIndex = (pageNum - 1) * pageSize;  //截止当前页码数的所有数据条数
-        int toIndex = Math.min(fromIndex + pageSize, total); //分页查询中的结束索引位置
-
-        List<comment> pagedCommentList = commentList.subList(fromIndex, toIndex);  //调用subList进行分页
-
-        PageInfo<comment> pageInfo = new PageInfo<>();
-        pageInfo.setList(pagedCommentList);  //存入合并出来的集合
-        pageInfo.setTotal(total);  //存入数据总条数
-        pageInfo.setPageNum(pageNum);  //存入当前页码数
-        pageInfo.setPageSize(pageSize); //存入一页有多少条数据
-
-        // 计算总页数
-        int totalPages = (int) Math.ceil((double) total / pageSize);
-
-        int[] nums = new int[totalPages];
-        for (int i = 0; i < totalPages; i++) {
-            nums[i] = i + 1;
-        }
-        pageInfo.setNavigatepageNums(nums); //存入页码数组
-
-        // 判断是否有上一页和下一页
-        boolean hasPreviousPage = pageNum > 1;
-        boolean hasNextPage = pageNum < totalPages;
-
-        //将是否有上一页下一页的信息存入pageInfo对象中
-        pageInfo.setHasPreviousPage(hasPreviousPage);
-        pageInfo.setHasNextPage(hasNextPage);
-
         return pageInfo;
     }
 }

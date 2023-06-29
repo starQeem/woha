@@ -27,6 +27,9 @@ public class commentController {
      * */
     @PostMapping
     public String commentInput(comment comment) throws MessagingException {
+        if (comment.getPicturesId() == null && comment.getStrategyId() == null && comment.getStoryId() == null){
+            return null;
+        }
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         if (user != null){
@@ -44,7 +47,10 @@ public class commentController {
     * 点赞
     * */
     @PostMapping("/liked/{commentId}")
-    public String commentLiked(@PathVariable("commentId")Long commentId, comment comment, Model model){
+    public String commentLiked(@PathVariable("commentId")Long commentId, comment comment){
+        if (comment.getPicturesId() == null && comment.getStrategyId() == null && comment.getStoryId() == null){
+            return null;
+        }
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         if (user != null){

@@ -92,7 +92,7 @@ public class storyController {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         if (user != null){
-            boolean status = storyService.liked(id, Long.valueOf(user.getId()));
+            storyService.liked(id, Long.valueOf(user.getId()));
         }
         return "redirect:/story/storydetail/" + id;
     }

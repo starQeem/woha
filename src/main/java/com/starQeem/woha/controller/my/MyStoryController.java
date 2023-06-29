@@ -33,10 +33,7 @@ public class MyStoryController {
      * 查询故事
      * */
     @GetMapping(value = {"/mystory","/mystory/{pageNum}"})
-    public String mystory(@PathVariable(value = "pageNum",required = false)Integer pageNum, Model model){
-        if (pageNum == null){
-            pageNum = PAGE_NUM;
-        }
+    public String myStory(@PathVariable(value = "pageNum",required = false)Integer pageNum, Model model){
         PageInfo<story> pageInfo = storyService.queryMyStory(pageNum, PAGE_SIZE,Long.valueOf(STATUS_ZERO));
         model.addAttribute("page",pageInfo);
         return "my/story";
@@ -45,14 +42,14 @@ public class MyStoryController {
      * 跳转到我的故事发布页面
      * */
     @GetMapping("/mystoryInput")
-    public String getmystoryInput(){
+    public String getMyStoryInput(){
         return "my/storyInput";
     }
     /*
      * 我的故事发布
      * */
     @PostMapping("/mystoryInput")
-    public String mystoryInput(story story){
+    public String myStoryInput(story story){
         storyService.saveStory(story);
         return "redirect:/my/story/mystory";
     }
@@ -60,7 +57,7 @@ public class MyStoryController {
      * 跳转到我的故事编辑页面
      * */
     @GetMapping("/mystoryUpdate/{id}")
-    public String getmystoryUpdate(@PathVariable("id")Long id, Model model){
+    public String getMyStoryUpdate(@PathVariable("id")Long id, Model model){
         story story = storyService.getBaseMapper().selectById(id);
         model.addAttribute("story",story);
         return "my/storyUpdate";
@@ -69,7 +66,7 @@ public class MyStoryController {
      * 故事编辑
      * */
     @PostMapping("/mystoryUpdate")
-    public String mystoryUpdate(story story){
+    public String myStoryUpdate(story story){
         storyService.updateStory(story);
         return "redirect:/my/story/mystory";
     }
@@ -77,7 +74,7 @@ public class MyStoryController {
      * 故事删除
      * */
     @RequestMapping("/mystoryDelete/{id}")
-    public String mystoryDeleteById(@PathVariable("id")Long id, @RequestParam(value = "pageNum",required = false)Integer pageNum){
+    public String myStoryDeleteById(@PathVariable("id")Long id, @RequestParam(value = "pageNum",required = false)Integer pageNum){
         storyService.removeStoryById(id);
         if (pageNum == null){
             return "redirect:/story";
@@ -88,7 +85,7 @@ public class MyStoryController {
      * 故事详情
      * */
     @GetMapping("/mystory/storydetail/{id}")
-    public String mystoryById(@PathVariable("id")Long id, Model model){
+    public String myStoryById(@PathVariable("id")Long id, Model model){
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         story story = storyService.queryStoryDetail(id);

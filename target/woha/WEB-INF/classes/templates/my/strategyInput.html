@@ -39,7 +39,7 @@
         <a href="more.html" th:href="@{/story}" class="a"><i class="mini question circle outline icon"></i>&nbsp;问答</a>
         <a href="story.html" th:href="@{/strategy}" class="a"><i class="mini book icon"></i>&nbsp;文章</a>
         <a href="picture.html" th:href="@{/pictures}" class="a"><i class="mini image outline icon"></i>&nbsp;壁纸</a>
-        <a href="message.html" target="_blank" th:href="@{/my}" class="selected a"><i class="mini info icon"></i>我的</a>
+        <a href="message.html" th:href="@{/my}" class="selected a"><i class="mini info icon"></i>我的</a>
         <a href="more.html" th:href="@{/more}" class="a2"><i class="mini comment alternate outline icon"></i>&nbsp;联系我们</a>
         <div shiro:guest class="a">
           <a href="message.html" th:href="@{/login}"><i class="mini sign in alternate icon"></i>&nbsp;登录</a>
@@ -54,11 +54,13 @@
   <!-- header 代码开始end -->
   <!--中间内容-->
   <DIV>
-    <DIV  class="fieldX"> <button onclick="uploadImage('article')" style="color: rgba(144 116 102);background-color:white; border: 0px solid rgba(85,66,32,1.00);">上传文章首图</button>&nbsp;
-      <input type="file" style="height: 38px;width: 890px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" id="uploadInput"/>
+    <DIV  class="fieldX"> <button onclick="uploadImage('article')"  style=" border: 0px solid rgba(85,66,32,1.00);position: absolute; width: 138PX; height: 36PX;  color: #fff; border-radius: 5PX; background: #907466; text-align: center;">点击上传文章首图</button>&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="file" style="height: 38px;width: 855px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" id="uploadInput"/>
     </DIV>
-    <DIV class="fieldX"> <button onclick="uploadImage('text')" style="color: rgba(144 116 102);background-color:white; border: 0px solid rgba(85,66,32,1.00); ">上传文本图片</button>&nbsp;
-      <input type="file" style="height: 38px;width: 890px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" id="uploadInput2"/>
+    <DIV class="fieldX"> <button onclick="uploadImage('text')"  style=" border: 0px solid rgba(85,66,32,1.00);position: absolute; width: 138PX; height: 36PX;  color: #fff; border-radius: 5PX; background: #907466; text-align: center;">点击上传文本图片</button>&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="file" style="height: 38px;width: 855px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" id="uploadInput2"/>
     </DIV>
     <div class="fieldX" style="position: relative;">
       <label class="label">文本图地址</label>

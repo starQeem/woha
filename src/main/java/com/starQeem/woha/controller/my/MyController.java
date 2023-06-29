@@ -1,12 +1,9 @@
 package com.starQeem.woha.controller.my;
 
-import com.starQeem.woha.dto.userDto;
 import com.starQeem.woha.pojo.user;
 import com.starQeem.woha.pojo.userTask;
 import com.starQeem.woha.service.userTaskService;
 import com.starQeem.woha.service.userService;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +38,7 @@ public class MyController {
      * 跳转到我的信息编辑页面
      * */
     @GetMapping("/mymessageUpdate")
-    public String getmessageUpdate(Model model){
+    public String getMessageUpdate(Model model){
         user users = userService.getMessage();
         model.addAttribute("user",users);
         return "my/messageUpdate";
