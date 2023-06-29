@@ -22,20 +22,4 @@
 - 数据库: MySQL
 - 缓存中间件: Redis
 
-**系列文章** 
 
-<a href="http://itstarqeem.space/blogs/57" target="_blank">喔哈星-项目介绍</a><br>
-<a href="http://itstarqeem.space/blogs/58" target="_blank">喔哈星-数据库表和实体类</a><br>
-<a href="http://itstarqeem.space/blogs/59" target="_blank">喔哈星-首页</a><br>
-<a href="http://itstarqeem.space/blogs/64" target="_blank">喔哈星-登录、注册和注销功能</a><br>
-<a href="http://itstarqeem.space/blogs/63" target="_blank">喔哈星-查看用户资料</a><br>
-<a href="http://itstarqeem.space/blogs/63" target="_blank">喔哈星-用户关注、取关、修改资料、修改密码、修改头像</a><br>
-<a href="http://itstarqeem.space/blogs/66" target="_blank">喔哈星-每日任务、每周任务</a><br>
-<a href="http://itstarqeem.space/blogs/69" target="_blank">喔哈星-文章、图片的编辑、发布和删除</a><br>
-<a href="http://itstarqeem.space/blogs/62" target="_blank">喔哈星-文章</a><br>
-<a href="http://itstarqeem.space/blogs/61" target="_blank">喔哈星-壁纸</a><br>
-<a href="http://itstarqeem.space/blogs/60" target="_blank">喔哈星-问答</a><br>
-<a href="http://itstarqeem.space/blogs/70" target="_blank">喔哈星-查看"回复我的"和查看"评论我的"(新增的功能)</a><br>
-<a href="http://itstarqeem.space/blogs/73" target="_blank">喔哈星-防止登陆爆破</a><br>
-<a href="http://itstarqeem.space/blogs/67" target="_blank">喔哈星-点赞功能</a><br>
-<a href="http://itstarqeem.space/blogs/68" target="_blank">喔哈星-评论功能</a>
