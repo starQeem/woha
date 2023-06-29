@@ -33,13 +33,15 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         System.out.println("执行了=>授权");
-        //拿到当前登录的对象
+        //获取当前登录用户
         Subject subject = SecurityUtils.getSubject();
         userDto userDto = (userDto) subject.getPrincipal();
+        //从数据库中查询用户权限
         QueryWrapper<user> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("id","perms").eq("id", userDto.getId());
         user user = userService.getBaseMapper().selectOne(queryWrapper);
-        if (user.getPerms() != null && user.getPerms().equals("admin")){
+        if (user.getPerms() != null && user.getPerms().equals("admin")){ //判断用户权限是否为admin
+            //是,执行授权
             SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
             System.out.println("执行了=>授权管理员权限");
             info.addStringPermission("user:admin");  //授权管理员权限
@@ -57,6 +59,7 @@ public class UserRealm extends AuthorizingRealm {
             queryWrapper.select("id","username","password","perms").eq("username",userToken.getUsername());
             user user = userService.getBaseMapper().selectOne(queryWrapper);
             if (user == null){
+                //用户不存在
                 return null;  //抛出异常 UnknownAccountException
             }
             userDto userDto = new userDto();
@@ -68,8 +71,10 @@ public class UserRealm extends AuthorizingRealm {
             //验证码登录
             String getCode = stringRedisTemplate.opsForValue().get(USER_CODE + userToken.getUsername());
             if (getCode == null){
+                //redis中验证码为空(过期了或压根没有)
                 return null;  //抛出异常 UnknownAccountException
             }
+            //根据用户名查询用户信息
             QueryWrapper<user> queryWrapper = new QueryWrapper<>();
             queryWrapper.select("id","username","perms").eq("username", userToken.getUsername());
             user user = userService.getBaseMapper().selectOne(queryWrapper);

@@ -6,9 +6,7 @@ import com.starQeem.woha.service.commentService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
@@ -30,10 +28,11 @@ public class commentController {
         if (comment.getPicturesId() == null && comment.getStrategyId() == null && comment.getStoryId() == null){
             return null;
         }
+        //获取用户信息
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         if (user != null){
-            commentService.Comment(comment);
+            commentService.Comment(comment); //保存评论信息
         }
         if (comment.getPicturesId() != null) {
             return "redirect:/pictures/picturesdetail/" + comment.getPicturesId();
@@ -44,16 +43,18 @@ public class commentController {
         return "redirect:/strategy/strategydetail/" + comment.getStrategyId();
     }
     /*
-    * 点赞
+    * 评论区点赞
     * */
     @PostMapping("/liked/{commentId}")
     public String commentLiked(@PathVariable("commentId")Long commentId, comment comment){
         if (comment.getPicturesId() == null && comment.getStrategyId() == null && comment.getStoryId() == null){
             return null;
         }
+        //获取用户信息
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         if (user != null){
+            //保存点赞信息
             commentService.liked(commentId, Long.valueOf(user.getId()));
         }
         if (comment.getPicturesId()!=null){

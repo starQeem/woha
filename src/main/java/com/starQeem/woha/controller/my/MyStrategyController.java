@@ -31,73 +31,75 @@ public class MyStrategyController {
     @Resource
     private strategyService strategyService;
     /*
-    * 查询我发布的攻略
+    * 查询我发布的文章
     * */
     @GetMapping(value = {"/mystrategy","/mystrategy/{pageNum}"})
     public String strategy(@PathVariable(value = "pageNum",required = false)Integer pageNum,Model model){
-        PageInfo<strategy> pageInfo = strategyService.getUserWithStrategyWithStrategyType(pageNum, PAGE_SIZE, (long) STATUS_ZERO);
+        PageInfo<strategy> pageInfo = strategyService.getUserWithStrategyWithStrategyType(pageNum, PAGE_SIZE, (long) STATUS_ZERO);//查询文章列表
         model.addAttribute("page",pageInfo);
         return "my/strategy";
     }
     /*
-    * 跳转到百科发布页面
+    * 跳转到文章发布页面
     * */
     @GetMapping("/strategyInput")
     public String getStrategyInput(Model model){
-        List<strategyType> typeList = strategyTypeService.list();
+        List<strategyType> typeList = strategyTypeService.list(); //查询所有文章分类
         model.addAttribute("typeList",typeList);
         return "my/strategyInput";
     }
     /*
-    * 百科发布
+    * 文章发布
     * */
     @PostMapping("/strategyInput")
     public String strategyInput(strategy strategy){
-        strategyService.saveStrategy(strategy);
+        strategyService.saveStrategy(strategy); //保存文章信息
         return "redirect:/my/strategy/mystrategy";
     }
     /*
-    * 跳转到百科编辑页面
+    * 跳转到文章编辑页面
     * */
     @GetMapping("/strategyUpdate/{id}")
     public String getStrategyUpdate(@PathVariable("id") Long id,Model model){
-        strategy strategy = strategyService.getUserWithStrategyWithStrategyTypeById(id);
-        List<strategyType> typeList = strategyTypeService.list();
+        strategy strategy = strategyService.getUserWithStrategyWithStrategyTypeById(id);//根据文章id查询文章详情
+        List<strategyType> typeList = strategyTypeService.list();//查询所有文章分类
         model.addAttribute("strategy", strategy);
         model.addAttribute("typeList",typeList);
         return "my/strategyUpdate";
     }
     /*
-    * 百科编辑
+    * 文章编辑
     * */
     @PostMapping("/strategyUpdate")
     public String strategyUpdate(strategy strategy){
-        strategyService.updateStrategy(strategy);
+        strategyService.updateStrategy(strategy); //更新文章
         return "redirect:/my/strategy/mystrategy";
     }
     /*
-    * 百科删除
+    * 文章删除
     * */
     @RequestMapping("/strategyDelete/{id}")
     public String strategyDeleteById(@PathVariable("id")Long id, @RequestParam(value = "pageNum",required = false)Integer pageNum){
-        strategyService.removeStrategyById(id);
+        strategyService.removeStrategyById(id); //根据文章id删除文章
         if (pageNum == null){
             return "redirect:/strategy";
         }
         return "redirect:/my/strategy/mystrategy/" + pageNum;
     }
     /*
-    * 攻略详情
+    * 文章详情
     * */
     @GetMapping("/strategydetail/{id}")
     public String strategyDetailById(@PathVariable("id")Long id,Model model){
+        //获取用户信息
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
-        strategy strategy = strategyService.queryStrategyDetailById(id,Long.valueOf(user.getId()));
-        List<comment> commentList = strategyService.getComments(id);
+
+        strategy strategy = strategyService.queryStrategyDetailById(id,Long.valueOf(user.getId())); //查询文章详情
+        List<comment> commentList = strategyService.getComments(id); //查询评论信息
         boolean status = strategyService.getStatus(id);//查询是否点赞
-        Integer liked = strategyService.getLikedCount(id);
-        List<user> likedUserThree = strategyService.getLikedUserThree(id);
+        Integer liked = strategyService.getLikedCount(id); //查询文章点赞数
+        List<user> likedUserThree = strategyService.getLikedUserThree(id); //查询点赞文章的前三名用户
         model.addAttribute("strategy", strategy);
         model.addAttribute("commentsList",commentList);
         model.addAttribute("status",status);

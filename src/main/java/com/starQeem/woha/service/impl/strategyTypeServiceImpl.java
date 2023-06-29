@@ -47,7 +47,7 @@ public class strategyTypeServiceImpl extends ServiceImpl<strategyTypeMapper, str
             List<strategyType> strategyTypeList = strategyTypeService.list();
             //将数据库中的列表信息存入redis中
             String strategyTypeListJson = JSONUtil.toJsonStr(strategyTypeList);
-            stringRedisTemplate.opsForValue().set(STRATEGY_TYPE_LIST,strategyTypeListJson,TIME_STARTEGY, TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(STRATEGY_TYPE_LIST,strategyTypeListJson,TIME_STRATEGY, TimeUnit.SECONDS);
             return strategyTypeList;
         }
     }

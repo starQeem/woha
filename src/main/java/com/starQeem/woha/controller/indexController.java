@@ -30,16 +30,16 @@ public class indexController {
     * */
     @GetMapping
     public String index(Model model){
-        List<story> storyList = storyService.getStoryListFive();
-        List<strategy> strategyList = strategyService.getStrategyListFive();
-        List<pictures> picturesList = picturesService.getPicturesListFiveBylike();
+        List<story> storyList = storyService.getStoryListFive(); //查询五条问答列表信息
+        List<strategy> strategyList = strategyService.getStrategyListFive(); //查询五条文章列表信息
+        List<pictures> picturesList = picturesService.getPicturesListFiveBylike();  //查询图片列表
         model.addAttribute("storyList",storyList);
         model.addAttribute("strategyList",strategyList);
         model.addAttribute("picturesList",picturesList);
         return "index";
     }
     /*
-    * 跳转到关于喔哈星页面
+    * 跳转到联系管理员页面
     * */
     @GetMapping("/more")
     public String more(){

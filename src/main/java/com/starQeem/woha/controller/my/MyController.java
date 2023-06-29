@@ -28,8 +28,8 @@ public class MyController {
      * */
     @GetMapping
     public String User(Model model){
-        user queryUser = userService.queryMyMessage();
-        userTask grade = userTaskService.getGradeByUserId();
+        user queryUser = userService.queryMyMessage(); //查询用户信息
+        userTask grade = userTaskService.getGradeByUserId();  //查询用户等级信息
         model.addAttribute("user",queryUser);
         model.addAttribute("grade",grade);
         return "my/my";
@@ -39,8 +39,8 @@ public class MyController {
      * */
     @GetMapping("/mymessageUpdate")
     public String getMessageUpdate(Model model){
-        user users = userService.getMessage();
-        model.addAttribute("user",users);
+        user user = userService.getMessage(); //查询我的信息(回显)
+        model.addAttribute("user",user);
         return "my/messageUpdate";
     }
     /*
@@ -48,7 +48,7 @@ public class MyController {
      * */
     @PostMapping("/mymessageUpdate")
     public String messageUpdate(user user){
-        userService.updateById(user);
+        userService.updateById(user); //修改我的信息
         return "redirect:/my";
     }
     /*
@@ -56,8 +56,8 @@ public class MyController {
     * */
     @GetMapping("/avatar")
     public String getAvatar(Model model){
-        user getUser = userService.getAvatarAddress();
-        model.addAttribute("user",getUser);
+        user user = userService.getAvatarAddress(); //查询用户信息
+        model.addAttribute("user",user);
         return "my/avatarUpdate";
     }
     /*
@@ -65,7 +65,7 @@ public class MyController {
     * */
     @PostMapping("/avatar")
     public String avatar(user user){
-        userService.updateById(user);
+        userService.updateById(user); //修改我的头像
         return "redirect:/my";
     }
     /*
@@ -80,7 +80,7 @@ public class MyController {
     * */
     @PostMapping("/password")
     public String password(String username, String password, String newPassword,RedirectAttributes attributes){
-        boolean success = userService.updatePassword(username, password, newPassword);
+        boolean success = userService.updatePassword(username, password, newPassword); //修改我的密码
         if (success){
             return "redirect:/logout";
         }else {

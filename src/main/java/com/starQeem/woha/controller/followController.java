@@ -22,10 +22,11 @@ public class followController {
     private followService followService;
     @GetMapping("/follow/{id}")
     public String follow(@PathVariable("id") Long id){
+        //获取当前登录的用户信息
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         if (user != null){
-            followService.saveFollow(Long.valueOf(user.getId()),id);
+            followService.saveFollow(Long.valueOf(user.getId()),id); //关注或取关用户
             return "redirect:/user/{id}";
         }else {
             return "redirect:/login";  //未登录跳转到登录页面

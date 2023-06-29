@@ -1,7 +1,6 @@
 package com.starQeem.woha.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
-import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,8 +33,8 @@ public class ShiroConfig {
         //拦截
         filterMap.put("/admin", "perms[user:admin]"); //拥有管理员权限才能访问
         filterMap.put("/admin/**", "perms[user:admin]"); //拥有管理员权限才能访问
-        filterMap.put("/my/**","authc");
-        filterMap.put("/my","authc");
+        filterMap.put("/my/**","authc"); //登录后才能访问
+        filterMap.put("/my","authc");  //登录后才能访问
         bean.setFilterChainDefinitionMap(filterMap);
         //设置登录的请求
         bean.setLoginUrl("/login");

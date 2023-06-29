@@ -12,14 +12,14 @@ import java.util.List;
  */
 public interface strategyTypeService extends IService<strategyType> {
     /**
-     * 查询攻略的所有分类
+     * 查询文章的所有分类
      *
      * @return {@link List}<{@link strategyType}>
      */
     List<strategyType> queryStrategyType();
 
     /**
-     * 获取战略类型列表
+     * 获取文章类型列表
      *
      * @param pageNum 页面num
      * @return {@link PageInfo}<{@link strategyType}>
@@ -27,14 +27,14 @@ public interface strategyTypeService extends IService<strategyType> {
     PageInfo<strategyType> getStrategyTypeList(Integer pageNum);
 
     /**
-     * 拯救策略类型
+     * 保存文章类型
      *
-     * @param strategyType 策略类型
+     * @param strategyType 文章类型
      */
     void saveStrategyType(strategyType strategyType);
 
     /**
-     * 通过id获取战略类型
+     * 通过id获取文章类型
      *
      * @param id id
      * @return {@link strategyType}
@@ -42,7 +42,7 @@ public interface strategyTypeService extends IService<strategyType> {
     strategyType getStrategyTypeById(Long id);
 
     /**
-     * 策略更新通过id类型
+     * 文章更新通过id类型
      *
      * @param strategyType 策略类型
      */

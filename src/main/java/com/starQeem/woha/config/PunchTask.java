@@ -24,12 +24,14 @@ public class PunchTask {
     @Scheduled(cron = "0 0 0 * * ?")  //每日0点每日刷新任务状态
     public void resetPunchAndTaskStatusDay() {
         UpdateWrapper<userTask> updateWrapper = new UpdateWrapper<>();
+        //设置为未完成
         updateWrapper.set("dailytask_strategy", STATUS_ZERO).set("dailytask_story",STATUS_ZERO).set("dailytask_login",STATUS_ZERO);
         userTaskService.update(updateWrapper);
     }
     @Scheduled(cron = "0 0 0 ? * MON")  //每周一0点刷新每周任务状态
     public void resetPunchAndTaskStatusWeek() {
         UpdateWrapper<userTask> updateWrapper = new UpdateWrapper<>();
+        //设置为未完成
         updateWrapper.set("weeklytask_pictures", STATUS_ZERO);
         userTaskService.update(updateWrapper);
     }

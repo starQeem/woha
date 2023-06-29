@@ -34,14 +34,6 @@
         on s.user_id = u.id
         where s.id = #{id} and u.id = #{userId};
     </select>
-    <select id="getMyPicturesIndexByUpdateTime" resultMap="BaseResultMap">
-        select s.id,s.title,s.content,s.first_picture,s.update_time,s.views,s.comment_count,s.liked,s.description,
-               u.nick_name user_nick_name
-        from story s
-        join user u on s.user_id = u.id
-        where u.id = #{userId}
-        order by update_time desc limit 3;
-    </select>
     <select id="getStory" resultMap="BaseResultMap">
         select s.id,s.title,s.first_picture,s.update_time,s.views,s.comment_count,s.liked,s.description,
                u.nick_name user_nick_name,u.id user_id,u.avatar user_avatar

@@ -29,7 +29,7 @@ public class MyCommentController {
         if (comment.getStoryId() == null && comment.getStrategyId() == null && comment.getPicturesId() == null){
             return null;
         }
-        commentService.Comment(comment);
+        commentService.Comment(comment); //保存评论信息
         if (comment.getPicturesId() != null){
             return "redirect:/my/pictures/mypicturesdetail/"+comment.getPicturesId();
         }
@@ -49,7 +49,7 @@ public class MyCommentController {
         if (picturesId == null && storyId == null && strategyId == null){
             return null;
         }
-        commentService.removeComment(id);
+        commentService.removeComment(id); //根据id删除评论
         if (picturesId != null){
             return "redirect:/my/pictures/mypicturesdetail/"+picturesId;
         }
@@ -63,7 +63,7 @@ public class MyCommentController {
     * */
     @GetMapping(value = {"/info","/info/{pageNum}"})
     public String info(@PathVariable(value = "pageNum",required = false)Integer pageNum, Model model){
-        PageInfo<comment> pageInfo = commentService.info(pageNum,COMMENT_PAGE_SIZE);
+        PageInfo<comment> pageInfo = commentService.info(pageNum,COMMENT_PAGE_SIZE); //查询回复我的评论列表
         model.addAttribute("page",pageInfo);
         return "my/info";
     }
@@ -72,7 +72,7 @@ public class MyCommentController {
     * */
     @GetMapping(value = {"/comment","/comment/{pageNum}"})
     public String comment(@PathVariable(value = "pageNum",required = false)Integer pageNum,Model model){
-        PageInfo<comment> pageInfo = commentService.comment(pageNum,COMMENT_PAGE_SIZE);
+        PageInfo<comment> pageInfo = commentService.comment(pageNum,COMMENT_PAGE_SIZE);  //查询所有评论我的评论
         model.addAttribute("page",pageInfo);
         return "my/comment";
     }

@@ -14,15 +14,15 @@ import java.util.List;
  */
 public interface storyService extends IService<story>{
     /**
-     * 新增故事文章
+     * 新增问答
      *
-     * @param story 故事
+     * @param story 问答
      * @return boolean
      */
     boolean saveStory(story story);
 
     /**
-     * 查询我的故事文章列表
+     * 查询我的问答问答列表
      *
      * @param pageNum   页码
      * @param PAGE_SIZE 数据条数
@@ -32,7 +32,7 @@ public interface storyService extends IService<story>{
     PageInfo<story> queryMyStory(Integer pageNum,int PAGE_SIZE,Long id);
 
     /**
-     * 登录后查询故事文章详情
+     * 登录后查询问答问答详情
      *
      * @param id id
      * @return {@link story}
@@ -40,28 +40,28 @@ public interface storyService extends IService<story>{
     story queryStoryDetail(Long id);
 
     /**
-     * 更新故事文章
+     * 更新问答问答
      *
-     * @param story 故事
+     * @param story 问答
      * @return boolean
      */
     boolean updateStory(story story);
 
 
     /**
-     * 查询故事文章列表
+     * 查询问答问答列表
      *
      * @param pageNum  页码
      * @param pageSize 数据条数
-     * @param title    文章标题
+     * @param title    问答标题
      * @return {@link PageInfo}<{@link story}>
      */
     PageInfo<story> getStoryListPageInfo(Integer pageNum, int pageSize, String title);
 
     /**
-     * 查询故事文章详情
+     * 查询问答问答详情
      *
-     * @param id 故事id
+     * @param id 问答id
      * @return {@link story}
      */
     story getStoryById(Long id);
@@ -69,7 +69,7 @@ public interface storyService extends IService<story>{
     /**
      * 查询评论列表
      *
-     * @param id 故事id
+     * @param id 问答id
      * @return {@link List}<{@link comment}>
      */
     List<comment> getComments(Long id);
@@ -77,7 +77,7 @@ public interface storyService extends IService<story>{
     /**
      * 点赞
      *
-     * @param storyId 故事id
+     * @param storyId 问答id
      * @param userId  用户id
      * @return boolean
      */
@@ -86,20 +86,20 @@ public interface storyService extends IService<story>{
     /**
      * 查询是否点赞
      *
-     * @param storyId 故事id
+     * @param storyId 问答id
      * @return boolean
      */
     boolean getStatus(Long storyId);
 
     /**
-     * 得到五条故事信息
+     * 得到五条问答信息
      *
      * @return {@link List}<{@link story}>
      */
     List<story> getStoryListFive();
 
     /**
-     * 通过id删除故事文章
+     * 通过id删除问答
      *
      * @param id id
      * @return boolean
@@ -107,9 +107,9 @@ public interface storyService extends IService<story>{
     boolean removeStoryById(Long id);
 
     /**
-     * 查询故事文章点赞数
+     * 查询问答文章点赞数
      *
-     * @param id 故事id
+     * @param id 问答id
      * @return {@link Integer}
      */
     Integer getLikedCount(Long id);
@@ -117,7 +117,7 @@ public interface storyService extends IService<story>{
     /**
      * 获取点赞的前三名用户
      *
-     * @param id 故事id
+     * @param id 问答id
      * @return {@link List}<{@link user}>
      */
     List<user> getLikedUserThree(Long id);

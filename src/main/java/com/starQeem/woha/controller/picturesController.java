@@ -24,7 +24,7 @@ import static com.starQeem.woha.util.constant.PICTURES_PAGE_SIZE;
 /**
  * @Date: 2023/4/21 17:04
  * @author: Qeem
- * 精美图片
+ * 壁纸
  */
 @Controller
 @RequestMapping("/pictures")
@@ -36,7 +36,7 @@ public class picturesController {
     * */
     @GetMapping(value = {"","/{pageNum}"})
     public String pictures(@PathVariable(value = "pageNum",required = false)Integer pageNum, String title, Model model){
-        PageInfo<pictures> pageInfo = picturesService.getPicturesListPageInfo(pageNum, PICTURES_PAGE_SIZE, title);
+        PageInfo<pictures> pageInfo = picturesService.getPicturesListPageInfo(pageNum, PICTURES_PAGE_SIZE, title);//查询图片列表
         model.addAttribute("page",pageInfo);
         return "picture";
     }
@@ -45,9 +45,11 @@ public class picturesController {
     * */
     @GetMapping("/picturesdetail/{id}")
     public String picturesdetail(@PathVariable("id")Long id, Model model){
+        //获取用户信息
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
-        Integer liked = picturesService.getLikedCount(id);  //点赞数
+
+        Integer liked = picturesService.getLikedCount(id);  //获取图片的点赞数
         pictures pictures = picturesService.getPicturesDetailById(id);  //图片详情
         List<comment> commentList = picturesService.getComments(id);  //评论区
         List<user> likedUserThree = picturesService.getLikedUserThree(id);  //点赞排行榜

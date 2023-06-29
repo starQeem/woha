@@ -45,10 +45,10 @@ public class UserController {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
     private LineCaptcha lineCaptcha;
-    private String CODE = null;
-    private String USERNAME = null;
-    private String PASSWORD = null;
-    private String MESSAGE = null;
+    private String CODE = null; //验证码
+    private String USERNAME = null; //用户名
+    private String PASSWORD = null;  //密码
+    private String MESSAGE = null; //提示消息
     /*
      * 跳转到账号密码登录页面
      * */

@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Optional;
 
 
 /**
@@ -33,7 +32,7 @@ public class adminController {
      */
     @GetMapping(value = {"","/{pageNum}"})
     public String admin(Model model,@PathVariable(value = "pageNum",required = false)Integer pageNum,String nickName){
-        PageInfo<user> pageInfo =userService.getUserList(pageNum,nickName);
+        PageInfo<user> pageInfo =userService.getUserList(pageNum,nickName);//获取用户列表
         model.addAttribute("page",pageInfo);
         return "admin/admin";
     }
@@ -46,24 +45,24 @@ public class adminController {
      */
     @GetMapping("/status/{id}")
     public String updateStatus(@PathVariable("id")Long id){
-        userService.updateStatus(id);
+        userService.updateStatus(id); //更新用户状态
         return "redirect:/admin";
     }
 
     /**
-     * 跳转到攻略类型管理页面
+     * 跳转到文章类型管理页面
      *
      * @return {@link String}
      */
     @GetMapping(value = {"/strategyType/{pageNum}","/strategyType"})
     public String strategyType(@PathVariable(value = "pageNum",required = false)Integer pageNum,Model model){
-        PageInfo<strategyType> pageInfo = strategyTypeService.getStrategyTypeList(pageNum);
+        PageInfo<strategyType> pageInfo = strategyTypeService.getStrategyTypeList(pageNum); //获取文章类型列表
         model.addAttribute("page",pageInfo);
         return "admin/strategyType";
     }
 
     /**
-     * 跳转到分类新增页面
+     * 跳转到文章分类新增页面
      *
      * @return {@link String}
      */
@@ -73,50 +72,50 @@ public class adminController {
     }
 
     /**
-     * 分类新增
+     * 文章分类新增
      *
      * @param strategyType 策略类型
      * @return {@link String}
      */
     @PostMapping("/strategyTypeInput")
     public String StrategyTypeInput(strategyType strategyType){
-        strategyTypeService.saveStrategyType(strategyType);
+        strategyTypeService.saveStrategyType(strategyType); //保存文章分类
         return "redirect:/admin/strategyType";
     }
 
     /**
-     * 跳转到攻略分类修改页面
+     * 跳转到文章分类修改页面
      *
      * @return {@link String}
      */
     @GetMapping("/strategyType/{id}/edit")
     public String getStrategyTypeUpdate(@PathVariable("id")Long id,Model model){
-        strategyType strategyType = strategyTypeService.getStrategyTypeById(id);
+        strategyType strategyType = strategyTypeService.getStrategyTypeById(id); //根据id查询文章分类信息(回显)
         model.addAttribute("strategyType",strategyType);
         return "admin/strategyTypeUpdate";
     }
 
     /**
-     * 攻略分类修改
+     * 文章分类修改
      *
      * @param strategyType 策略类型
      * @return {@link String}
      */
     @PostMapping("/strategyTypeUpdate")
     public String StrategyTypeUpdate(strategyType strategyType){
-        strategyTypeService.StrategyTypeUpdateById(strategyType);
+        strategyTypeService.StrategyTypeUpdateById(strategyType); //文章分类修改
         return "redirect:/admin/strategyType";
     }
 
     /**
-     * 策略类型删除
+     * 文章类型删除
      *
      * @param id id
      * @return {@link String}
      */
     @RequestMapping("/strategyType/{id}/delete")
     public String StrategyTypeDelete(@PathVariable("id")Long id,@RequestParam("pageNum")Integer pageNum){
-        strategyTypeService.StrategyTypeDeleteById(id);
+        strategyTypeService.StrategyTypeDeleteById(id); //根据id删除文章分类
         return "redirect:/admin/strategyType/" + pageNum;
     }
 }

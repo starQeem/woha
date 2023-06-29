@@ -56,16 +56,14 @@
     <DIV>
         <DIV  class="fieldX"> <button onclick="uploadImage('article')"  style=" border: 0px solid rgba(85,66,32,1.00);position: absolute; width: 138PX; height: 36PX;  color: #fff; border-radius: 5PX; background: #907466; text-align: center;">点击上传文章首图</button>&nbsp;
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="file" style="height: 38px;width: 855px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" id="uploadInput"/>
+            <input type="file" style="height: 38px;width: 185px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" id="uploadInput"/>
+            <input th:value="${strategy.firstPicture}"  style="height: 38px;width: 666px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" type="text" name="firstPicture2" placeholder="首图引用地址">
         </DIV>
         <DIV class="fieldX"> <button onclick="uploadImage('text')"  style=" border: 0px solid rgba(85,66,32,1.00);position: absolute; width: 138PX; height: 36PX;  color: #fff; border-radius: 5PX; background: #907466; text-align: center;">点击上传文本图片</button>&nbsp;
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="file" style="height: 38px;width: 855px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" id="uploadInput2"/>
+            <input type="file" style="height: 38px;width: 185px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" id="uploadInput2"/>
+            <input style="height: 38px;width: 666px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" type="text" name="textPicturesAddress" placeholder="文本图地址">
         </DIV>
-        <div class="fieldX" style="position: relative;">
-          <label class="label">文本图地址</label>
-          <input  Class="label-R" type="text" name="textPicturesAddress" placeholder="文本图地址">
-        </div>
 <form id="blog-form" action="#" th:object="${strategy}" th:action="@{/my/strategy/strategyUpdate}" method="post" class="ui form">
     <input type="hidden" name="published">
     <input type="hidden" name="id" th:value="*{id}">
@@ -82,14 +80,11 @@
 <div style="overflow: hidden; height: 90PX; width: 1000PX;">
   <div class="fieldX" style="position: relative;">
     <label class="label">分类</label>
-          <select name="typeId" id="select" class="label-fl" title="">
+          <select name="typeId" id="select" class="label-fl" title="" style="width: 888px">
               <option style="width: 100px;height: 20px" value="1" th:each="type : ${typeList}" th:value="${type.id}" th:text="${type.name}">我的故事</option>
           </select>
     </div>
- <div class="fieldX" style="position: relative; LEFT:490PX; TOP:-60PX;">
-          <label class="label">首图</label>
-          <input  Class="label-R2" type="text" name="firstPicture" th:value="*{firstPicture}" placeholder="首图引用地址">
-        </div>
+          <input type="hidden" name="firstPicture" th:value="*{firstPicture}" placeholder="首图引用地址">
 	 </div>
 <textarea  name="description" th:text="*{description}" style="border: 1PX solid #907466; width: 992PX; height: 160PX; line-height: 20px;" placeholder="简介..."></textarea>
 
@@ -145,6 +140,7 @@
         console.log("Image URL: " + imageUrl);
         if (type === 'article'){
           document.getElementsByName("firstPicture")[0].value = imageUrl;
+          document.getElementsByName("firstPicture2")[0].value = imageUrl;
         }
         if (type === 'text'){
           document.getElementsByName("textPicturesAddress")[0].value = "<a target='_blank' href=\" " + imageUrl + "\"><img src=\"" + imageUrl + "\"  alt=\"\"></a>";

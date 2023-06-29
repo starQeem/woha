@@ -14,13 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.starQeem.woha.util.constant.PAGE_NUM;
 import static com.starQeem.woha.util.constant.PAGE_SIZE;
 
 /**
  * @Date: 2023/4/22 22:12
  * @author: Qeem
- * 攻略
+ * 文章
  */
 @Controller
 @RequestMapping("/strategy")
@@ -30,13 +29,13 @@ public class strategyController {
     @Resource
     private strategyService strategyService;
     /*
-    * 查询攻略列表
+    * 查询文章列表
     * */
     @GetMapping(value = {"","/{id}"})
     public String strategy(@PathVariable(value = "id",required = false)Long id,
                           @RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
                           Model model, String title){
-        List<strategyType> typeList = strategyTypeService.queryStrategyType();  //查询所有分类
+        List<strategyType> typeList = strategyTypeService.queryStrategyType();  //查询所有文章分类
         model.addAttribute("typeList",typeList);
         if (id == null){
             id = typeList.get(0).getId();
@@ -47,11 +46,12 @@ public class strategyController {
         return "strategy";
     }
     /*
-    * 查询用户发布的攻略列表
+    * 查询用户发布的文章列表
     * */
     @GetMapping(value = {"/user/{id}","/user/{id}/{pageNum}"})
     public String UserStrategy(@RequestParam(value = "pageNum",required = false)Integer pageNum,
                                @PathVariable("id") Long id,Model model){
+        //根据文章分类id查询文章列表信息
         PageInfo<strategy> pageInfo = strategyService.getUserWithStrategyWithStrategyType(pageNum, PAGE_SIZE, id);
         model.addAttribute("page",pageInfo);
         model.addAttribute("userStrategy","1");
@@ -59,10 +59,11 @@ public class strategyController {
         return "strategy";
     }
     /*
-    * 查询攻略详情
+    * 查询文章详情
     * */
     @GetMapping("strategydetail/{id}")
     public String strategyDetail(@PathVariable("id")Long id, Model model){
+        //获取用户信息
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         if (user != null){
@@ -94,10 +95,11 @@ public class strategyController {
      * */
     @PostMapping("/liked/{id}")
     public String liked(@PathVariable("id")Long id){
+        //获取当前登录的用户信息
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         if (user != null){
-            strategyService.liked(id, Long.valueOf(user.getId()));
+            strategyService.liked(id, Long.valueOf(user.getId())); //保存点赞信息
         }
         return "redirect:/strategy/strategydetail/" + id;
     }

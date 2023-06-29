@@ -21,7 +21,7 @@ import static com.starQeem.woha.util.constant.PAGE_SIZE;
 /**
  * @Date: 2023/4/21 12:27
  * @author: Qeem
- * 喔哈广场
+ * 问答
  */
 @Controller
 @RequestMapping("/story")
@@ -29,24 +29,21 @@ public class storyController {
     @Resource
     private storyService storyService;
     /*
-     * 查询帖子列表
+     * 查询问答列表
      * */
     @GetMapping(value = {"", "/{pageNum}"})
     public String story(@PathVariable(value = "pageNum", required = false) Integer pageNum, Model model, String title) {
-        PageInfo<story> pageInfo = storyService.getStoryListPageInfo(pageNum, PAGE_SIZE, title);
+        PageInfo<story> pageInfo = storyService.getStoryListPageInfo(pageNum, PAGE_SIZE, title); //查询问答列表
         model.addAttribute("page", pageInfo);
         return "story";
     }
     /*
-    * 查询用户发布的帖子列表
+    * 查询用户发布的问答列表
     * */
     @GetMapping(value = {"/user/{id}","/user/{id}/{pageNum}"})
     public String UserStory(@RequestParam(value = "pageNum",required = false)Integer pageNum,
                             @PathVariable("id") Long id,Model model){
-        if (pageNum == null){
-            pageNum = PAGE_NUM;
-        }
-        PageInfo<story> pageInfo = storyService.queryMyStory(pageNum, PAGE_SIZE, id);
+        PageInfo<story> pageInfo = storyService.queryMyStory(pageNum, PAGE_SIZE, id); //根据用户id查询问答列表
         model.addAttribute("page",pageInfo);
         model.addAttribute("userStory","1");
         model.addAttribute("userId",id);
@@ -54,17 +51,18 @@ public class storyController {
     }
 
     /*
-     * 查询故事详情
+     * 查询问答详情
      * */
     @GetMapping("/storydetail/{id}")
     public String storydetail(@PathVariable("id") Long id, Model model) {
+        //获取当前登录的用户信息
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         Integer liked = storyService.getLikedCount(id);  //获取点赞数
         List<user> likedUserThree = storyService.getLikedUserThree(id); //点赞排行榜
         if (user != null) {
             //已经登陆
-            story story = storyService.queryStoryDetail(id);  //查询文章详情并且判断有没有完成每日任务，没有则把每日任务：观看一篇故事设置为已完成状态
+            story story = storyService.queryStoryDetail(id);  //查询问答详情并且判断有没有完成每日任务，没有则把每日任务：观看一篇故事设置为已完成状态
             boolean status = storyService.getStatus(id);//查询是否点赞
             model.addAttribute("story", story);
             model.addAttribute("status",status);

@@ -14,15 +14,15 @@ import java.util.List;
  */
 public interface strategyService extends IService<strategy> {
     /**
-     * 新增攻略
+     * 新增文章
      *
-     * @param strategy 攻略
+     * @param strategy 文章
      * @return boolean
      */
     boolean saveStrategy(strategy strategy);
 
     /**
-     * 查询我发布的攻略
+     * 查询我发布的文章
      *
      * @param pageNum  页码
      * @param pageSize 数据条数
@@ -32,53 +32,53 @@ public interface strategyService extends IService<strategy> {
     PageInfo<strategy> getUserWithStrategyWithStrategyType(Integer pageNum, int pageSize,Long id);
 
     /**
-     * 攻略回显
+     * 文章回显
      *
-     * @param id 攻略id
+     * @param id 文章id
      * @return {@link strategy}
      */
     strategy getUserWithStrategyWithStrategyTypeById(Long id);
 
     /**
-     * 更新攻略
+     * 更新文章
      *
-     * @param strategy 攻略
+     * @param strategy 文章
      * @return boolean
      */
     boolean updateStrategy(strategy strategy);
 
     /**
-     * 通过id获取攻略详情
+     * 通过id获取文章详情
      *
-     * @param id 攻略id
+     * @param id 文章id
      * @return {@link strategy}
      */
     strategy getStrategyDetailById(Long id);
 
     /**
-     * 查询攻略分类列表
+     * 查询文章分类列表
      *
      * @param pageNum  页码
      * @param pageSize 数据条数
-     * @param id       攻略分类id
+     * @param id       文章分类id
      * @param title    标题
      * @return {@link PageInfo}<{@link strategy}>
      */
     PageInfo<strategy> pageStrategyWithStrategyTypeById(Integer pageNum, int pageSize, Long id, String title);
 
     /**
-     * 登录后查询攻略详情
+     * 登录后查询文章详情
      *
-     * @param id     攻略id
+     * @param id     文章id
      * @param userId 用户id
      * @return {@link strategy}
      */
     strategy queryStrategyDetailById(Long id, Long userId);
 
     /**
-     * 根据攻略id查询评论列表
+     * 根据文章id查询评论列表
      *
-     * @param id 攻略id
+     * @param id 文章id
      * @return {@link List}<{@link comment}>
      */
     List<comment> getComments(Long id);
@@ -86,7 +86,7 @@ public interface strategyService extends IService<strategy> {
     /**
      * 点赞
      *
-     * @param strategyId 攻略id
+     * @param strategyId 文章id
      * @param userId     用户id
      * @return boolean
      */
@@ -95,30 +95,30 @@ public interface strategyService extends IService<strategy> {
     /**
      * 查询是否点赞
      *
-     * @param strategyId 攻略id
+     * @param strategyId 文章id
      * @return boolean
      */
     boolean getStatus(Long strategyId);
 
     /**
-     * 查询五条攻略记录
+     * 查询五条文章记录
      *
      * @return {@link List}<{@link strategy}>
      */
     List<strategy> getStrategyListFive();
 
     /**
-     * 通过id删除攻略
+     * 通过id删除文章
      *
-     * @param id 攻略id
+     * @param id 文章id
      * @return boolean
      */
     boolean removeStrategyById(Long id);
 
     /**
-     * 查询攻略点赞数
+     * 查询文章点赞数
      *
-     * @param id 攻略id
+     * @param id 文章id
      * @return {@link Integer}
      */
     Integer getLikedCount(Long id);
@@ -126,7 +126,7 @@ public interface strategyService extends IService<strategy> {
     /**
      * 获取点赞的前三名用户
      *
-     * @param id 攻略id
+     * @param id 文章id
      * @return {@link List}<{@link user}>
      */
     List<user> getLikedUserThree(Long id);

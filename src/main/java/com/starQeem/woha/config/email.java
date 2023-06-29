@@ -31,13 +31,13 @@ public class email {
         simpleMailMessage.setFrom(form);   //发送邮件的邮箱号
         simpleMailMessage.setTo(to);   //接收邮件的邮箱号
         String suffix = "";
-        if (type == TYPE_ONE){
+        if (type == TYPE_ONE){ //图片
             suffix = "pictures/picturesdetail/" + comment.getPicturesId();
         }
-        if (type == TYPE_TWO){
+        if (type == TYPE_TWO){ //问答
             suffix = "story/storydetail/" + comment.getStoryId();
         }
-        if (type == TYPE_THREE){
+        if (type == TYPE_THREE){ //文章
             suffix = "strategy/strategydetail/" + comment.getStrategyId();
         }
         simpleMailMessage.setText("您在喔哈星的[" + title +"]中发布的评论:["+ commentContent +"]有新的回复,回复用户:[" + nickName + "] 回复信息:[" + comment.getContent() +"] 前去查看: wohaqeem.top/" + suffix);   //邮件内容

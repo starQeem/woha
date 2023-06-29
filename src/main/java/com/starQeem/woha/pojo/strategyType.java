@@ -14,5 +14,5 @@ import lombok.Data;
 public class strategyType {
     @TableId(type = IdType.AUTO)
     private Long id;  //主键id
-    private String name;  //攻略类型名称
+    private String name;  //文章类型名称
 }

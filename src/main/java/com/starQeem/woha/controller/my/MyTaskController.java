@@ -24,7 +24,7 @@ public class MyTaskController {
     * */
     @GetMapping
     public String task(Model model){
-        userTask userTasks = userTaskService.getMyTaskByUserId();
+        userTask userTasks = userTaskService.getMyTaskByUserId(); //查询我的任务信息
         model.addAttribute("task",userTasks);
         return "my/task";
     }

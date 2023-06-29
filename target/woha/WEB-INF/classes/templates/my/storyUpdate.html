@@ -56,16 +56,14 @@
   <DIV>
     <DIV  class="fieldX"> <button onclick="uploadImage('article')"  style=" border: 0px solid rgba(85,66,32,1.00);position: absolute; width: 138PX; height: 36PX;  color: #fff; border-radius: 5PX; background: #907466; text-align: center;">点击上传文章首图</button>&nbsp;
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type="file" style="height: 38px;width: 855px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" id="uploadInput"/>
+      <input type="file" style="height: 38px;width: 185px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" id="uploadInput"/>
+      <input th:value="${story.firstPicture}"  style="height: 38px;width: 666px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" type="text" name="firstPicture2" placeholder="首图地址" >
     </DIV>
     <DIV class="fieldX"> <button onclick="uploadImage('text')"  style=" border: 0px solid rgba(85,66,32,1.00);position: absolute; width: 138PX; height: 36PX;  color: #fff; border-radius: 5PX; background: #907466; text-align: center;">点击上传文本图片</button>&nbsp;
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type="file" style="height: 38px;width: 855px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" id="uploadInput2"/>
+      <input type="file" style="height: 38px;width: 185px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" id="uploadInput2"/>
+      <input  type="text" style="height: 38px;width: 666px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" name="textPicturesAddress" placeholder="文本图地址">
     </DIV>
-    <div class="fieldX" style="position: relative;">
-      <label class="label">文本图地址</label>
-      <input  Class="label-R" type="text" name="textPicturesAddress" placeholder="文本图地址">
-    </div>
     <form id="blogform" action="#" th:object="${story}" th:action="@{/my/story/mystoryUpdate}" method="post">
       <input type="hidden" name="published">
       <input type="hidden" name="id" th:value="*{id}">
@@ -73,10 +71,7 @@
         <label class="label">标题</label>
         <input  Class="label-R" style="width: 893px;" type="text" name="title" placeholder="标题" th:value="*{title}">
       </div>
-      <div class="fieldX" style="position: relative;">
-        <label class="label">首图</label>
-        <input  Class="label-R" style="width: 893px;" type="text" th:value="*{firstPicture}" name="firstPicture" placeholder="首图" >
-      </div>
+        <input  type="hidden" th:value="*{firstPicture}" name="firstPicture" placeholder="首图" >
       <div style="margin-top: 20PX;">
         <div class="" id="md-content">
           <textarea  style="border: 1PX solid #907466; width: 992PX; height: 360PX; line-height: 20px;" name="content" th:text="*{content}" placeholder="请输入文章内容..."></textarea>
@@ -137,6 +132,7 @@
           console.log("Image URL: " + imageUrl);
           if (type === 'article'){
             document.getElementsByName("firstPicture")[0].value = imageUrl;
+            document.getElementsByName("firstPicture2")[0].value = imageUrl;
           }
           if (type === 'text'){
             document.getElementsByName("textPicturesAddress")[0].value = "<a target='_blank' href=\" " + imageUrl + "\"><img src=\"" + imageUrl + "\"  alt=\"\"></a>";

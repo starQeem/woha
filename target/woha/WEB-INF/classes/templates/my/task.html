@@ -69,12 +69,12 @@
             </div>
             <div class="task-item" th:classappend="${task.dailytaskStrategy == 0} ? 'completed-task'">
                 <div class="task-title">每日任务</div>
-                <div class="task-description">浏览一篇百科 ex+10</div>
+                <div class="task-description">浏览一篇文章 ex+10</div>
                 <div class="task-status">状态: <span th:text="${task.dailytaskStrategy == 1} ? '已完成' : '未完成'"></span></div>
             </div>
             <div class="task-item" th:classappend="${task.dailytaskStory == 0} ? 'completed-task'">
                 <div class="task-title">每日任务</div>
-                <div class="task-description">浏览一篇故事 ex+10</div>
+                <div class="task-description">浏览一篇问答 ex+10</div>
                 <div class="task-status">状态：<span th:text="${task.dailytaskStory == 1} ? '已完成' : '未完成'"></span></div>
             </div>
             <div class="task-item" th:classappend="${task.weeklytaskPictures == 0} ? 'completed-task'">

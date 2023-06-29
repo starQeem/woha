@@ -57,17 +57,15 @@
         <DIV  class="fieldX">
             <button  onclick="uploadImage('article')" style=" border: 0px solid rgba(85,66,32,1.00);position: absolute; width: 108PX; height: 36PX;  color: #fff; border-radius: 5PX; background: #907466; text-align: center;">点击上传图片</button>&nbsp;
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="file" style="height: 38px;width: 890px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" id="uploadInput"/>
+            <input type="file" style="height: 38px;width: 185px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" id="uploadInput"/>
+            <input style="height: 38px;width: 703px; border: solid 1px rgba(144 116 102); border-radius: 5PX;padding: 5px;" type="text" name="picturesAddress2" placeholder="图片地址" >
         </DIV>
         <form id="blogform" action="#" th:action="@{/my/pictures/mypicturesInput}" method="post">
             <div class="fieldX" style="position: relative;">
                 <label class="label">标题</label>
                 <input  Class="label-R" style="width: 893px;" type="text" name="title" placeholder="标题" >
             </div>
-            <div class="fieldX" style="position: relative;">
-                <label class="label">图片</label>
-                <input  Class="label-R" style="width: 893px;" type="text" name="picturesAddress" placeholder="图片地址" >
-            </div>
+            <input  type="hidden" name="picturesAddress" placeholder="图片地址" >
             <textarea  name="content" style="border: 1PX solid #907466; width: 992PX; height: 350PX; line-height: 20px;" placeholder="图片描述..."></textarea>
             <div style="width: 400PX; margin: 10PX auto;">
                 <a href="#" th:href="@{/my/pictures/mypictures}">
@@ -115,6 +113,7 @@
                     var imageUrl = response.url; // 获取上传后的图片地址
                     console.log("Image URL: " + imageUrl);
                     document.getElementsByName("picturesAddress")[0].value = imageUrl;
+                    document.getElementsByName("picturesAddress2")[0].value = imageUrl;
                 }
             };
             xhr.send(formData); // 发送请求，上传文件

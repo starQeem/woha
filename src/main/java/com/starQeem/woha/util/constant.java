@@ -29,13 +29,13 @@ public class constant {
             "WKN7CP%2b5JlcgUiuD1nyme8IaxbNbPnANIw%3d&risl=&pid=ImgRaw&r=0";
     public final static String USER_CODE = "woha:user:code:"; //注册验证码
     public final static String EMAIL_FORM = "2572277647@qq.com";  //邮箱发送者
-    public final static String STRATEGY_TYPE_LIST = "woha:strategy:type"; //攻略分类
+    public final static String STRATEGY_TYPE_LIST = "woha:strategy:type"; //文章分类
     public final static String PICTURES_DETAIL = "woha:pictures:detail:"; //图片详情
-    public final static String STORY_DETAIL = "woha:story:detail:";  //故事详情
-    public final static String STRATEGY_DETAIL = "woha:strategy:detail:";  //攻略详情
+    public final static String STORY_DETAIL = "woha:story:detail:";  //问答详情
+    public final static String STRATEGY_DETAIL = "woha:strategy:detail:";  //文章详情
     public final static String PICTURES_LIKED = "woha:pictures:liked:";  //图片点赞的用户
-    public final static String STORY_LIKED = "woha:story:liked:";  //故事点赞的用户
-    public final static String STRATEGY_LIKED = "woha:strategy:liked:";  //攻略点赞的用户
+    public final static String STORY_LIKED = "woha:story:liked:";  //问答点赞的用户
+    public final static String STRATEGY_LIKED = "woha:strategy:liked:";  //文章点赞的用户
     public final static String COMMENT_LIKED = "woha:comment:liked";  //评论点赞的用户
     public final static int SEARCH_SIZE = 100000000;
     /*
@@ -46,8 +46,8 @@ public class constant {
     public final static int TIME_BIG = 180;
     public final static int TIME_MAX = 1800;
     public final static int TIME_CODE = 300;
-    public final static int TIME_STARTEGY = 7200;
-    public final static int TYPE_ONE = 1;
-    public final static int TYPE_TWO = 2;
-    public final static int TYPE_THREE = 3;
+    public final static int TIME_STRATEGY = 7200;
+    public final static int TYPE_ONE = 1; //图片
+    public final static int TYPE_TWO = 2; //问答
+    public final static int TYPE_THREE = 3; //文章
 }

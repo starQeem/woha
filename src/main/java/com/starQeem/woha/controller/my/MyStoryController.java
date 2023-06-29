@@ -6,13 +6,11 @@ import com.starQeem.woha.pojo.comment;
 import com.starQeem.woha.pojo.story;
 import com.starQeem.woha.pojo.user;
 import com.starQeem.woha.service.storyService;
-import com.starQeem.woha.service.userTaskService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -30,16 +28,16 @@ public class MyStoryController {
     @Resource
     private storyService storyService;
      /*
-     * 查询故事
+     * 查询问答
      * */
     @GetMapping(value = {"/mystory","/mystory/{pageNum}"})
     public String myStory(@PathVariable(value = "pageNum",required = false)Integer pageNum, Model model){
-        PageInfo<story> pageInfo = storyService.queryMyStory(pageNum, PAGE_SIZE,Long.valueOf(STATUS_ZERO));
+        PageInfo<story> pageInfo = storyService.queryMyStory(pageNum, PAGE_SIZE, (long) STATUS_ZERO); //查询问答列表
         model.addAttribute("page",pageInfo);
         return "my/story";
     }
     /*
-     * 跳转到我的故事发布页面
+     * 跳转到我的问答发布页面
      * */
     @GetMapping("/mystoryInput")
     public String getMyStoryInput(){
@@ -50,49 +48,51 @@ public class MyStoryController {
      * */
     @PostMapping("/mystoryInput")
     public String myStoryInput(story story){
-        storyService.saveStory(story);
+        storyService.saveStory(story); //问答发布
         return "redirect:/my/story/mystory";
     }
     /*
-     * 跳转到我的故事编辑页面
+     * 跳转到我的问答编辑页面
      * */
     @GetMapping("/mystoryUpdate/{id}")
     public String getMyStoryUpdate(@PathVariable("id")Long id, Model model){
-        story story = storyService.getBaseMapper().selectById(id);
+        story story = storyService.getBaseMapper().selectById(id); //根据问答id查询问答详情
         model.addAttribute("story",story);
         return "my/storyUpdate";
     }
     /*
-     * 故事编辑
+     * 问答编辑
      * */
     @PostMapping("/mystoryUpdate")
     public String myStoryUpdate(story story){
-        storyService.updateStory(story);
+        storyService.updateStory(story);  //问答修改
         return "redirect:/my/story/mystory";
     }
     /*
-     * 故事删除
+     * 问答删除
      * */
     @RequestMapping("/mystoryDelete/{id}")
     public String myStoryDeleteById(@PathVariable("id")Long id, @RequestParam(value = "pageNum",required = false)Integer pageNum){
-        storyService.removeStoryById(id);
+        storyService.removeStoryById(id); //根据问答id删除问答文章
         if (pageNum == null){
             return "redirect:/story";
         }
         return "redirect:/my/story/mystory/" + pageNum;
     }
     /*
-     * 故事详情
+     * 问答文章详情
      * */
     @GetMapping("/mystory/storydetail/{id}")
     public String myStoryById(@PathVariable("id")Long id, Model model){
+        //获取用户信息
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
-        story story = storyService.queryStoryDetail(id);
-        List<comment> commentList = storyService.getComments(id);
-        Integer liked = storyService.getLikedCount(id);
+
+        story story = storyService.queryStoryDetail(id);//查询问答详情
+        List<comment> commentList = storyService.getComments(id);//查询评论信息
+        Integer liked = storyService.getLikedCount(id);//查询问答文章点赞数
         boolean status = storyService.getStatus(id);//查询是否点赞
-        List<user> likedUserThree = storyService.getLikedUserThree(id);
+        List<user> likedUserThree = storyService.getLikedUserThree(id); //查询问答文章点赞的前三名用户
         model.addAttribute("story",story);
         model.addAttribute("commentsList",commentList);
         model.addAttribute("status",status);
