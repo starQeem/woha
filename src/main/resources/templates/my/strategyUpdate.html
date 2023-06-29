@@ -132,7 +132,7 @@
     formData.append("file", file); // 将文件添加到FormData对象中
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://api.superbed.cn/upload?token=0d4a8d87241e48d786cc853d207d6098"); // 设置请求方法和URL，token是Superbed提供的API Token
+    xhr.open("POST", "https://api.superbed.cn/upload?token="); // 设置请求方法和URL，token是Superbed提供的API Token
     xhr.onreadystatechange = function() {
       if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
         var response = JSON.parse(xhr.responseText);
