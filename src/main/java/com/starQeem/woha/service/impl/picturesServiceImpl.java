@@ -12,6 +12,7 @@ import com.github.pagehelper.PageInfo;
 import com.starQeem.woha.dto.userDto;
 import com.starQeem.woha.mapper.commentMapper;
 import com.starQeem.woha.mapper.picturesMapper;
+import com.starQeem.woha.mapper.userTaskMapper;
 import com.starQeem.woha.pojo.*;
 import com.starQeem.woha.service.*;
 import com.starQeem.woha.util.updateGradeUtils;
@@ -102,7 +103,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
             Integer experience = userTask.getExperience(); //未完成
             userTask.setExperience(experience + TASK_WEEK_EXPERIENCE);
             userTask.setWeeklytaskPictures(STATUS_ONE);   //设置为已完成状态
-            updateGradeUtils.updateGrade(userTask);  //更新等级
+            userTaskService.updateById(updateGradeUtils.updateGrade(userTask));//更新等级
         }
         return picturesService.save(pictures);
     }

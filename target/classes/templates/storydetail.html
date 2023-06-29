@@ -124,7 +124,7 @@
                 </div>
                 <shiro:hasPermission name="user:admin">
                     <div style="display: flex; justify-content: center;font-size: 15px">
-                        <a href="#" th:href="@{/my/story/mystoryDelete/{id}(id=${story.id})}"  style="color: red;">帖子违规?点击删除</a>
+                        <a href="#" onclick="return confirm('确定要删除该贴子吗？')" th:href="@{/my/story/mystoryDelete/{id}(id=${story.id})}"  style="color: red;">帖子违规?点击删除</a>
                     </div>
                 </shiro:hasPermission><br>
 

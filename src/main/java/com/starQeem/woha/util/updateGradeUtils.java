@@ -1,5 +1,6 @@
 package com.starQeem.woha.util;
 
+import com.starQeem.woha.mapper.userTaskMapper;
 import com.starQeem.woha.pojo.userTask;
 import com.starQeem.woha.service.userTaskService;
 
@@ -12,11 +13,9 @@ import static com.starQeem.woha.util.constant.GRADE_SIX;
  * @author: Qeem
  */
 public class updateGradeUtils {
-    @Resource
-    private static userTaskService userTaskService;
-    public static void updateGrade(userTask userTask){
+    public static userTask updateGrade(userTask userTask){
         if (userTask.getGrade() == 6){
-            return;
+            return userTask;
         }
         if (userTask.getExperience() >= GRADE_SIX) {  //判断用户经验值达到的等级
             userTask.setGrade(6);
@@ -41,6 +40,6 @@ public class updateGradeUtils {
                     userTask.setGrade(1);
             }
         }
-        userTaskService.updateById(userTask);
+        return userTask;
     }
 }

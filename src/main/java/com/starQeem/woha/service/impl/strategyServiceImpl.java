@@ -188,7 +188,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
                 userTask.setDailytaskStrategy(STATUS_ONE);  //设置为已经完成状态
                 Integer experience = userTask.getExperience();
                 userTask.setExperience(experience + TASK_DAY_EXPERIENCE);  //经验+
-                updateGradeUtils.updateGrade(userTask); //更新等级
+                userTaskService.updateById(updateGradeUtils.updateGrade(userTask));//更新等级
             }
             String html = MarkdownUtil.markdownToHtml(strategy.getContent());
             strategy.setContent(html);
@@ -216,7 +216,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
                 userTask.setDailytaskStrategy(STATUS_ONE);  //设置为已经完成状态
                 Integer experience = userTask.getExperience();
                 userTask.setExperience(experience + TASK_DAY_EXPERIENCE);  //经验+
-                updateGradeUtils.updateGrade(userTask); //更新等级
+                userTaskService.updateById(updateGradeUtils.updateGrade(userTask));
             }
             String html = MarkdownUtil.markdownToHtml(strategy.getContent());
             strategy.setContent(html);

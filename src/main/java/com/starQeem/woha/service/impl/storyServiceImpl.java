@@ -153,7 +153,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
                 Integer experience = userTask.getExperience();
                 userTask.setExperience(experience + TASK_DAY_EXPERIENCE);  //经验+
                 userTask.setDailytaskStory(STATUS_ONE);  //设置为完成状态
-                updateGradeUtils.updateGrade(userTask);  //更新等级
+                userTaskService.updateById(updateGradeUtils.updateGrade(userTask)); //更新等级
             }
             String html = MarkdownUtil.markdownToHtml(story.getContent());
             story.setContent(html);
@@ -180,7 +180,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
                 Integer experience = userTask.getExperience();
                 userTask.setExperience(experience + TASK_DAY_EXPERIENCE);  //经验+
                 userTask.setDailytaskStory(STATUS_ONE);  //设置为完成状态
-                updateGradeUtils.updateGrade(userTask);  //更新等级
+                userTaskService.updateById(updateGradeUtils.updateGrade(userTask));//更新等级
             }
             String html = MarkdownUtil.markdownToHtml(story.getContent());
             story.setContent(html);
