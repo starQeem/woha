@@ -114,7 +114,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
     }
 
     /*
-     * 百科编辑
+     * 文章编辑
      * */
     @Override
     public boolean updateStrategy(strategy strategy) {
@@ -130,100 +130,97 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
     }
 
     /*
-     * 攻略详情
+     * 文章详情
      * */
     @Override
     public strategy getStrategyDetailById(Long id) {
-        //查询redis中的故事详情
+        //查询redis中的文章详情
         String getStrategyDetail = stringRedisTemplate.opsForValue().get(STRATEGY_DETAIL + id);
+
         if (StrUtil.isNotBlank(getStrategyDetail)) {
             //不为空,直接返回
-            strategy strategy = JSONUtil.toBean(getStrategyDetail, strategy.class);
-            UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.setSql("views = views + 1").eq("id", id);
-            strategyService.update(updateWrapper);
-            String html = MarkdownUtil.markdownToHtml(strategy.getContent());
-            strategy.setContent(html);
-            return strategy;
+            return processStrategyDetail(getStrategyDetail, id);
         } else if (getStrategyDetail != null) {
             return null;
         } else {
-            //从数据库中查询故事详情
+            //为空,查询数据库
             strategy strategy = strategyMapper.getStrategyDetailById(id);
             if (strategy == null) {
-                //缓存空字符串
+                //数据库中也没有,缓存空字符串
                 stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id, "", TIME_BIG, TimeUnit.SECONDS);
                 return null;
             }
-            //将数据库中查询的故事详情写入redis中
+            //将文章详情存入redis
             stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id, JSONUtil.toJsonStr(strategy), TIME_MAX + RandomUtil.randomInt(0, 300), TimeUnit.SECONDS);
-            UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.setSql("views = views + 1").eq("id", id);
-            strategyService.update(updateWrapper);
-            String html = MarkdownUtil.markdownToHtml(strategy.getContent());
-            strategy.setContent(html);
-            //返回故事详情
-            return strategy;
+            return processStrategyDetail(JSONUtil.toJsonStr(strategy), id);
         }
     }
-
     /*
-     * 登录后查询攻略详情
-     * */
+    * 登录后查询文章详情
+    * */
     @Override
     public strategy queryStrategyDetailById(Long id, Long userId) {
-        //查询redis中的攻略详情
+        //查询redis中的文章详情
         String getStrategyDetail = stringRedisTemplate.opsForValue().get(STRATEGY_DETAIL + id);
+
         if (StrUtil.isNotBlank(getStrategyDetail)) {
             //不为空,直接返回
-            strategy strategy = JSONUtil.toBean(getStrategyDetail, strategy.class);
-            UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.setSql("views = views + 1").eq("id", id);
-            strategyService.update(updateWrapper);
-            //我的任务
-            QueryWrapper<userTask> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("user_id", userId);
-            userTask userTask = userTaskService.getBaseMapper().selectOne(queryWrapper);
-            if (userTask != null && userTask.getDailytaskStrategy() == STATUS_ZERO) {  //判断每日任务是否未完成
-                userTask.setDailytaskStrategy(STATUS_ONE);  //设置为已经完成状态
-                Integer experience = userTask.getExperience();
-                userTask.setExperience(experience + TASK_DAY_EXPERIENCE);  //经验+
-                userTaskService.updateById(updateGradeUtils.updateGrade(userTask));//更新等级
-            }
-            String html = MarkdownUtil.markdownToHtml(strategy.getContent());
-            strategy.setContent(html);
-            return strategy;
+            return processStrategyDetail(getStrategyDetail, id, userId);
         } else if (getStrategyDetail != null) {
             return null;
         } else {
-            //从数据库中查询攻略详情
+            //为空,查询数据库
             strategy strategy = strategyMapper.getStrategyDetailById(id);
             if (strategy == null) {
-                //缓存空字符串
+                //数据库中也没有,缓存空字符串
                 stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id, "", TIME_BIG, TimeUnit.SECONDS);
                 return null;
             }
-            UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.setSql("views = views + 1").eq("id", id);
-            strategyService.update(updateWrapper);
-            //将数据库中的攻略详情写入redis中
+            //将文章详情存入redis
             stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id, JSONUtil.toJsonStr(strategy), TIME_MAX + RandomUtil.randomInt(0, 300), TimeUnit.SECONDS);
-            //我的任务
+            return processStrategyDetail(JSONUtil.toJsonStr(strategy), id, userId);
+        }
+    }
+    /*
+    * 更新浏览次数和转换MarkDown格式
+    * */
+    private strategy processStrategyDetail(String strategyDetail, Long id) {
+        strategy strategy = JSONUtil.toBean(strategyDetail, strategy.class);
+        UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.setSql("views = views + 1").eq("id", id); //浏览次数+1
+        strategyService.update(updateWrapper);
+        //将文章内容转换为html格式
+        String html = MarkdownUtil.markdownToHtml(strategy.getContent());
+        strategy.setContent(html);
+        return strategy;
+    }
+    /*
+     * 更新浏览次数和转换MarkDown格式和更新任务状态
+     * */
+    private strategy processStrategyDetail(String strategyDetail, Long id, Long userId) {
+        strategy strategy = JSONUtil.toBean(strategyDetail, strategy.class);
+        UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.setSql("views = views + 1").eq("id", id); //浏览次数+1
+        strategyService.update(updateWrapper);
+
+        if (userId != null) {//判断用户是否为空
+            //不为空,则已经登录,查询任务状态
             QueryWrapper<userTask> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("user_id", userId);
             userTask userTask = userTaskService.getBaseMapper().selectOne(queryWrapper);
-            if (userTask != null && userTask.getDailytaskStrategy() == STATUS_ZERO) {  //判断每日任务是否未完成
-                userTask.setDailytaskStrategy(STATUS_ONE);  //设置为已经完成状态
+            if (userTask != null && userTask.getDailytaskStrategy() == STATUS_ZERO) {
+                //未完成,设置为完成并增加经验值
+                userTask.setDailytaskStrategy(STATUS_ONE);
                 Integer experience = userTask.getExperience();
-                userTask.setExperience(experience + TASK_DAY_EXPERIENCE);  //经验+
+                userTask.setExperience(experience + TASK_DAY_EXPERIENCE);
                 userTaskService.updateById(updateGradeUtils.updateGrade(userTask));
             }
-            String html = MarkdownUtil.markdownToHtml(strategy.getContent());
-            strategy.setContent(html);
-            return strategy;
         }
+        //将文章内容转换为html格式
+        String html = MarkdownUtil.markdownToHtml(strategy.getContent());
+        strategy.setContent(html);
+        return strategy;
     }
-
     /*
      * 查询评论区
      * */

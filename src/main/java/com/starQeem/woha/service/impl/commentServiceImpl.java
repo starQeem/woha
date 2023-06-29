@@ -51,123 +51,209 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
      * */
     @Override
     public boolean Comment(comment comment) throws MessagingException {
-        if (comment.getPicturesId() ==null && comment.getStrategyId() == null && comment.getStoryId() == null){
+        if (comment.getPicturesId() == null && comment.getStrategyId() == null && comment.getStoryId() == null) {
             return false;
         }
+        //获取用户信息
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         comment.setUserId(Long.valueOf(user.getId()));
         comment.setUpdateTime(new Date());
         comment.setCreateTime(new Date());
+
         String title = "";
         Integer type = STATUS_ZERO;
+
         if (comment.getPicturesId() != null) {
-            QueryWrapper<pictures> storyQueryWrapper = new QueryWrapper<>();
-            storyQueryWrapper.select("id","user_id","title").eq("id", comment.getPicturesId());
-            pictures pictures = picturesService.getBaseMapper().selectOne(storyQueryWrapper);
-            UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("id",pictures.getId()).setSql("comment_count = comment_count + 1"); //评论数+1
-            picturesService.update(updateWrapper);
-            if (Objects.equals(pictures.getUserId(), Long.valueOf(user.getId()))) {//判断是否为自己发的帖子
-                //是,is_admin设置为1(表示此评论为楼主评论)
+            pictures pictures = getPicturesById(comment.getPicturesId());
+            incrementCommentCount(pictures);
+            if (pictures.getUserId() == Long.valueOf(user.getId())) {
                 comment.setIsAdmin(STATUS_ONE);
             }
             title = pictures.getTitle();
             type = TYPE_ONE;
         }
+
         if (comment.getStoryId() != null) {
-            QueryWrapper<story> storyQueryWrapper = new QueryWrapper<>();
-            storyQueryWrapper.select("id","user_id","title").eq("id", comment.getStoryId());
-            story story = storyService.getBaseMapper().selectOne(storyQueryWrapper);
-            UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("id",story.getId()).setSql("comment_count = comment_count + 1"); //评论数+1
-            storyService.update(updateWrapper);
-            if (Objects.equals(story.getUserId(), Long.valueOf(user.getId()))) {//判断是否为自己发的帖子
-                //是,is_admin设置为1(表示此评论为楼主评论)
+            story story = getStoryById(comment.getStoryId());
+            incrementCommentCount(story);
+            if (story.getUserId() == Long.valueOf(user.getId())) {
                 comment.setIsAdmin(STATUS_ONE);
             }
             title = story.getTitle();
             type = TYPE_TWO;
         }
+
         if (comment.getStrategyId() != null) {
-            QueryWrapper<strategy> strategyQueryWrapper = new QueryWrapper<>();
-            strategyQueryWrapper.select("id","user_id","title").eq("id", comment.getStrategyId());
-            strategy strategy = strategyService.getBaseMapper().selectOne(strategyQueryWrapper);
-            UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("id",strategy.getId()).setSql("comment_count = comment_count + 1"); //评论数+1
-            strategyService.update(updateWrapper);
-            if (Objects.equals(strategy.getUserId(), Long.valueOf(user.getId()))) {//判断是否为自己发的帖子
-                //是,is_admin设置为1(表示此评论为楼主评论)
+            strategy strategy = getStrategyById(comment.getStrategyId());
+            incrementCommentCount(strategy);
+            if (strategy.getUserId() == Long.valueOf(user.getId())) {
                 comment.setIsAdmin(STATUS_ONE);
             }
             title = strategy.getTitle();
             type = TYPE_THREE;
         }
         //回复评论时发邮箱提醒
-        if (comment.getCommentUserId()!=null && !Objects.equals(comment.getCommentUserId(), comment.getUserId())){
-            sendEmailService.sendEmail(comment,title,type);
+        if (comment.getCommentUserId() != null && !comment.getCommentUserId().equals(comment.getUserId())) {
+            sendEmailService.sendEmail(comment, title, type);
         }
+
         return commentService.save(comment);
     }
+
+    /**
+     * 通过id获取图片
+     *
+     * @param picturesId 身份证照片
+     * @return {@link pictures}
+     */
+    private pictures getPicturesById(Long picturesId) {
+        QueryWrapper<pictures> wrapper = new QueryWrapper<>();
+        wrapper.select("id", "user_id", "title").eq("id", picturesId);
+        return picturesService.getBaseMapper().selectOne(wrapper);
+    }
+
+    /**
+     * 通过id获取故事
+     *
+     * @param storyId 故事id
+     * @return {@link story}
+     */
+    private story getStoryById(Long storyId) {
+        QueryWrapper<story> wrapper = new QueryWrapper<>();
+        wrapper.select("id", "user_id", "title").eq("id", storyId);
+        return storyService.getBaseMapper().selectOne(wrapper);
+    }
+
+    /**
+     * 通过id获取策略
+     *
+     * @param strategyId 战略id
+     * @return {@link strategy}
+     */
+    private strategy getStrategyById(Long strategyId) {
+        QueryWrapper<strategy> wrapper = new QueryWrapper<>();
+        wrapper.select("id", "user_id", "title").eq("id", strategyId);
+        return strategyService.getBaseMapper().selectOne(wrapper);
+    }
+
+    /**
+     * 增加图片评论数
+     *
+     * @param pictures 图片
+     */
+    private void incrementCommentCount(pictures pictures) {
+        UpdateWrapper<pictures> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id", pictures.getId()).setSql("comment_count = comment_count + 1");
+        picturesService.update(wrapper);
+    }
+
+    /**
+     * 增加问答评论数
+     *
+     * @param story 故事
+     */
+    private void incrementCommentCount(story story) {
+        UpdateWrapper<story> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id", story.getId()).setSql("comment_count = comment_count + 1");
+        storyService.update(wrapper);
+    }
+
+    /**
+     * 增加文章评论数
+     *
+     * @param strategy 策略
+     */
+    private void incrementCommentCount(strategy strategy) {
+        UpdateWrapper<strategy> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id", strategy.getId()).setSql("comment_count = comment_count + 1");
+        strategyService.update(wrapper);
+    }
+
     /*
      * 评论删除
      * */
     @Override
     @Transactional
     public boolean removeComment(Long id) {
-        //根据id查询评论
-        comment comment = commentService.getBaseMapper().selectById(id);
-        //根据id查询子评论
+        comment comment = commentService.getById(id);
+
+        if (comment == null) {
+            return false;
+        }
+
         QueryWrapper<comment> queryWrapper = new QueryWrapper<>();
-        List<comment> getCommentByParentCommentIdWithId
-                = commentService.getBaseMapper().selectList(queryWrapper.eq("parent_comment_id", id));
-        if (comment.getParentCommentId() != -1 || getCommentByParentCommentIdWithId == null) {
-            //是子评论或者是没有子评论的父评论,直接根据id删除
+        queryWrapper.eq("parent_comment_id", id);
+        List<comment> childComments = commentService.list(queryWrapper);
+
+        if (comment.getParentCommentId() != -1 || childComments.isEmpty()) {
+            // 是子评论或者是没有子评论的父评论,直接根据id删除
             boolean success = commentService.removeById(id);
             if (success) {
-                if (comment.getPicturesId() != null) {
-                    UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
-                    updateWrapper.eq("id",comment.getPicturesId()).setSql("comment_count = comment_count - 1");  //评论数-1
-                    picturesService.update(updateWrapper);
-                }
-                if (comment.getStoryId() != null) {
-                    UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
-                    updateWrapper.eq("id",comment.getStoryId()).setSql("comment_count = comment_count - 1"); //评论数-1
-                    storyService.update(updateWrapper);
-                }
-                if (comment.getStrategyId() != null) {
-                    UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
-                    updateWrapper.eq("id",comment.getStrategyId()).setSql("comment_count = comment_count - 1"); //评论数-1
-                    strategyService.update(updateWrapper);
-                }
+                decrementCommentCount(comment);
             }
             return success;
         } else {
-            //是父评论且有子评论,父评论和子评论一起删除
-            queryWrapper.eq("parent_comment_id", id).or(wrapper -> wrapper.eq("id", id));
-            int i = commentService.getBaseMapper().delete(queryWrapper);
-                if (i > 0) {
-                if (comment.getPicturesId() != null) {
-                    UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
-                    updateWrapper.eq("id",comment.getPicturesId()).setSql("comment_count = comment_count - " + i);  //评论数-i
-                    picturesService.update(updateWrapper);
-                }
-                if (comment.getStoryId() != null) {
-                    UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
-                    updateWrapper.eq("id",comment.getStoryId()).setSql("comment_count = comment_count - " + i); //评论数-i
-                    storyService.update(updateWrapper);
-                }
-                if (comment.getStrategyId() != null) {
-                    UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
-                    updateWrapper.eq("id",comment.getStrategyId()).setSql("comment_count = comment_count - " + i); //评论数-i
-                    strategyService.update(updateWrapper);
-                }
-                return true;
-            } else {
-                return false;
+            // 是父评论且有子评论,父评论和子评论一起删除
+            queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("parent_comment_id", id).or().eq("id", id);
+            int deletedCount = commentService.count(queryWrapper);
+
+            boolean success = commentService.remove(queryWrapper);
+            if (success) {
+                decrementCommentCount(comment, deletedCount);
             }
+            return success;
         }
     }
+
+    /**
+     * 没有子评论的减少评论数
+     *
+     * @param comment 评论
+     */
+    private void decrementCommentCount(comment comment) {
+        if (comment.getPicturesId() != null) {
+            UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("id", comment.getPicturesId()).setSql("comment_count = comment_count - 1");
+            picturesService.update(updateWrapper);
+        }
+        if (comment.getStoryId() != null) {
+            UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("id", comment.getStoryId()).setSql("comment_count = comment_count - 1");
+            storyService.update(updateWrapper);
+        }
+        if (comment.getStrategyId() != null) {
+            UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("id", comment.getStrategyId()).setSql("comment_count = comment_count - 1");
+            strategyService.update(updateWrapper);
+        }
+    }
+
+    /**
+     * 有子评论的减少评论数
+     *
+     * @param comment 评论
+     * @param count   数
+     */
+    private void decrementCommentCount(comment comment, int count) {
+        if (comment.getPicturesId() != null) {
+            UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("id", comment.getPicturesId()).setSql("comment_count = comment_count - " + count);
+            picturesService.update(updateWrapper);
+        }
+        if (comment.getStoryId() != null) {
+            UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("id", comment.getStoryId()).setSql("comment_count = comment_count - " + count);
+            storyService.update(updateWrapper);
+        }
+        if (comment.getStrategyId() != null) {
+            UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("id", comment.getStrategyId()).setSql("comment_count = comment_count - " + count);
+            strategyService.update(updateWrapper);
+        }
+    }
+
 
     /*
      * 评论区点赞

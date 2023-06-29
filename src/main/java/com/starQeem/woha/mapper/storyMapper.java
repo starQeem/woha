@@ -14,7 +14,6 @@ import java.util.List;
 public interface storyMapper extends BaseMapper<story> {
     List<story> getUserWithStory(Long userId);
     story getUserWithStoryById(Long id,Long userId);
-    List<story> getMyPicturesIndexByUpdateTime(Long userId);
     List<story> getStory(String title);
     story getStoryById(Long id);
 }

@@ -123,107 +123,86 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
     }
 
     /*
-     * 查询最近更新的三条我的故事记录
-     * */
-    @Override
-    public List<story> getMyPicturesIndexByUpdateTime(Long userId) {
-        return storyMapper.getMyPicturesIndexByUpdateTime(userId);
-    }
-
-    /*
-     * 登录后查询故事详情
-     * */
+    * 登录后查看问答详情
+    * */
     @Override
     public story queryStoryDetail(Long id) {
+        //获取用户信息
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
-        //查询redis中的故事详情
+        //查询redis中的问答详情
         String getStoryDetail = stringRedisTemplate.opsForValue().get(STORY_DETAIL + id);
+
         if (StrUtil.isNotBlank(getStoryDetail)) {
             //不为空,直接返回
-            story story = JSONUtil.toBean(getStoryDetail, story.class);
-            UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.setSql("views = views + 1").eq("id", id);
-            storyService.update(updateWrapper);
-            //我的任务
-            QueryWrapper<userTask> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("user_id", Long.valueOf(user.getId()));
-            userTask userTask = userTaskService.getBaseMapper().selectOne(queryWrapper);
-            if (userTask.getDailytaskStory() == STATUS_ZERO) {  //判断每日任务是否未完成
-                Integer experience = userTask.getExperience();
-                userTask.setExperience(experience + TASK_DAY_EXPERIENCE);  //经验+
-                userTask.setDailytaskStory(STATUS_ONE);  //设置为完成状态
-                userTaskService.updateById(updateGradeUtils.updateGrade(userTask)); //更新等级
-            }
-            String html = MarkdownUtil.markdownToHtml(story.getContent());
-            story.setContent(html);
-            return story;
+            return processStoryDetail(getStoryDetail, id, user);
         } else if (getStoryDetail != null) {
             return null;
         } else {
-            //从数据库中查询故事详情
+            //为空,查询数据库
             story story = storyMapper.getStoryById(id);
-            if (story == null) {
+            if (story == null) { //判断数据库中查询出的结果是否为空
+                //为空,缓存空字符串
                 stringRedisTemplate.opsForValue().set(STORY_DETAIL + id, "", TIME_BIG, TimeUnit.SECONDS);
                 return null;
             }
-            UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.setSql("views = views + 1").eq("id", id);
-            storyService.update(updateWrapper);
-            //将数据库中查询的故事详情写入redis中
+            //将问答详情存入redis
             stringRedisTemplate.opsForValue().set(STORY_DETAIL + id, JSONUtil.toJsonStr(story), TIME_MAX + RandomUtil.randomInt(0, 300), TimeUnit.SECONDS);
-            //我的任务
-            QueryWrapper<userTask> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("user_id", Long.valueOf(user.getId()));
-            userTask userTask = userTaskService.getBaseMapper().selectOne(queryWrapper);
-            if (userTask.getDailytaskStory() == STATUS_ZERO) {  //判断每日任务是否未完成
-                Integer experience = userTask.getExperience();
-                userTask.setExperience(experience + TASK_DAY_EXPERIENCE);  //经验+
-                userTask.setDailytaskStory(STATUS_ONE);  //设置为完成状态
-                userTaskService.updateById(updateGradeUtils.updateGrade(userTask));//更新等级
-            }
-            String html = MarkdownUtil.markdownToHtml(story.getContent());
-            story.setContent(html);
-            return story;
+            return processStoryDetail(JSONUtil.toJsonStr(story), id, user);
         }
     }
-
     /*
-     * 查询故事详情
-     * */
+    * 查看问答详情
+    * */
     @Override
     public story getStoryById(Long id) {
-        //查询redis中的故事详情
+        //查询redis中的问答详情
         String getStoryDetail = stringRedisTemplate.opsForValue().get(STORY_DETAIL + id.toString());
+
         if (StrUtil.isNotBlank(getStoryDetail)) {
             //不为空,直接返回
-            story story = JSONUtil.toBean(getStoryDetail, story.class);
-            UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.setSql("views = views + 1").eq("id", id);
-            storyService.update(updateWrapper);
-            String html = MarkdownUtil.markdownToHtml(story.getContent());
-            story.setContent(html);
-            return story;
+            return processStoryDetail(getStoryDetail, id, null);
         } else if (getStoryDetail != null) {
             return null;
         } else {
-            //从数据库中查询故事详情
+            //为空,查询数据库
             story story = storyMapper.getStoryById(id);
-            if (story == null) {
-                //缓存空字符串
+            if (story == null) {//判断数据库中查询出的结果是否为空
+                //为空,缓存空字符串
                 stringRedisTemplate.opsForValue().set(STORY_DETAIL + id,"", TIME_BIG, TimeUnit.SECONDS);
                 return null;
             }
-            UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.setSql("views = views + 1").eq("id", id);
-            storyService.update(updateWrapper);
-            //将数据库中查询的故事详情写入redis中
-            stringRedisTemplate.opsForValue().set(STORY_DETAIL + id,JSONUtil.toJsonStr(story), TIME_MAX + RandomUtil.randomInt(0, 300), TimeUnit.SECONDS);
-            String html = MarkdownUtil.markdownToHtml(story.getContent());
-            story.setContent(html);
-            //返回故事详情
-            return story;
+            //将问答详情存入redis
+            stringRedisTemplate.opsForValue().set(STORY_DETAIL + id, JSONUtil.toJsonStr(story), TIME_MAX + RandomUtil.randomInt(0, 300), TimeUnit.SECONDS);
+            return processStoryDetail(JSONUtil.toJsonStr(story), id, null);
         }
+    }
+    /*
+    * 更新浏览次数和转换Markdown格式
+    * */
+    private story processStoryDetail(String storyDetail, Long id, userDto user) {
+        story story = JSONUtil.toBean(storyDetail, story.class);//将string类型转换为story类型
+        UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.setSql("views = views + 1").eq("id", id);//浏览次数+1
+        storyService.update(updateWrapper);
+
+        if (user != null) { //判断用户是否为空
+            //不为空,查询用户每日任务情况
+            QueryWrapper<userTask> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("user_id", Long.valueOf(user.getId()));
+            userTask userTask = userTaskService.getBaseMapper().selectOne(queryWrapper);
+            if (userTask.getDailytaskStory() == STATUS_ZERO) { //判断任务有没有完成
+                //未完成.设置为完成并增加经验
+                Integer experience = userTask.getExperience();
+                userTask.setExperience(experience + TASK_DAY_EXPERIENCE);
+                userTask.setDailytaskStory(STATUS_ONE);
+                userTaskService.updateById(updateGradeUtils.updateGrade(userTask));
+            }
+        }
+        //将文章内容转换为html格式
+        String html = MarkdownUtil.markdownToHtml(story.getContent());
+        story.setContent(html);
+        return story;
     }
 
     /*

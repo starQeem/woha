@@ -2,7 +2,6 @@ package com.starQeem.woha.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -12,7 +11,6 @@ import com.github.pagehelper.PageInfo;
 import com.starQeem.woha.dto.userDto;
 import com.starQeem.woha.mapper.commentMapper;
 import com.starQeem.woha.mapper.picturesMapper;
-import com.starQeem.woha.mapper.userTaskMapper;
 import com.starQeem.woha.pojo.*;
 import com.starQeem.woha.service.*;
 import com.starQeem.woha.util.updateGradeUtils;
@@ -250,9 +248,8 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
         queryWrapper.select("id", "pictures_address").
                 orderByDesc("liked").
                 last("limit 5");
-        List<pictures> picturesList = picturesMapper.selectList(queryWrapper);
         //返回图片列表
-        return picturesList;
+        return picturesMapper.selectList(queryWrapper);
 
     }
 
@@ -273,9 +270,9 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
             stringRedisTemplate.delete(PICTURES_DETAIL + id);
         }
         //删除图片的点赞信息
-        Set<String> redisPicturesLikedUser = stringRedisTemplate.opsForZSet().range(PICTURES_LIKED + String.valueOf(id), 0, -1);
+        Set<String> redisPicturesLikedUser = stringRedisTemplate.opsForZSet().range(PICTURES_LIKED + id, 0, -1);
         if (redisPicturesLikedUser != null) {
-            stringRedisTemplate.delete(PICTURES_LIKED + String.valueOf(id));
+            stringRedisTemplate.delete(PICTURES_LIKED + id);
         }
         return isSuccess;
     }
@@ -305,8 +302,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
             queryWrapper.select("id", "avatar")
                     .apply("FIND_IN_SET(id, {0})", firstThree)
                     .last("ORDER BY FIELD(id, " + firstThree + ")");
-            List<user> ThreeUserLikedList = userService.getBaseMapper().selectList(queryWrapper);
-            return ThreeUserLikedList;
+            return userService.getBaseMapper().selectList(queryWrapper);
         } else {
             return null;
         }

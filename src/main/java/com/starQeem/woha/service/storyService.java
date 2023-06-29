@@ -47,13 +47,6 @@ public interface storyService extends IService<story>{
      */
     boolean updateStory(story story);
 
-    /**
-     * 根据用户id查询故事文章列表
-     *
-     * @param userId 用户id
-     * @return {@link List}<{@link story}>
-     */
-    List<story> getMyPicturesIndexByUpdateTime(Long userId);
 
     /**
      * 查询故事文章列表
