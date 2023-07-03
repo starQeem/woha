@@ -217,13 +217,12 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
         // 创建一个Map来存储likedUserIds的键值对
         Map<String, String> likedUserIdsMap;
         likedUserIdsMap = (Map<String, String>) likedUserIds;
-        for (comment commentList : storyComments) {  //遍历所有评论
-            for (Map.Entry<String, String> commentLiked : likedUserIdsMap.entrySet()) {  //遍历所有点赞
-                if (commentList.getId().toString().equals(commentLiked.getKey())) {  //判断点赞的key和评论的id是否相等
-                    commentList.setLikedUser(commentLiked.getValue());  //相等则把点赞的用户赋值给评论对象
-                }
-            }
-        }
+
+        storyComments.forEach(commentList -> likedUserIdsMap.entrySet().stream()//遍历所有点赞
+                .filter(commentLiked -> commentList.getId().toString().equals(commentLiked.getKey())) //判断点赞的key和评论的id是否相等
+                .findFirst()
+                .ifPresent(commentLiked -> commentList.setLikedUser(commentLiked.getValue())));//相等则把点赞的用户赋值给评论对象
+        
         return storyComments;
     }
 
