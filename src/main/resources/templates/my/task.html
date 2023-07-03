@@ -5,7 +5,7 @@
     <title>我的任务</title>
     <link rel=stylesheet type=text/css href="../../static/css/video.css" th:href="@{/css/video.css}">
     <link rel="stylesheet" href="../../static/lib/semantic/dist/semantic.min.css" th:href="@{/lib/semantic/dist/semantic.min.css}">
-    <link href="../../static/images/me.png" th:href="@{/images/me.png}" rel="icon" type="image/x-ico">
+    <link href="../../static/images/me.png"  th:href="@{/images/me.png}" rel="icon" type="image/x-ico">
     <link rel="stylesheet" href="../../static/css/me.css" th:href="@{/css/me.css}">
     <link rel="stylesheet" href="../../static/css/mytask.css" th:href="@{/css/mytask.css}">
     <!-- 看板娘 -->
@@ -20,7 +20,6 @@
             height: 100%;
             width: 100%;
         }
-
         .title a.selected {
             /*text-decoration: underline;*/
             color: lightgoldenrodyellow;
@@ -79,7 +78,7 @@
             </div>
             <div class="task-item" th:classappend="${task.weeklytaskPictures == 0} ? 'completed-task'">
                 <div class="task-title">每周任务</div>
-                <div class="task-description">发布一张美图 ex+50</div>
+                <div class="task-description">发布一张图片 ex+50</div>
                 <div class="task-status">状态：<span th:text="${task.weeklytaskPictures == 1} ? '已完成' : '未完成'"></span></div>
             </div>
         </div>
@@ -103,18 +102,6 @@
 <!-- 看板娘 -->
 <script src="../static/live2d-widget/autoload.js" th:src="@{/live2d-widget/autoload.js}"></script>
 <script>
-    const prevButton = document.querySelector('.pagination .prev');
-    const nextButton = document.querySelector('.pagination .next');
-
-    // 禁用上一页按钮
-    if ("${page.hasPreviousPage}") {
-        nextButton.classList.add('disabled');
-    }
-
-    // 禁用下一页按钮
-    if ("${page.hasNextPage}") {
-        prevButton.classList.add('disabled');
-    }
 </script>
 </body>
 </html>

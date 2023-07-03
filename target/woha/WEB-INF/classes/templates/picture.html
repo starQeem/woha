@@ -69,6 +69,18 @@
         </div>
       </a>
     </div>
+    <div class="ui mini horizontal link list" style="height: 15px">
+      <div style="font-size: 10px">
+        <img src="../static/images/me.jpg" alt="" th:src="@{${pictures.user.avatar}}"
+             class="ui avatar image">
+        <a href="#" target="_blank" style="color: teal" th:href="@{/user/{id}(id=${pictures.user.id})}"
+           th:text="${pictures.user.nickName}" class="header">Qeem</a>
+        <i class="calendar icon"></i><span th:text="${#dates.format(pictures.updateTime,'yyyy-MM-dd')}">2020-01-01</span>
+        <i class="eye icon"></i> <span th:text="${pictures.views}">2222</span>
+        <i class="comment outline icon"></i> <span th:text="${pictures.commentCount}">1</span>
+        <i class="thumbs up outline icon"></i><span th:text="${pictures.liked}">1</span>
+      </div>
+    </div>
   </div>
 </div>
   <!--分页--><br>

@@ -178,7 +178,7 @@ a.black:active {
     font-size: 14px;
     line-height: 10px;
     color: #333;
-    height: 530px;
+    height: 610px;
     width: 915px;
     margin-right: auto;
     margin-left: auto;
@@ -193,7 +193,7 @@ a.black:active {
     border-left-color: #f2f2f2;
 }
 .contents .commodity {
-    height: 140px;
+    /*height: 170px;*/
     width: 270px;
     margin-left: 25px;
     float: left;

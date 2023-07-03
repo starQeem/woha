@@ -47,7 +47,7 @@
         order by p.update_time desc;
     </select>
     <select id="getPicturesListPageInfo" resultMap="BaseResultMap">
-        select p.id,p.pictures_address,p.update_time,p.views,u.nick_name user_nick_name,u.id user_id,p.comment_count,p.liked
+        select p.id,p.pictures_address,p.update_time,p.views,u.nick_name user_nick_name,u.avatar user_avatar,u.id user_id,p.comment_count,p.liked
         from pictures p
         join user u on p.user_id = u.id
         where (p.title like concat('%',#{title},'%')) or (p.content like concat('%',#{title},'%'))

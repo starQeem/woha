@@ -234,11 +234,11 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
         Map<String, String> likedUserIdsMap;
         likedUserIdsMap = (Map<String, String>) likedUserIds;
 
-         strategyComments.forEach(commentList -> likedUserIdsMap.entrySet().stream()//遍历所有点赞
+        strategyComments.forEach(commentList -> likedUserIdsMap.entrySet().stream()//遍历所有点赞
                 .filter(commentLiked -> commentList.getId().toString().equals(commentLiked.getKey())) //判断点赞的key和评论的id是否相等
                 .findFirst()
                 .ifPresent(commentLiked -> commentList.setLikedUser(commentLiked.getValue())));//相等则把点赞的用户赋值给评论对象
-        
+
         return strategyComments;
     }
 

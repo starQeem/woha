@@ -222,7 +222,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
                 .filter(commentLiked -> commentList.getId().toString().equals(commentLiked.getKey())) //判断点赞的key和评论的id是否相等
                 .findFirst()
                 .ifPresent(commentLiked -> commentList.setLikedUser(commentLiked.getValue())));//相等则把点赞的用户赋值给评论对象
-        
+
         return storyComments;
     }
 
