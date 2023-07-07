@@ -21,6 +21,8 @@
   <link rel="stylesheet" href="../../static/css/liked.css" th:href="@{/css/liked.css}">
   <!-- 看板娘 -->
   <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
+
+    <link rel="stylesheet" href="../../static/css/jquery.emoji.css" th:href="@{/css/jquery.emoji.css}">
   <style>
     body {
       background-image: url("/images/bj2.png") !important;
@@ -34,6 +36,12 @@
     .title a.selected {
         /*text-decoration: underline;*/
         color: lightgoldenrodyellow;
+    }
+    .test:empty::before{
+        color:lightgrey;
+        content:attr(placeholder);
+        padding-left: 6px;
+        font-size: 15px;
     }
   </style>
 	<!--[if IE 6]> 
@@ -125,7 +133,30 @@
         <br>
 
           <!--评论区域列表-->
-          <div id="comment-container" class="ui segment" style="color: #90532b">
+        <div class="ui form">
+            <input type="hidden" name="strategyId" th:value="${strategy.id}">
+            <input type="hidden" name="parentCommentId" value="-1">
+<!--            <div class="field">-->
+<!--                <textarea id="comment-textarea" name="content" placeholder="请输入评论信息..."></textarea>-->
+<!--            </div>-->
+                <div  id="commentEditor" class="field test" contenteditable="true" placeholder="请输入评论信息..."
+                      style="height: 200px;border: 1px solid 	#E0E0E0;font-family: KaiTi,serif;"></div>
+                <div class="fields">
+                    <!--表情按钮-->
+                    <div class="field  m-margin-bottom-small m-mobile-wide" data-tooltip="表情未加载完全或点击无响应可刷新页面重试">
+                        <button id="emojiBtn" type="button" class="ui yellow button m-mobile-wide" style="width:100px;height: 40px;font-family: KaiTi;">
+                            <i class="large smile outline icon"></i>表情</button>
+                    </div>
+                    <div class="field  m-margin-bottom-small m-mobile-wide">
+                    <button type="button" id="submit-comment-btn" class="ui brown button m-mobile-wide"
+                            style="width:100px;height: 40px;font-family: KaiTi">
+                        <i class="edit icon"></i>发布
+                    </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="comment-container" class="ui segment" style="color: #90532b">
               <div onload="myfunction()">
                   <div class="ui threaded comments" style="max-width: 100%;">
                       <h3 style="font-family: KaiTi" class="ui brown dividing header">评论</h3>
@@ -150,7 +181,7 @@
                                         <span class="date"
                                               th:text="${#dates.format(comment.createTime,'yyyy-MM-dd HH:mm')}">Today at 5:42PM</span>
                               </div>
-                              <div class="text" th:text="${comment.content}">
+                              <div class="text" th:utext="${comment.content}">
                                   How artistic!
                               </div>
                               <div class="actions">
@@ -204,7 +235,7 @@
                           <span class="date"
                                 th:text="${#dates.format(childComment.createTime,'yyyy-MM-dd HH:mm')}">Today at 5:42PM</span>
                                       </div>
-                                      <div class="text" th:text="${childComment.content}">
+                                      <div class="text" th:utext="${childComment.content}">
                                           How artistic!
                                       </div>
                                       <div class="actions">
@@ -240,21 +271,6 @@
                   </div>
               </div>
           </div>
-        <div class="ui form">
-            <input type="hidden" name="strategyId" th:value="${strategy.id}">
-            <input type="hidden" name="parentCommentId" value="-1">
-            <div class="field">
-                <textarea id="comment-textarea" name="content" placeholder="请输入评论信息..."></textarea>
-            </div>
-            <div class="fields">
-                <div class="field  m-margin-bottom-small m-mobile-wide">
-                    <button type="button" id="submit-comment-btn" class="ui brown button m-mobile-wide"
-                            style="width:100px;height: 40px;font-family: KaiTi">
-                        <i class="edit icon"></i>发布
-                    </button>
-                </div>
-            </div>
-        </div>
       </div>
     </div>
   </div>
@@ -278,7 +294,7 @@
   </div>
 </div>
 <!-- 看板娘 -->
-<script src="../static/live2d-widget/autoload.js" th:src="@{/live2d-widget/autoload.js}"></script>
+<script src="../../static/live2d-widget/autoload.js" th:src="@{/live2d-widget/autoload.js}"></script>
 
 <script src="../../static/lib/jquery-3.2.1/jquery-3.2.1.min.js" th:src="@{/lib/jquery-3.2.1/jquery-3.2.1.min.js}"></script>
 <script src="../../static/lib/semantic/dist/semantic.min.js" th:src="@{/lib/semantic/dist/semantic.min.js}"></script>
@@ -287,10 +303,22 @@
 <script src="../../static/lib/prism/prism.js" th:src="@{/lib/prism/prism.js}"></script>
 <script src="../../static/lib/tocbot/tocbot.min.js" th:src="@{/lib/tocbot/tocbot.min.js}"></script>
 <!-- 看板娘 -->
-<script src="../static/live2d-widget/autoload.js" th:src="@{/live2d-widget/autoload.js}"></script>
+<script src="../../static/live2d-widget/autoload.js" th:src="@{/live2d-widget/autoload.js}"></script>
 
-
+<script src="../../static/lib/emoji/jquery.emoji.js" th:src="@{/lib/emoji/jquery.emoji.js}"></script>
+<script src="../../static/lib/emoji/emoji.list.js" th:src="@{/lib/emoji/emoji.list.js}"></script>
 <script>
+
+    // /*加载emoji表情*/
+    onload = function () {
+        $("#commentEditor").emoji({
+            button: "#emojiBtn",  //评论表情
+            showTab: false,
+            animation: 'slide',
+            basePath: '/images/emoji',
+            icons: emojiLists
+        });
+    }
 
   var commentId = -1;
   var commentNickName;
@@ -302,8 +330,9 @@
     $('#submit-comment-btn').click(function () {
       // 执行发送post请求的代码
       // 获取评论信息和图片 ID
-      var content = $("textarea[name='content']").val();
+      // var content = $("textarea[name='content']").val();
       var strategyId = $("input[name='strategyId']").val();
+        var content = document.getElementById("commentEditor").innerHTML
       // 发送 POST 请求
       $.ajax({
         type: "POST",
@@ -333,7 +362,7 @@
   * */
   function reply(element) {
     // 滚动到底部位置(评论区位置)
-    window.scrollTo(0, document.body.scrollHeight);
+    // window.scrollTo(0, document.body.scrollHeight);
 
     // 获取回复的评论ID和昵称
     commentId = element.getAttribute("data-commentid");
@@ -341,13 +370,13 @@
     commentUserId = element.getAttribute("data-commentuserid");
 
     // 自动填充评论内容
-    var textarea = document.getElementById("comment-textarea");
+    var textarea = document.getElementById("commentEditor");
     textarea.setAttribute("placeholder", "@" + this.commentNickName);
   }
 
   function submitComment() {
     // 获取评论内容并提交
-    var textarea = document.getElementById("comment-textarea");
+    var textarea = document.getElementById("commentEditor");
     var content = textarea.value;
 
     // 刷新页面

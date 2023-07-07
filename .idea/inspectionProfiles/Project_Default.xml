@@ -18,7 +18,7 @@
     <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myValues">
         <value>
-          <list size="18">
+          <list size="19">
             <item index="0" class="java.lang.String" itemvalue="th:href" />
             <item index="1" class="java.lang.String" itemvalue="th:value" />
             <item index="2" class="java.lang.String" itemvalue="th:action" />
@@ -37,6 +37,7 @@
             <item index="15" class="java.lang.String" itemvalue="th:with" />
             <item index="16" class="java.lang.String" itemvalue="th:attr" />
             <item index="17" class="java.lang.String" itemvalue="th:data-value" />
+            <item index="18" class="java.lang.String" itemvalue="placeholder" />
           </list>
         </value>
       </option>

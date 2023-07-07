@@ -177,7 +177,6 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
     public List<pictures> getUserPicturesWithUpdateTime(Long id) {
         return picturesMapper.getMyPicturesIndexByUpdateTime(id);
     }
-
     /*
      * 查询评论区
      * */
