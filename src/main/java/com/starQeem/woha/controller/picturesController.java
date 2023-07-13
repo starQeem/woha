@@ -2,9 +2,9 @@ package com.starQeem.woha.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.starQeem.woha.dto.userDto;
-import com.starQeem.woha.pojo.comment;
-import com.starQeem.woha.pojo.pictures;
-import com.starQeem.woha.pojo.user;
+import com.starQeem.woha.pojo.Comment;
+import com.starQeem.woha.pojo.Pictures;
+import com.starQeem.woha.pojo.User;
 import com.starQeem.woha.service.picturesService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -36,7 +36,7 @@ public class picturesController {
     * */
     @GetMapping(value = {"","/{pageNum}"})
     public String pictures(@PathVariable(value = "pageNum",required = false)Integer pageNum, String title, Model model){
-        PageInfo<pictures> pageInfo = picturesService.getPicturesListPageInfo(pageNum, PICTURES_PAGE_SIZE, title);//查询图片列表
+        PageInfo<Pictures> pageInfo = picturesService.getPicturesListPageInfo(pageNum, PICTURES_PAGE_SIZE, title);//查询图片列表
         model.addAttribute("page",pageInfo);
         return "picture";
     }
@@ -50,9 +50,9 @@ public class picturesController {
         userDto user = (userDto) subject.getPrincipal();
 
         Integer liked = picturesService.getLikedCount(id);  //获取图片的点赞数
-        pictures pictures = picturesService.getPicturesDetailById(id);  //图片详情
-        List<comment> commentList = picturesService.getComments(id);  //评论区
-        List<user> likedUserThree = picturesService.getLikedUserThree(id);  //点赞排行榜
+        Pictures pictures = picturesService.getPicturesDetailById(id);  //图片详情
+        List<Comment> commentList = picturesService.getComments(id);  //评论区
+        List<User> likedUserThree = picturesService.getLikedUserThree(id);  //点赞排行榜
         if (user == null){
             model.addAttribute("likeMessage","喜欢吗?登录为楼主点个赞吧~");
             model.addAttribute("message","登录后才可以发布评论哦!");

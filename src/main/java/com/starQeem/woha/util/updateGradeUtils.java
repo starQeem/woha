@@ -1,10 +1,6 @@
 package com.starQeem.woha.util;
 
-import com.starQeem.woha.mapper.userTaskMapper;
-import com.starQeem.woha.pojo.userTask;
-import com.starQeem.woha.service.userTaskService;
-
-import javax.annotation.Resource;
+import com.starQeem.woha.pojo.UserTask;
 
 import static com.starQeem.woha.util.constant.GRADE_SIX;
 
@@ -13,7 +9,7 @@ import static com.starQeem.woha.util.constant.GRADE_SIX;
  * @author: Qeem
  */
 public class updateGradeUtils {
-    public static userTask updateGrade(userTask userTask){
+    public static UserTask updateGrade(UserTask userTask){
         if (userTask.getGrade() == 6){
             return userTask;
         }

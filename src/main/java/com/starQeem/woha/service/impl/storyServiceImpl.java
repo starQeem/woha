@@ -2,10 +2,10 @@ package com.starQeem.woha.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -36,7 +36,7 @@ import static com.starQeem.woha.util.constant.*;
  * @author: Qeem
  */
 @Service
-public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements storyService {
+public class storyServiceImpl extends ServiceImpl<storyMapper, Story> implements storyService {
     @Resource
     private storyService storyService;
     @Resource
@@ -53,10 +53,10 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
     private userService userService;
 
     /*
-     * 新增我的故事
+     * 新增问答
      * */
     @Override
-    public boolean saveStory(story story) {
+    public boolean saveStory(Story story) {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         story.setCreateTime(new Date());
@@ -67,10 +67,10 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
     }
 
     /*
-     * 根据用户id查询故事列表
+     * 根据用户id查询问答列表
      * */
     @Override
-    public PageInfo<story> queryMyStory(Integer pageNum, int PAGE_SIZE, Long id) {
+    public PageInfo<Story> queryMyStory(Integer pageNum, int PAGE_SIZE, Long id) {
         if (pageNum == null){
             pageNum = PAGE_NUM;
         }
@@ -79,19 +79,19 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
         PageHelper.startPage(pageNum, PAGE_SIZE);
         PageHelper.orderBy("create_time desc");
         if (id.equals(0L)) {
-            List<story> storyList = storyMapper.getUserWithStory(Long.valueOf(user.getId()));
+            List<Story> storyList = storyMapper.getUserWithStory(Long.valueOf(user.getId()));
             return new PageInfo<>(storyList, PAGE_SIZE);
         } else {
-            List<story> storyList = storyMapper.getUserWithStory(id);
+            List<Story> storyList = storyMapper.getUserWithStory(id);
             return new PageInfo<>(storyList, PAGE_SIZE);
         }
     }
 
     /*
-     * 查询故事列表
+     * 查询问答列表
      * */
     @Override
-    public PageInfo<story> getStoryListPageInfo(Integer pageNum, int pageSize, String title) {
+    public PageInfo<Story> getStoryListPageInfo(Integer pageNum, int pageSize, String title) {
         if (pageNum == null) {
             pageNum = PAGE_NUM;
         }
@@ -102,15 +102,15 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
         }
         PageHelper.startPage(pageNum, pageSize);
         //查询数据库
-        List<story> storyList = storyMapper.getStory(title);
+        List<Story> storyList = storyMapper.getStory(title);
         return new PageInfo<>(storyList, pageSize);
     }
 
     /*
-     * 更新我的故事
+     * 更新问答
      * */
     @Override
-    public boolean updateStory(story story) {
+    public boolean updateStory(Story story) {
         story.setUpdateTime(new Date());
         story.setCreateTime(new Date());
         boolean isSuccess = storyService.updateById(story);
@@ -126,7 +126,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
     * 登录后查看问答详情
     * */
     @Override
-    public story queryStoryDetail(Long id) {
+    public Story queryStoryDetail(Long id) {
         //获取用户信息
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
@@ -140,7 +140,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
             return null;
         } else {
             //为空,查询数据库
-            story story = storyMapper.getStoryById(id);
+            Story story = storyMapper.getStoryById(id);
             if (story == null) { //判断数据库中查询出的结果是否为空
                 //为空,缓存空字符串
                 stringRedisTemplate.opsForValue().set(STORY_DETAIL + id, "", TIME_BIG, TimeUnit.SECONDS);
@@ -155,7 +155,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
     * 查看问答详情
     * */
     @Override
-    public story getStoryById(Long id) {
+    public Story getStoryById(Long id) {
         //查询redis中的问答详情
         String getStoryDetail = stringRedisTemplate.opsForValue().get(STORY_DETAIL + id.toString());
 
@@ -166,7 +166,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
             return null;
         } else {
             //为空,查询数据库
-            story story = storyMapper.getStoryById(id);
+            Story story = storyMapper.getStoryById(id);
             if (story == null) {//判断数据库中查询出的结果是否为空
                 //为空,缓存空字符串
                 stringRedisTemplate.opsForValue().set(STORY_DETAIL + id,"", TIME_BIG, TimeUnit.SECONDS);
@@ -180,17 +180,14 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
     /*
     * 更新浏览次数和转换Markdown格式
     * */
-    private story processStoryDetail(String storyDetail, Long id, userDto user) {
-        story story = JSONUtil.toBean(storyDetail, story.class);//将string类型转换为story类型
-        UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.setSql("views = views + 1").eq("id", id);//浏览次数+1
-        storyService.update(updateWrapper);
+    private Story processStoryDetail(String storyDetail, Long id, userDto user) {
+        Story story = JSONUtil.toBean(storyDetail, Story.class);//将string类型转换为story类型
+        storyService.update(Wrappers.<Story>lambdaUpdate().eq(Story::getId,id).setSql("views = views + 1"));
 
         if (user != null) { //判断用户是否为空
             //不为空,查询用户每日任务情况
-            QueryWrapper<userTask> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("user_id", Long.valueOf(user.getId()));
-            userTask userTask = userTaskService.getBaseMapper().selectOne(queryWrapper);
+            UserTask userTask = userTaskService.getBaseMapper().selectOne(Wrappers.<UserTask>lambdaQuery()
+                    .eq(UserTask::getUserId,Long.valueOf(user.getId())));
             if (userTask.getDailytaskStory() == STATUS_ZERO) { //判断任务有没有完成
                 //未完成.设置为完成并增加经验
                 Integer experience = userTask.getExperience();
@@ -209,9 +206,9 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
      * 查询评论区
      * */
     @Override
-    public List<comment> getComments(Long id) {
+    public List<Comment> getComments(Long id) {
         //查询所有评论
-        List<comment> storyComments = commentMapper.getStoryComments(id);
+        List<Comment> storyComments = commentMapper.getStoryComments(id);
         //查询所有点赞
         Object likedUserIds = stringRedisTemplate.opsForHash().entries(COMMENT_LIKED);
         // 创建一个Map来存储likedUserIds的键值对
@@ -260,32 +257,25 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
     }
 
     /*
-     * 查询五条故事(按照时间降序)
+     * 查询五条问答(按照时间降序)
      * */
     @Override
-    public List<story> getStoryListFive() {
-        //查询数据库
-        QueryWrapper<story> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id", "title", "update_time").
-                orderByDesc("update_time").
-                orderByDesc("liked").
-                last("limit 5");
-        //返回图片列表
-        return storyMapper.selectList(queryWrapper);
+    public List<Story> getStoryListFive() {
+        return storyMapper.selectList(Wrappers.<Story>lambdaQuery()
+                .select(Story::getId,Story::getTitle,Story::getUpdateTime)
+                .last("order by update_time,liked desc limit 5"));
 
     }
 
     /*
-     * 故事删除
+     *问答删除
      * */
     @Override
     @Transactional
     public boolean removeStoryById(Long id) {
         storyService.removeById(id);
         //删除关联的评论信息
-        QueryWrapper<comment> queryWrapperComment = new QueryWrapper<>();
-        queryWrapperComment.eq("story_id", id);
-        commentService.remove(queryWrapperComment);
+        commentService.remove(Wrappers.<Comment>lambdaQuery().eq(Comment::getStoryId,id));
         //删除故事缓存
         String redisStoryDetail = stringRedisTemplate.opsForValue().get(STORY_DETAIL + id);
         if (StrUtil.isNotBlank(redisStoryDetail)) {
@@ -305,7 +295,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
     @Override
     public Integer getLikedCount(Long id) {
         int liked = stringRedisTemplate.opsForZSet().size(STORY_LIKED + id.toString()).intValue();
-        story story = new story();
+        Story story = new Story();
         story.setId(id);
         story.setLiked(liked);
         storyService.updateById(story);
@@ -316,15 +306,14 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, story> implements
      * 获取点赞的前三名用户
      * */
     @Override
-    public List<user> getLikedUserThree(Long id) {
+    public List<User> getLikedUserThree(Long id) {
         Set<String> range = stringRedisTemplate.opsForZSet().range(STORY_LIKED + id.toString(), 0, 2);
         if (!range.isEmpty()) {
             String firstThree = String.join(",", range);
-            QueryWrapper<user> queryWrapper = new QueryWrapper<>();
-            queryWrapper.select("id", "avatar")
+            return userService.getBaseMapper().selectList(Wrappers.<User>lambdaQuery()
+                    .select(User::getId,User::getAvatar)
                     .apply("FIND_IN_SET(id, {0})", firstThree)
-                    .last("ORDER BY FIELD(id, " + firstThree + ")");
-            return userService.getBaseMapper().selectList(queryWrapper);
+                    .last("ORDER BY FIELD(id, " + firstThree + ")"));
         } else {
             return null;
         }

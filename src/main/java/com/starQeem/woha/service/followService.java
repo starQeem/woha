@@ -1,8 +1,8 @@
 package com.starQeem.woha.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.starQeem.woha.pojo.follow;
-import com.starQeem.woha.pojo.user;
+import com.starQeem.woha.pojo.Follow;
+import com.starQeem.woha.pojo.User;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * @Date: 2023/4/28 17:16
  * @author: Qeem
  */
-public interface followService extends IService<follow> {
+public interface followService extends IService<Follow> {
     /**
      * 关注和取关
      *
@@ -31,14 +31,14 @@ public interface followService extends IService<follow> {
     /**
      * 查询关注列表
      *
-     * @return {@link List}<{@link user}>
+     * @return {@link List}<{@link User}>
      */
-    List<user> getFollowList();
+    List<User> getFollowList();
 
     /**
      * 查询关注我的列表
      *
-     * @return {@link List}<{@link user}>
+     * @return {@link List}<{@link User}>
      */
-    List<user> getFansList();
+    List<User> getFansList();
 }

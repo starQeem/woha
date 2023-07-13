@@ -2,9 +2,9 @@ package com.starQeem.woha.controller.my;
 
 import com.github.pagehelper.PageInfo;
 import com.starQeem.woha.dto.userDto;
-import com.starQeem.woha.pojo.comment;
-import com.starQeem.woha.pojo.story;
-import com.starQeem.woha.pojo.user;
+import com.starQeem.woha.pojo.Comment;
+import com.starQeem.woha.pojo.Story;
+import com.starQeem.woha.pojo.User;
 import com.starQeem.woha.service.storyService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -32,7 +32,7 @@ public class MyStoryController {
      * */
     @GetMapping(value = {"/mystory","/mystory/{pageNum}"})
     public String myStory(@PathVariable(value = "pageNum",required = false)Integer pageNum, Model model){
-        PageInfo<story> pageInfo = storyService.queryMyStory(pageNum, PAGE_SIZE, (long) STATUS_ZERO); //查询问答列表
+        PageInfo<Story> pageInfo = storyService.queryMyStory(pageNum, PAGE_SIZE, (long) STATUS_ZERO); //查询问答列表
         model.addAttribute("page",pageInfo);
         return "my/story";
     }
@@ -47,7 +47,7 @@ public class MyStoryController {
      * 我的故事发布
      * */
     @PostMapping("/mystoryInput")
-    public String myStoryInput(story story){
+    public String myStoryInput(Story story){
         storyService.saveStory(story); //问答发布
         return "redirect:/my/story/mystory";
     }
@@ -56,7 +56,7 @@ public class MyStoryController {
      * */
     @GetMapping("/mystoryUpdate/{id}")
     public String getMyStoryUpdate(@PathVariable("id")Long id, Model model){
-        story story = storyService.getBaseMapper().selectById(id); //根据问答id查询问答详情
+        Story story = storyService.getBaseMapper().selectById(id); //根据问答id查询问答详情
         model.addAttribute("story",story);
         return "my/storyUpdate";
     }
@@ -64,7 +64,7 @@ public class MyStoryController {
      * 问答编辑
      * */
     @PostMapping("/mystoryUpdate")
-    public String myStoryUpdate(story story){
+    public String myStoryUpdate(Story story){
         storyService.updateStory(story);  //问答修改
         return "redirect:/my/story/mystory";
     }
@@ -88,11 +88,11 @@ public class MyStoryController {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
 
-        story story = storyService.queryStoryDetail(id);//查询问答详情
-        List<comment> commentList = storyService.getComments(id);//查询评论信息
+        Story story = storyService.queryStoryDetail(id);//查询问答详情
+        List<Comment> commentList = storyService.getComments(id);//查询评论信息
         Integer liked = storyService.getLikedCount(id);//查询问答文章点赞数
         boolean status = storyService.getStatus(id);//查询是否点赞
-        List<user> likedUserThree = storyService.getLikedUserThree(id); //查询问答文章点赞的前三名用户
+        List<User> likedUserThree = storyService.getLikedUserThree(id); //查询问答文章点赞的前三名用户
         model.addAttribute("story",story);
         model.addAttribute("commentsList",commentList);
         model.addAttribute("status",status);

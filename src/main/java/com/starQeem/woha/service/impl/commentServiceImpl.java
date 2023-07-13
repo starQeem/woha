@@ -1,10 +1,8 @@
 package com.starQeem.woha.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageInfo;
-import com.starQeem.woha.config.email;
 import com.starQeem.woha.dto.userDto;
 import com.starQeem.woha.mapper.commentMapper;
 import com.starQeem.woha.pojo.*;
@@ -13,15 +11,12 @@ import com.starQeem.woha.util.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.starQeem.woha.util.constant.*;
 
@@ -30,7 +25,7 @@ import static com.starQeem.woha.util.constant.*;
  * @author: Qeem
  */
 @Service
-public class commentServiceImpl extends ServiceImpl<commentMapper, comment> implements commentService {
+public class commentServiceImpl extends ServiceImpl<commentMapper, Comment> implements commentService {
     @Resource
     private commentService commentService;
     @Resource
@@ -50,7 +45,7 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
      * 评论发布
      * */
     @Override
-    public boolean Comment(comment comment) throws MessagingException {
+    public boolean Comment(Comment comment) throws MessagingException {
         if (comment.getPicturesId() == null && comment.getStrategyId() == null && comment.getStoryId() == null) {
             return false;
         }
@@ -65,7 +60,7 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
         Integer type = STATUS_ZERO;
 
         if (comment.getPicturesId() != null) {
-            pictures pictures = getPicturesById(comment.getPicturesId());
+            Pictures pictures = getPicturesById(comment.getPicturesId());
             incrementCommentCount(pictures);
             if (pictures.getUserId() == Long.valueOf(user.getId())) {
                 comment.setIsAdmin(STATUS_ONE);
@@ -75,7 +70,7 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
         }
 
         if (comment.getStoryId() != null) {
-            story story = getStoryById(comment.getStoryId());
+            Story story = getStoryById(comment.getStoryId());
             incrementCommentCount(story);
             if (story.getUserId() == Long.valueOf(user.getId())) {
                 comment.setIsAdmin(STATUS_ONE);
@@ -85,7 +80,7 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
         }
 
         if (comment.getStrategyId() != null) {
-            strategy strategy = getStrategyById(comment.getStrategyId());
+            Strategy strategy = getStrategyById(comment.getStrategyId());
             incrementCommentCount(strategy);
             if (strategy.getUserId() == Long.valueOf(user.getId())) {
                 comment.setIsAdmin(STATUS_ONE);
@@ -105,36 +100,36 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
      * 通过id获取图片
      *
      * @param picturesId 身份证照片
-     * @return {@link pictures}
+     * @return {@link Pictures}
      */
-    private pictures getPicturesById(Long picturesId) {
-        QueryWrapper<pictures> wrapper = new QueryWrapper<>();
-        wrapper.select("id", "user_id", "title").eq("id", picturesId);
-        return picturesService.getBaseMapper().selectOne(wrapper);
+    private Pictures getPicturesById(Long picturesId) {
+        return picturesService.getBaseMapper().selectOne(Wrappers.<Pictures>lambdaQuery()
+                .select(Pictures::getId, Pictures::getUserId, Pictures::getTitle)
+                .eq(Pictures::getId,picturesId));
     }
 
     /**
      * 通过id获取故事
      *
      * @param storyId 故事id
-     * @return {@link story}
+     * @return {@link Story}
      */
-    private story getStoryById(Long storyId) {
-        QueryWrapper<story> wrapper = new QueryWrapper<>();
-        wrapper.select("id", "user_id", "title").eq("id", storyId);
-        return storyService.getBaseMapper().selectOne(wrapper);
+    private Story getStoryById(Long storyId) {
+        return storyService.getBaseMapper().selectOne(Wrappers.<Story>lambdaQuery()
+                .select(Story::getId, Story::getUserId, Story::getTitle)
+                .eq(Story::getId,storyId));
     }
 
     /**
      * 通过id获取策略
      *
      * @param strategyId 战略id
-     * @return {@link strategy}
+     * @return {@link Strategy}
      */
-    private strategy getStrategyById(Long strategyId) {
-        QueryWrapper<strategy> wrapper = new QueryWrapper<>();
-        wrapper.select("id", "user_id", "title").eq("id", strategyId);
-        return strategyService.getBaseMapper().selectOne(wrapper);
+    private Strategy getStrategyById(Long strategyId) {
+        return strategyService.getBaseMapper().selectOne(Wrappers.<Strategy>lambdaQuery()
+                .select(Strategy::getId, Strategy::getUserId, Strategy::getTitle)
+                .eq(Strategy::getId,strategyId));
     }
 
     /**
@@ -142,10 +137,10 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
      *
      * @param pictures 图片
      */
-    private void incrementCommentCount(pictures pictures) {
-        UpdateWrapper<pictures> wrapper = new UpdateWrapper<>();
-        wrapper.eq("id", pictures.getId()).setSql("comment_count = comment_count + 1");
-        picturesService.update(wrapper);
+    private void incrementCommentCount(Pictures pictures) {
+        picturesService.update(Wrappers.<Pictures>lambdaUpdate()
+                .eq(Pictures::getId,pictures.getId())
+                .setSql("comment_count = comment_count + 1"));
     }
 
     /**
@@ -153,10 +148,10 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
      *
      * @param story 故事
      */
-    private void incrementCommentCount(story story) {
-        UpdateWrapper<story> wrapper = new UpdateWrapper<>();
-        wrapper.eq("id", story.getId()).setSql("comment_count = comment_count + 1");
-        storyService.update(wrapper);
+    private void incrementCommentCount(Story story) {
+        storyService.update(Wrappers.<Story>lambdaUpdate()
+                .eq(Story::getId,story.getId())
+                .setSql("comment_count = comment_count + 1"));
     }
 
     /**
@@ -164,10 +159,10 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
      *
      * @param strategy 策略
      */
-    private void incrementCommentCount(strategy strategy) {
-        UpdateWrapper<strategy> wrapper = new UpdateWrapper<>();
-        wrapper.eq("id", strategy.getId()).setSql("comment_count = comment_count + 1");
-        strategyService.update(wrapper);
+    private void incrementCommentCount(Strategy strategy) {
+        strategyService.update(Wrappers.<Strategy>lambdaUpdate()
+                .eq(Strategy::getId,strategy.getId())
+                .setSql("comment_count = comment_count + 1"));
     }
 
     /*
@@ -176,32 +171,38 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
     @Override
     @Transactional
     public boolean removeComment(Long id) {
-        comment comment = commentService.getById(id);
+        if (id == null){
+            return false;
+        }
+        Comment commentById = commentService.getById(id);
 
-        if (comment == null) {
+        if (commentById == null) {
             return false;
         }
 
-        QueryWrapper<comment> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("parent_comment_id", id);
-        List<comment> childComments = commentService.list(queryWrapper);
+        List<Comment> childComments = commentService.list(Wrappers.<Comment>lambdaQuery()
+                .eq(Comment::getParentCommentId,id));
 
-        if (comment.getParentCommentId() != -1 || childComments.isEmpty()) {
+        if (commentById.getParentCommentId() != -1 || childComments.isEmpty()) {
             // 是子评论或者是没有子评论的父评论,直接根据id删除
             boolean success = commentService.removeById(id);
             if (success) {
-                decrementCommentCount(comment);
+                decrementCommentCount(commentById);
             }
             return success;
         } else {
             // 是父评论且有子评论,父评论和子评论一起删除
-            queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("parent_comment_id", id).or().eq("id", id);
-            int deletedCount = commentService.count(queryWrapper);
+            int deletedCount = commentService.count(Wrappers.<Comment>lambdaQuery()
+                    .eq(Comment::getParentCommentId,id)
+                    .or()
+                    .eq(Comment::getId,id));
 
-            boolean success = commentService.remove(queryWrapper);
+            boolean success = commentService.remove(Wrappers.<Comment>lambdaQuery()
+                    .eq(Comment::getParentCommentId,id)
+                    .or()
+                    .eq(Comment::getId,id));
             if (success) {
-                decrementCommentCount(comment, deletedCount);
+                decrementCommentCount(commentById, deletedCount);
             }
             return success;
         }
@@ -212,21 +213,24 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
      *
      * @param comment 评论
      */
-    private void decrementCommentCount(comment comment) {
+    private void decrementCommentCount(Comment comment) {
+        if (comment.getPicturesId() == null && comment.getStoryId() == null && comment.getStrategyId() == null){
+            return;
+        }
         if (comment.getPicturesId() != null) {
-            UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("id", comment.getPicturesId()).setSql("comment_count = comment_count - 1");
-            picturesService.update(updateWrapper);
+            picturesService.update(Wrappers.<Pictures>update().lambda()
+                    .eq(Pictures::getId,comment.getPicturesId())
+                    .setSql("comment_count = comment_count - 1"));
         }
         if (comment.getStoryId() != null) {
-            UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("id", comment.getStoryId()).setSql("comment_count = comment_count - 1");
-            storyService.update(updateWrapper);
+            storyService.update(Wrappers.<Story>update().lambda()
+                    .eq(Story::getId,comment.getStoryId())
+                    .setSql("comment_count = comment_count - 1"));
         }
         if (comment.getStrategyId() != null) {
-            UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("id", comment.getStrategyId()).setSql("comment_count = comment_count - 1");
-            strategyService.update(updateWrapper);
+            strategyService.update(Wrappers.<Strategy>update().lambda()
+                    .eq(Strategy::getId,comment.getStrategyId())
+                    .setSql("comment_count = comment_count - 1"));
         }
     }
 
@@ -236,21 +240,26 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
      * @param comment 评论
      * @param count   数
      */
-    private void decrementCommentCount(comment comment, int count) {
+    private void decrementCommentCount(Comment comment, int count) {
+        if (comment.getPicturesId() == null && comment.getStoryId() == null && comment.getStrategyId() == null){
+            return;
+        }
         if (comment.getPicturesId() != null) {
-            UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("id", comment.getPicturesId()).setSql("comment_count = comment_count - " + count);
-            picturesService.update(updateWrapper);
+            picturesService.update(Wrappers.<Pictures>update().lambda()
+                    .eq(Pictures::getId,comment.getPicturesId())
+                    .setSql("comment_count = comment_count - " + count));
+            return;
         }
         if (comment.getStoryId() != null) {
-            UpdateWrapper<story> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("id", comment.getStoryId()).setSql("comment_count = comment_count - " + count);
-            storyService.update(updateWrapper);
+            storyService.update(Wrappers.<Story>update().lambda()
+                    .eq(Story::getId,comment.getStoryId())
+                    .setSql("comment_count = comment_count - " + count));
+            return;
         }
         if (comment.getStrategyId() != null) {
-            UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("id", comment.getStrategyId()).setSql("comment_count = comment_count - " + count);
-            strategyService.update(updateWrapper);
+            strategyService.update(Wrappers.<Strategy>update().lambda()
+                    .eq(Strategy::getId,comment.getStrategyId())
+                    .setSql("comment_count = comment_count - " + count));
         }
     }
 
@@ -285,7 +294,7 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
     * 回复我的评论
     * */
     @Override
-    public PageInfo<comment> info(Integer pageNum, int pageSize) {
+    public PageInfo<Comment> info(Integer pageNum, int pageSize) {
         if (pageNum == null){
             pageNum = PAGE_NUM;
         }
@@ -293,16 +302,16 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
 
-        List<comment> commentPicturesInfo = commentMapper.commentPicturesInfo(Long.valueOf(user.getId()));
-        List<comment> commentStrategyInfo = commentMapper.commentStrategyInfo(Long.valueOf(user.getId()));
-        List<comment> commentStoryInfo = commentMapper.commentStoryInfo(Long.valueOf(user.getId()));
+        List<Comment> commentPicturesInfo = commentMapper.commentPicturesInfo(Long.valueOf(user.getId()));
+        List<Comment> commentStrategyInfo = commentMapper.commentStrategyInfo(Long.valueOf(user.getId()));
+        List<Comment> commentStoryInfo = commentMapper.commentStoryInfo(Long.valueOf(user.getId()));
         return mergeList(commentPicturesInfo, commentStrategyInfo, commentStoryInfo, pageNum, pageSize);
     }
     /*
      * 我的所有文章的评论
      * */
     @Override
-    public PageInfo<comment> comment(Integer pageNum, int pageSize) {
+    public PageInfo<Comment> comment(Integer pageNum, int pageSize) {
         if (pageNum == null){
             pageNum = PAGE_NUM;
         }
@@ -310,9 +319,9 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
 
-        List<comment> picturesComment = commentMapper.picturesComment(Long.valueOf(user.getId()));//图片文章评论
-        List<comment> strategyComment = commentMapper.strategyComment(Long.valueOf(user.getId()));//攻略文章评论
-        List<comment> storyComment = commentMapper.storyComment(Long.valueOf(user.getId()));//广场文章评论
+        List<Comment> picturesComment = commentMapper.picturesComment(Long.valueOf(user.getId()));//图片评论
+        List<Comment> strategyComment = commentMapper.strategyComment(Long.valueOf(user.getId()));//文章评论
+        List<Comment> storyComment = commentMapper.storyComment(Long.valueOf(user.getId()));//问答评论
         return mergeList(picturesComment,strategyComment,storyComment,pageNum,pageSize);
 
     }
@@ -325,23 +334,23 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, comment> impl
      * @param commentList3 评论list3
      * @param pageNum      页面num
      * @param pageSize     页面大小
-     * @return {@link PageInfo}<{@link comment}>
+     * @return {@link PageInfo}<{@link Comment}>
      */
-    private PageInfo<comment> mergeList(List<comment> commentList1,List<comment> commentList2,List<comment> commentList3,Integer pageNum,int pageSize){
-        List<comment> commentList = new ArrayList<>();
+    private PageInfo<Comment> mergeList(List<Comment> commentList1, List<Comment> commentList2, List<Comment> commentList3, Integer pageNum, int pageSize){
+        List<Comment> commentList = new ArrayList<>();
         commentList.addAll(commentList1);
         commentList.addAll(commentList2);
         commentList.addAll(commentList3);
         // 按照 update_time 属性降序排列
-        commentList.sort(Comparator.comparing(comment::getUpdateTime).reversed());
+        commentList.sort(Comparator.comparing(Comment::getUpdateTime).reversed());
 
         int total = commentList.size();
         int fromIndex = (pageNum - 1) * pageSize;
         int toIndex = Math.min(fromIndex + pageSize, total);
 
-        List<comment> pagedCommentList = commentList.subList(fromIndex, toIndex);
+        List<Comment> pagedCommentList = commentList.subList(fromIndex, toIndex);
 
-        PageInfo<comment> pageInfo = new PageInfo<>();
+        PageInfo<Comment> pageInfo = new PageInfo<>();
         pageInfo.setList(pagedCommentList);
         pageInfo.setTotal(total);
         pageInfo.setPageNum(pageNum);

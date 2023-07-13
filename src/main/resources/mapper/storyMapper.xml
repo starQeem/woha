@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.starQeem.woha.mapper.storyMapper">
-    <resultMap id="BaseResultMap" type="com.starQeem.woha.pojo.story">
+    <resultMap id="BaseResultMap" type="com.starQeem.woha.pojo.Story">
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="title" column="title" jdbcType="VARCHAR"/>
         <result property="content" column="content" jdbcType="VARCHAR"/>
@@ -14,7 +14,7 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="views" column="views" jdbcType="INTEGER"/>
         <result property="liked" column="liked" jdbcType="INTEGER"/>
-        <association property="user" javaType="com.starQeem.woha.pojo.user">
+        <association property="user" javaType="com.starQeem.woha.pojo.User">
             <id property="id" column="user_id"/>
             <result property="nickName" column="user_nick_name"/>
             <result property="avatar" column="user_avatar"/>

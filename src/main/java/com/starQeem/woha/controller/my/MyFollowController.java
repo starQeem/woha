@@ -1,6 +1,6 @@
 package com.starQeem.woha.controller.my;
 
-import com.starQeem.woha.pojo.user;
+import com.starQeem.woha.pojo.User;
 import com.starQeem.woha.service.followService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +25,7 @@ public class MyFollowController {
     * */
     @GetMapping("/follow")
     public String follow(Model model){
-        List<user> userList = followService.getFollowList(); //查询我关注的用户列表
+        List<User> userList = followService.getFollowList(); //查询我关注的用户列表
         model.addAttribute("userList",userList);
         return "my/follow";
     }
@@ -34,7 +34,7 @@ public class MyFollowController {
     * */
     @GetMapping("/fans")
     public String fans(Model model){
-        List<user> userList = followService.getFansList();  //查询关注我的用户列表
+        List<User> userList = followService.getFansList();  //查询关注我的用户列表
         model.addAttribute("userList",userList);
         return "my/fans";
     }

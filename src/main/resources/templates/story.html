@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
     <link rel=stylesheet type=text/css href="../static/css/nav.css" th:href="@{/css/nav.css}">
     <!-- 看板娘 -->
-    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
+<!--    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">-->
     <style type="text/css">
         body {
             background-image: url("/images/bj2.png") !important;
@@ -39,7 +39,7 @@
                 <a href="index.html" th:href="@{/}" class="a"><i class="mini home icon"></i>&nbsp;首页</a>
                 <a href="more.html" th:href="@{/story}" class="selected a"><i class="mini question circle outline icon"></i>&nbsp;问答</a>
                 <a href="story.html" th:href="@{/strategy}" class="a"><i class="mini book icon"></i>&nbsp;文章</a>
-                <a href="picture.html" th:href="@{/pictures}" class="a"><i class="mini image outline icon"></i>&nbsp;壁纸</a>
+                <a href="picture.html"  th:href="@{/pictures}" class="a"><i class="mini image outline icon"></i>&nbsp;壁纸</a>
                 <a href="message.html"  th:href="@{/my}" class="a"><i class="mini info icon"></i>我的</a>
                 <a href="more.html" th:href="@{/more}" class="a2"><i class="mini comment alternate outline icon"></i>&nbsp;联系我们</a>
                 <div shiro:guest class="a">
@@ -154,9 +154,7 @@
     </div>
     <div class="footer">
         <table width="100%" border="0">
-            <tr>
-                <td height="25" align="center" style="font-family: KaiTi">版权声明 | 联系方法 | 刊登广告 | 关于我们 | 服务条款</td>
-            </tr>
+            <br>
             <tr>
                 <td height="29" align="center" style="font-family: KaiTi">版权所有：Qeem</td>
             </tr>
@@ -171,7 +169,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/unveil/1.3.0/jquery.unveil.min.js"></script>
 <!-- 看板娘 -->
-<script src="../static/live2d-widget/autoload.js" th:src="@{/live2d-widget/autoload.js}"></script>
+<!--<script src="../static/live2d-widget/autoload.js" th:src="@{/live2d-widget/autoload.js}"></script>-->
 <script>
     $(document).ready(function() {
         $('img').unveil();

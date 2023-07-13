@@ -3,9 +3,9 @@ package com.starQeem.woha.controller.my;
 import com.github.pagehelper.PageInfo;
 import com.starQeem.woha.dto.userDto;
 import com.starQeem.woha.mapper.picturesMapper;
-import com.starQeem.woha.pojo.comment;
-import com.starQeem.woha.pojo.pictures;
-import com.starQeem.woha.pojo.user;
+import com.starQeem.woha.pojo.Comment;
+import com.starQeem.woha.pojo.Pictures;
+import com.starQeem.woha.pojo.User;
 import com.starQeem.woha.service.picturesService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -35,7 +35,7 @@ public class MyPicturesController {
     * */
     @GetMapping(value = {"/mypictures","/mypictures/{pageNum}"})
     public String myPictures(@PathVariable(value = "pageNum",required = false)Integer pageNum, Model model){
-        PageInfo<pictures> pageInfo = picturesService.queryPictures(pageNum, PICTURES_PAGE_SIZE); //查询图片列表
+        PageInfo<Pictures> pageInfo = picturesService.queryPictures(pageNum, PICTURES_PAGE_SIZE); //查询图片列表
         model.addAttribute("page",pageInfo);
         return "my/pictures";
     }
@@ -50,7 +50,7 @@ public class MyPicturesController {
     * 新增图片
     * */
     @PostMapping("/mypicturesInput")
-    public String myPicturesInput(pictures pictures){
+    public String myPicturesInput(Pictures pictures){
         picturesService.savePictures(pictures); //新增壁纸图片
         return "redirect:/my/pictures/mypictures";
     }
@@ -59,7 +59,7 @@ public class MyPicturesController {
     * */
     @GetMapping("/mypicturesUpdate/{id}")
     public String getMyPicturesUpdate(@PathVariable("id")Long id,Model model){
-        pictures pictures = picturesMapper.selectById(id);  //根据id查询图片信息
+        Pictures pictures = picturesMapper.selectById(id);  //根据id查询图片信息
         model.addAttribute("pictures",pictures);
         return "my/picturesUpdate";
     }
@@ -67,7 +67,7 @@ public class MyPicturesController {
     * 图片编辑
     * */
     @PostMapping("/mypicturesUpdate")
-    public String myPicturesUpdate(pictures pictures){
+    public String myPicturesUpdate(Pictures pictures){
         picturesService.updatePictures(pictures);  //修改图片信息
         return "redirect:/my/pictures/mypictures";
     }
@@ -91,10 +91,10 @@ public class MyPicturesController {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         Integer liked = picturesService.getLikedCount(id); //根据图片id查询图片点赞数
-        pictures pictures = picturesService.queryPicturesDetail(id);  //根据图片id查询图片信息
-        List<comment> commentList = picturesService.getComments(id);//根据图片id查询评论列表
+        Pictures pictures = picturesService.queryPicturesDetail(id);  //根据图片id查询图片信息
+        List<Comment> commentList = picturesService.getComments(id);//根据图片id查询评论列表
         boolean status = picturesService.getStatus(id, Long.valueOf(user.getId()));//查询是否点赞
-        List<user> likedUserThree = picturesService.getLikedUserThree(id); //获取前三名点赞的用户
+        List<User> likedUserThree = picturesService.getLikedUserThree(id); //获取前三名点赞的用户
         model.addAttribute("pictures",pictures);
         model.addAttribute("commentsList",commentList);
         model.addAttribute("status",status);

@@ -1,7 +1,7 @@
 package com.starQeem.woha.controller;
 
 import com.starQeem.woha.dto.userDto;
-import com.starQeem.woha.pojo.comment;
+import com.starQeem.woha.pojo.Comment;
 import com.starQeem.woha.service.commentService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -24,7 +24,7 @@ public class commentController {
      * 评论区发布
      * */
     @PostMapping
-    public String commentInput(comment comment) throws MessagingException {
+    public String commentInput(Comment comment) throws MessagingException {
         if (comment.getPicturesId() == null && comment.getStrategyId() == null && comment.getStoryId() == null){
             return null;
         }
@@ -46,7 +46,7 @@ public class commentController {
     * 评论区点赞
     * */
     @PostMapping("/liked/{commentId}")
-    public String commentLiked(@PathVariable("commentId")Long commentId, comment comment){
+    public String commentLiked(@PathVariable("commentId")Long commentId, Comment comment){
         if (comment.getPicturesId() == null && comment.getStrategyId() == null && comment.getStoryId() == null){
             return null;
         }

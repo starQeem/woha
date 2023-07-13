@@ -2,9 +2,9 @@ package com.starQeem.woha.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.pagehelper.PageInfo;
-import com.starQeem.woha.pojo.comment;
-import com.starQeem.woha.pojo.pictures;
-import com.starQeem.woha.pojo.user;
+import com.starQeem.woha.pojo.Comment;
+import com.starQeem.woha.pojo.Pictures;
+import com.starQeem.woha.pojo.User;
 
 import java.util.List;
 
@@ -12,23 +12,23 @@ import java.util.List;
  * @Date: 2023/4/18 10:51
  * @author: Qeem
  */
-public interface picturesService extends IService<pictures> {
+public interface picturesService extends IService<Pictures> {
     /**
      * 新增图片
      *
      * @param pictures 图片
      * @return boolean
      */
-    boolean savePictures(pictures pictures);
+    boolean savePictures(Pictures pictures);
 
     /**
      * 查询图片列表
      *
      * @param pageNum  页码
      * @param pageSize 数据条数
-     * @return {@link PageInfo}<{@link pictures}>
+     * @return {@link PageInfo}<{@link Pictures}>
      */
-    PageInfo<pictures> queryPictures(Integer pageNum,int pageSize);
+    PageInfo<Pictures> queryPictures(Integer pageNum, int pageSize);
 
     /**
      * 修改图片
@@ -36,23 +36,23 @@ public interface picturesService extends IService<pictures> {
      * @param pictures 图片
      * @return boolean
      */
-    boolean updatePictures(pictures pictures);
+    boolean updatePictures(Pictures pictures);
 
     /**
      * 查询我的图片详情
      *
      * @param id 图片id
-     * @return {@link pictures}
+     * @return {@link Pictures}
      */
-    pictures queryPicturesDetail(Long id);
+    Pictures queryPicturesDetail(Long id);
 
     /**
      * 查询最近更新的三条我的图片记录
      *
      * @param userId 用户id
-     * @return {@link List}<{@link pictures}>
+     * @return {@link List}<{@link Pictures}>
      */
-    List<pictures> getMyPicturesIndexByUpdateTime(Long userId);
+    List<Pictures> getMyPicturesIndexByUpdateTime(Long userId);
 
     /**
      * 查询图片列表
@@ -60,33 +60,33 @@ public interface picturesService extends IService<pictures> {
      * @param pageNum  页码
      * @param pageSize 数据条数
      * @param title    标题
-     * @return {@link PageInfo}<{@link pictures}>
+     * @return {@link PageInfo}<{@link Pictures}>
      */
-    PageInfo<pictures> getPicturesListPageInfo(Integer pageNum, int pageSize, String title);
+    PageInfo<Pictures> getPicturesListPageInfo(Integer pageNum, int pageSize, String title);
 
     /**
      * 查询图片详情
      *
      * @param id 图片id
-     * @return {@link pictures}
+     * @return {@link Pictures}
      */
-    pictures getPicturesDetailById(Long id);
+    Pictures getPicturesDetailById(Long id);
 
     /**
      * 查询用户发布的图片列表
      *
      * @param id 用户id
-     * @return {@link List}<{@link pictures}>
+     * @return {@link List}<{@link Pictures}>
      */
-    List<pictures> getUserPicturesWithUpdateTime(Long id);
+    List<Pictures> getUserPicturesWithUpdateTime(Long id);
 
     /**
      * 查询评论区
      *
      * @param id 图片id
-     * @return {@link List}<{@link comment}>
+     * @return {@link List}<{@link Comment}>
      */
-    List<comment> getComments(Long id);
+    List<Comment> getComments(Long id);
 
     /**
      * 图片点赞
@@ -109,9 +109,9 @@ public interface picturesService extends IService<pictures> {
     /**
      * 查询五条图片记录
      *
-     * @return {@link List}<{@link pictures}>
+     * @return {@link List}<{@link Pictures}>
      */
-    List<pictures> getPicturesListFiveBylike();
+    List<Pictures> getPicturesListFiveBylike();
 
     /**
      * 删除图片
@@ -133,7 +133,7 @@ public interface picturesService extends IService<pictures> {
      * 获取点赞的前三名用户
      *
      * @param id 图片id
-     * @return {@link List}<{@link user}>
+     * @return {@link List}<{@link User}>
      */
-    List<user> getLikedUserThree(Long id);
+    List<User> getLikedUserThree(Long id);
 }

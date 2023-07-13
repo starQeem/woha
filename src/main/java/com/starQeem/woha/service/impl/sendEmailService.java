@@ -1,9 +1,10 @@
 package com.starQeem.woha.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.starQeem.woha.config.email;
-import com.starQeem.woha.pojo.comment;
-import com.starQeem.woha.pojo.user;
+import com.starQeem.woha.pojo.Comment;
+import com.starQeem.woha.pojo.User;
 import com.starQeem.woha.service.commentService;
 import com.starQeem.woha.service.userService;
 import org.springframework.scheduling.annotation.Async;
@@ -27,20 +28,20 @@ public class sendEmailService {
     @Resource
     private email email;
     @Async
-    public void sendEmail(comment comment, String title, Integer type) throws MessagingException {
+    public void sendEmail(Comment comment, String title, Integer type) throws MessagingException {
         //回复的用户
-        QueryWrapper<user> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.select("id","email").eq("id",comment.getCommentUserId());
-        user user1 = userService.getBaseMapper().selectOne(queryWrapper1);
+        User replyUser = userService.getBaseMapper().selectOne(Wrappers.<User>lambdaQuery()
+                .select(User::getId,User::getEmail)
+                .eq(User::getId,comment.getCommentUserId()));
         //发布回复评论的用户
-        QueryWrapper<user> queryWrapper2 = new QueryWrapper<>();
-        queryWrapper2.select("id","nick_name").eq("id",comment.getUserId());
-        user user2 = userService.getBaseMapper().selectOne(queryWrapper2);
+        User newReplyUser = userService.getBaseMapper().selectOne(Wrappers.<User>lambdaQuery()
+                .select(User::getId,User::getNickName)
+                .eq(User::getId,comment.getUserId()));
         //回复的评论
-        QueryWrapper<comment> commentQueryWrapper = new QueryWrapper<>();
-        commentQueryWrapper.select("id","content").eq("id",comment.getParentCommentId());
-        comment commentInfo = commentService.getBaseMapper().selectOne(commentQueryWrapper);
+        Comment commentInfo = commentService.getBaseMapper().selectOne(Wrappers.<Comment>lambdaQuery()
+                .select(Comment::getId,Comment::getContent)
+                .eq(Comment::getId,comment.getParentCommentId()));
         //发送提醒邮件
-        email.sendVerificationCommentHint(EMAIL_FORM,user1.getEmail(),user2.getNickName(),comment,title,type,commentInfo.getContent());
+        email.sendVerificationCommentHint(EMAIL_FORM,replyUser.getEmail(),newReplyUser.getNickName(),comment,title,type,commentInfo.getContent());
     }
 }

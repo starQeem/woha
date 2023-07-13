@@ -1,7 +1,7 @@
 package com.starQeem.woha.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.starQeem.woha.pojo.comment;
+import com.starQeem.woha.pojo.Comment;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -11,14 +11,14 @@ import java.util.List;
  * @author: Qeem
  */
 @Mapper
-public interface commentMapper extends BaseMapper<comment> {
-    List<comment> commentPicturesInfo(Long userId);
-    List<comment> getPicturesComments(Long picturesId);
-    List<comment> getStoryComments(Long storyId);
-    List<comment> getStrategyComments(Long strategyId);
-    List<comment> commentStrategyInfo(Long valueOf);
-    List<comment> commentStoryInfo(Long valueOf);
-    List<comment> picturesComment(Long valueOf);
-    List<comment> strategyComment(Long valueOf);
-    List<comment> storyComment(Long valueOf);
+public interface commentMapper extends BaseMapper<Comment> {
+    List<Comment> commentPicturesInfo(Long userId);
+    List<Comment> getPicturesComments(Long picturesId);
+    List<Comment> getStoryComments(Long storyId);
+    List<Comment> getStrategyComments(Long strategyId);
+    List<Comment> commentStrategyInfo(Long valueOf);
+    List<Comment> commentStoryInfo(Long valueOf);
+    List<Comment> picturesComment(Long valueOf);
+    List<Comment> strategyComment(Long valueOf);
+    List<Comment> storyComment(Long valueOf);
 }

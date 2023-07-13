@@ -1,8 +1,8 @@
 package com.starQeem.woha.controller.admin;
 
 import com.github.pagehelper.PageInfo;
-import com.starQeem.woha.pojo.strategyType;
-import com.starQeem.woha.pojo.user;
+import com.starQeem.woha.pojo.StrategyType;
+import com.starQeem.woha.pojo.User;
 import com.starQeem.woha.service.strategyTypeService;
 import com.starQeem.woha.service.userService;
 import org.springframework.stereotype.Controller;
@@ -32,7 +32,7 @@ public class adminController {
      */
     @GetMapping(value = {"","/{pageNum}"})
     public String admin(Model model,@PathVariable(value = "pageNum",required = false)Integer pageNum,String nickName){
-        PageInfo<user> pageInfo =userService.getUserList(pageNum,nickName);//获取用户列表
+        PageInfo<User> pageInfo =userService.getUserList(pageNum,nickName);//获取用户列表
         model.addAttribute("page",pageInfo);
         return "admin/admin";
     }
@@ -56,7 +56,7 @@ public class adminController {
      */
     @GetMapping(value = {"/strategyType/{pageNum}","/strategyType"})
     public String strategyType(@PathVariable(value = "pageNum",required = false)Integer pageNum,Model model){
-        PageInfo<strategyType> pageInfo = strategyTypeService.getStrategyTypeList(pageNum); //获取文章类型列表
+        PageInfo<StrategyType> pageInfo = strategyTypeService.getStrategyTypeList(pageNum); //获取文章类型列表
         model.addAttribute("page",pageInfo);
         return "admin/strategyType";
     }
@@ -78,7 +78,7 @@ public class adminController {
      * @return {@link String}
      */
     @PostMapping("/strategyTypeInput")
-    public String StrategyTypeInput(strategyType strategyType){
+    public String StrategyTypeInput(StrategyType strategyType){
         strategyTypeService.saveStrategyType(strategyType); //保存文章分类
         return "redirect:/admin/strategyType";
     }
@@ -90,7 +90,7 @@ public class adminController {
      */
     @GetMapping("/strategyType/{id}/edit")
     public String getStrategyTypeUpdate(@PathVariable("id")Long id,Model model){
-        strategyType strategyType = strategyTypeService.getStrategyTypeById(id); //根据id查询文章分类信息(回显)
+        StrategyType strategyType = strategyTypeService.getStrategyTypeById(id); //根据id查询文章分类信息(回显)
         model.addAttribute("strategyType",strategyType);
         return "admin/strategyTypeUpdate";
     }
@@ -102,7 +102,7 @@ public class adminController {
      * @return {@link String}
      */
     @PostMapping("/strategyTypeUpdate")
-    public String StrategyTypeUpdate(strategyType strategyType){
+    public String StrategyTypeUpdate(StrategyType strategyType){
         strategyTypeService.StrategyTypeUpdateById(strategyType); //文章分类修改
         return "redirect:/admin/strategyType";
     }

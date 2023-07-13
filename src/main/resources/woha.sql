@@ -16,7 +16,7 @@ Date: 2023-05-22 15:09:34
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for comment
+-- Table structure for Comment
 -- ----------------------------
 DROP TABLE IF EXISTS `comment`;
 CREATE TABLE `comment` (
@@ -35,7 +35,7 @@ CREATE TABLE `comment` (
 ) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for follow
+-- Table structure for Follow
 -- ----------------------------
 DROP TABLE IF EXISTS `follow`;
 CREATE TABLE `follow` (
@@ -46,7 +46,7 @@ CREATE TABLE `follow` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for pictures
+-- Table structure for Pictures
 -- ----------------------------
 DROP TABLE IF EXISTS `pictures`;
 CREATE TABLE `pictures` (
@@ -64,7 +64,7 @@ CREATE TABLE `pictures` (
 ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for story
+-- Table structure for Story
 -- ----------------------------
 DROP TABLE IF EXISTS `story`;
 CREATE TABLE `story` (
@@ -83,7 +83,7 @@ CREATE TABLE `story` (
 ) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for strategy
+-- Table structure for Strategy
 -- ----------------------------
 DROP TABLE IF EXISTS `strategy`;
 CREATE TABLE `strategy` (
@@ -113,7 +113,7 @@ CREATE TABLE `strategy_type` (
 ) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for user
+-- Table structure for User
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (

@@ -1,10 +1,11 @@
 package com.starQeem.woha.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.starQeem.woha.dto.userDto;
 import com.starQeem.woha.mapper.userTaskMapper;
-import com.starQeem.woha.pojo.userTask;
+import com.starQeem.woha.pojo.UserTask;
 import com.starQeem.woha.service.userTaskService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -17,29 +18,25 @@ import javax.annotation.Resource;
  * @author: Qeem
  */
 @Service
-public class userTaskServiceImpl extends ServiceImpl<userTaskMapper, userTask> implements userTaskService {
+public class userTaskServiceImpl extends ServiceImpl<userTaskMapper, UserTask> implements userTaskService {
     @Resource
     private userTaskMapper userTaskMapper;
     /*
     * 查询我的任务
     * */
     @Override
-    public userTask getMyTaskByUserId() {
+    public UserTask getMyTaskByUserId() {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
-        QueryWrapper<userTask> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id",Long.valueOf(user.getId()));
-        return userTaskMapper.selectOne(queryWrapper);
+        return userTaskMapper.selectOne(Wrappers.<UserTask>lambdaQuery().eq(UserTask::getUserId,Long.valueOf(user.getId())));
     }
     /*
     * 查询我的等级
     * */
     @Override
-    public userTask getGradeByUserId() {
+    public UserTask getGradeByUserId() {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
-        QueryWrapper<userTask> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("grade").eq("user_id",user.getId());
-        return userTaskMapper.selectOne(queryWrapper);
+        return userTaskMapper.selectOne(Wrappers.<UserTask>lambdaQuery().select(UserTask::getGrade).eq(UserTask::getUserId,user.getId()));
     }
 }

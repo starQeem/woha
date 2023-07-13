@@ -1,7 +1,7 @@
 package com.starQeem.woha.controller.my;
 
 import com.github.pagehelper.PageInfo;
-import com.starQeem.woha.pojo.comment;
+import com.starQeem.woha.pojo.Comment;
 import com.starQeem.woha.service.commentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +25,7 @@ public class MyCommentController {
     * 我的评论发布
     * */
     @PostMapping
-    public String CommentInput(comment comment) throws MessagingException {
+    public String CommentInput(Comment comment) throws MessagingException {
         if (comment.getStoryId() == null && comment.getStrategyId() == null && comment.getPicturesId() == null){
             return null;
         }
@@ -63,7 +63,7 @@ public class MyCommentController {
     * */
     @GetMapping(value = {"/info","/info/{pageNum}"})
     public String info(@PathVariable(value = "pageNum",required = false)Integer pageNum, Model model){
-        PageInfo<comment> pageInfo = commentService.info(pageNum,COMMENT_PAGE_SIZE); //查询回复我的评论列表
+        PageInfo<Comment> pageInfo = commentService.info(pageNum,COMMENT_PAGE_SIZE); //查询回复我的评论列表
         model.addAttribute("page",pageInfo);
         return "my/info";
     }
@@ -72,7 +72,7 @@ public class MyCommentController {
     * */
     @GetMapping(value = {"/comment","/comment/{pageNum}"})
     public String comment(@PathVariable(value = "pageNum",required = false)Integer pageNum,Model model){
-        PageInfo<comment> pageInfo = commentService.comment(pageNum,COMMENT_PAGE_SIZE);  //查询所有评论我的评论
+        PageInfo<Comment> pageInfo = commentService.comment(pageNum,COMMENT_PAGE_SIZE);  //查询所有评论我的评论
         model.addAttribute("page",pageInfo);
         return "my/comment";
     }

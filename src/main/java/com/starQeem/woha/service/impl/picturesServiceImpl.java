@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -26,12 +27,13 @@ import java.util.concurrent.TimeUnit;
 
 import static com.starQeem.woha.util.constant.*;
 
+
 /**
  * @Date: 2023/4/18 10:51
  * @author: Qeem
  */
 @Service
-public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> implements picturesService {
+public class picturesServiceImpl extends ServiceImpl<picturesMapper, Pictures> implements picturesService {
     @Resource
     private picturesService picturesService;
     @Resource
@@ -51,7 +53,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
      * 查询我的图片列表
      * */
     @Override
-    public PageInfo<pictures> queryPictures(Integer pageNum, int pageSize) {
+    public PageInfo<Pictures> queryPictures(Integer pageNum, int pageSize) {
         if (pageNum == null){
             pageNum = PAGE_NUM;
         }
@@ -59,7 +61,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
         PageHelper.orderBy("create_time desc");
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
-        List<pictures> picturesList = picturesMapper.getUserWithPictures(Long.valueOf(user.getId()));
+        List<Pictures> picturesList = picturesMapper.getUserWithPictures(Long.valueOf(user.getId()));
         return new PageInfo<>(picturesList, pageSize);
     }
 
@@ -67,7 +69,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
      * 查询图片列表
      * */
     @Override
-    public PageInfo<pictures> getPicturesListPageInfo(Integer pageNum, int pageSize, String title) {
+    public PageInfo<Pictures> getPicturesListPageInfo(Integer pageNum, int pageSize, String title) {
         if (pageNum == null) {
             pageNum = PAGE_NUM;
         }
@@ -78,7 +80,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
         }
         PageHelper.startPage(pageNum, pageSize);
         //查询数据库
-        List<pictures> picturesList = picturesMapper.getPicturesListPageInfo(title);
+        List<Pictures> picturesList = picturesMapper.getPicturesListPageInfo(title);
         return new PageInfo<>(picturesList, pageSize);
     }
 
@@ -86,7 +88,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
      * 新增我的图片
      * */
     @Override
-    public boolean savePictures(pictures pictures) {
+    public boolean savePictures(Pictures pictures) {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         pictures.setCreateTime(new Date());
@@ -94,9 +96,8 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
         pictures.setViews(0);
         pictures.setUserId(Long.valueOf(user.getId()));
         //每周任务
-        QueryWrapper<userTask> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id", Long.valueOf(user.getId()));
-        userTask userTask = userTaskService.getBaseMapper().selectOne(queryWrapper);
+        UserTask userTask = userTaskService.getBaseMapper().selectOne(Wrappers.<UserTask>lambdaQuery()
+                .eq(UserTask::getUserId,Long.valueOf(user.getId())));
         if (userTask.getWeeklytaskPictures() == STATUS_ZERO) { //判断每周任务是否未完成
             Integer experience = userTask.getExperience(); //未完成
             userTask.setExperience(experience + TASK_WEEK_EXPERIENCE);
@@ -110,7 +111,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
      * 修改我的图片
      * */
     @Override
-    public boolean updatePictures(pictures pictures) {
+    public boolean updatePictures(Pictures pictures) {
         pictures.setCreateTime(new Date());
         pictures.setUpdateTime(new Date());
         boolean isSuccess = picturesService.updateById(pictures);
@@ -125,13 +126,11 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
      * 查询我的图片详情
      * */
     @Override
-    public pictures queryPicturesDetail(Long id) {
+    public Pictures queryPicturesDetail(Long id) {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
-        pictures pictures = picturesMapper.queryPicturesWithUserById(id, Long.valueOf(user.getId()));
-        UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.setSql("views = views + 1").eq("id", id);
-        picturesService.update(updateWrapper);
+        Pictures pictures = picturesMapper.queryPicturesWithUserById(id, Long.valueOf(user.getId()));
+        picturesService.update(Wrappers.<Pictures>lambdaUpdate().eq(Pictures::getId,id).setSql("views = views + 1"));
         return pictures;
     }
 
@@ -139,22 +138,20 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
      * 查询图片详情
      * */
     @Override
-    public pictures getPicturesDetailById(Long id) {
+    public Pictures getPicturesDetailById(Long id) {
         //查询redis中的图片详情
         String getPicturesDetail = stringRedisTemplate.opsForValue().get(PICTURES_DETAIL + id);
         if (StrUtil.isNotBlank(getPicturesDetail)) {
             //不为空,直接返回
-            pictures pictures = JSONUtil.toBean(getPicturesDetail, pictures.class);
-            UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.setSql("views = views + 1").eq("id", id);
-            picturesService.update(updateWrapper);
+            Pictures pictures = JSONUtil.toBean(getPicturesDetail, Pictures.class);
+            picturesService.update(Wrappers.<Pictures>lambdaUpdate().eq(Pictures::getId,id).setSql("views = views + 1"));
             //返回图片详情
             return pictures;
         } else if (getPicturesDetail != null) {
             return null;
         } else {
             //为空,从数据库中查询图片详情
-            pictures pictures = picturesMapper.getPicturesDetailById(id);
+            Pictures pictures = picturesMapper.getPicturesDetailById(id);
             if (pictures == null) {
                 //缓存空字符串
                 stringRedisTemplate.opsForValue().set(PICTURES_DETAIL + id, "", TIME_BIG, TimeUnit.SECONDS);
@@ -162,9 +159,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
             }
             //将数据库中查询出的图片详情写入redis中
             stringRedisTemplate.opsForValue().set(PICTURES_DETAIL + id, JSONUtil.toJsonStr(pictures), TIME_MAX + RandomUtil.randomInt(0, 300), TimeUnit.SECONDS);
-            UpdateWrapper<pictures> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.setSql("views = views + 1").eq("id", id);
-            picturesService.update(updateWrapper);
+            picturesService.update(Wrappers.<Pictures>lambdaUpdate().eq(Pictures::getId,id).setSql("views = views + 1"));
             //返回图片详情
             return pictures;
         }
@@ -174,16 +169,16 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
      * 查询用户发布图片记录
      * */
     @Override
-    public List<pictures> getUserPicturesWithUpdateTime(Long id) {
+    public List<Pictures> getUserPicturesWithUpdateTime(Long id) {
         return picturesMapper.getMyPicturesIndexByUpdateTime(id);
     }
     /*
      * 查询评论区
      * */
     @Override
-    public List<comment> getComments(Long id) {
+    public List<Comment> getComments(Long id) {
         //查询所有评论
-        List<comment> picturesComments = commentMapper.getPicturesComments(id);
+        List<Comment> picturesComments = commentMapper.getPicturesComments(id);
         //查询所有点赞
         Object likedUserIds = stringRedisTemplate.opsForHash().entries(COMMENT_LIKED);
         // 创建一个Map来存储likedUserIds的键值对
@@ -202,7 +197,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
      * 查询最近更新的三条我的图片记录
      * */
     @Override
-    public List<pictures> getMyPicturesIndexByUpdateTime(Long userId) {
+    public List<Pictures> getMyPicturesIndexByUpdateTime(Long userId) {
         return picturesMapper.getMyPicturesIndexByUpdateTime(userId);
     }
 
@@ -240,14 +235,12 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
      * 查询五条图片记录,根据点赞数降序排列
      * */
     @Override
-    public List<pictures> getPicturesListFiveBylike() {
-        //查询数据库
-        QueryWrapper<pictures> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id", "pictures_address").
-                orderByDesc("liked").
-                last("limit 5");
+    public List<Pictures> getPicturesListFiveBylike() {
         //返回图片列表
-        return picturesMapper.selectList(queryWrapper);
+        return picturesMapper.selectList(Wrappers.<Pictures>lambdaQuery()
+                .select(Pictures::getId,Pictures::getPicturesAddress)
+                .orderByDesc(Pictures::getLiked)
+                .last("limit 5"));
 
     }
 
@@ -259,9 +252,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
     public boolean removePicturesById(Long id) {
         boolean isSuccess = picturesService.removeById(id);
         //删除该图片的评论信息
-        QueryWrapper<comment> queryWrapperComment = new QueryWrapper<>();
-        queryWrapperComment.eq("pictures_id", id);
-        commentService.remove(queryWrapperComment);
+        commentService.remove(Wrappers.<Comment>lambdaQuery().eq(Comment::getPicturesId,id));
         //删除图片缓存
         String redisPicturesDetail = stringRedisTemplate.opsForValue().get(PICTURES_DETAIL + id);
         if (StrUtil.isNotBlank(redisPicturesDetail)) {
@@ -281,7 +272,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
     @Override
     public Integer getLikedCount(Long id) {
         int liked = stringRedisTemplate.opsForZSet().size(PICTURES_LIKED + id.toString()).intValue();
-        pictures pictures = new pictures();
+        Pictures pictures = new Pictures();
         pictures.setId(id);
         pictures.setLiked(liked);
         picturesService.updateById(pictures);
@@ -292,15 +283,14 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, pictures> i
      * 获取点赞的前三名用户
      * */
     @Override
-    public List<user> getLikedUserThree(Long id) {
+    public List<User> getLikedUserThree(Long id) {
         Set<String> range = stringRedisTemplate.opsForZSet().range(PICTURES_LIKED + id.toString(), 0, 2);
         if (!range.isEmpty()) {
             String firstThree = String.join(",", range);
-            QueryWrapper<user> queryWrapper = new QueryWrapper<>();
-            queryWrapper.select("id", "avatar")
+            return userService.getBaseMapper().selectList(Wrappers.<User>lambdaQuery()
+                    .select(User::getId,User::getAvatar)
                     .apply("FIND_IN_SET(id, {0})", firstThree)
-                    .last("ORDER BY FIELD(id, " + firstThree + ")");
-            return userService.getBaseMapper().selectList(queryWrapper);
+                    .last("ORDER BY FIELD(id, " + firstThree + ")"));
         } else {
             return null;
         }

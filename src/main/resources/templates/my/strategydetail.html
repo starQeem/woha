@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="../../static/css/grade.css" th:href="@{/css/grade.css}">
   <link rel="stylesheet" href="../../static/css/liked.css" th:href="@{/css/liked.css}">
   <!-- 看板娘 -->
-  <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
+<!--  <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">-->
 
     <link rel="stylesheet" href="../../static/css/jquery.emoji.css" th:href="@{/css/jquery.emoji.css}">
   <style>
@@ -137,7 +137,7 @@
             <input type="hidden" name="strategyId" th:value="${strategy.id}">
             <input type="hidden" name="parentCommentId" value="-1">
 <!--            <div class="field">-->
-<!--                <textarea id="comment-textarea" name="content" placeholder="请输入评论信息..."></textarea>-->
+<!--                <textarea id="Comment-textarea" name="content" placeholder="请输入评论信息..."></textarea>-->
 <!--            </div>-->
                 <div  id="commentEditor" class="field test" contenteditable="true" placeholder="请输入评论信息..."
                       style="height: 200px;border: 1px solid 	#E0E0E0;font-family: KaiTi,serif;"></div>
@@ -160,6 +160,9 @@
               <div onload="myfunction()">
                   <div class="ui threaded comments" style="max-width: 100%;">
                       <h3 style="font-family: KaiTi" class="ui brown dividing header">评论</h3>
+                      <div style="text-align: center;">
+                          <span style="color: #90532b" th:if="${#lists.isEmpty(commentsList)}">暂无评论!</span>
+                      </div>
                       <div class="comment" th:each="comment : ${commentsList}" th:if="${comment.parentCommentId == -1}">
                           <div class="content">
                               <a class="avatar" target="_blank" th:href="@{/user/{id}(id=${comment.user.id})}">
@@ -279,9 +282,7 @@
 
 <div class="footer">
     <table width="100%" border="0">
-      <tr>
-        <td height="25" align="center" style="font-family: KaiTi">版权声明 | 联系方法 | 刊登广告 | 关于我们 | 服务条款</td>
-      </tr>
+        <br>
       <tr>
         <td height="29" align="center" style="font-family: KaiTi">版权所有：Qeem</td>
       </tr>
@@ -294,7 +295,7 @@
   </div>
 </div>
 <!-- 看板娘 -->
-<script src="../../static/live2d-widget/autoload.js" th:src="@{/live2d-widget/autoload.js}"></script>
+<!--<script src="../../static/live2d-widget/autoload.js" th:src="@{/live2d-widget/autoload.js}"></script>-->
 
 <script src="../../static/lib/jquery-3.2.1/jquery-3.2.1.min.js" th:src="@{/lib/jquery-3.2.1/jquery-3.2.1.min.js}"></script>
 <script src="../../static/lib/semantic/dist/semantic.min.js" th:src="@{/lib/semantic/dist/semantic.min.js}"></script>
@@ -302,8 +303,6 @@
 <script src="../../static/lib/qrcode/qrcode.min.js" th:src="@{/lib/qrcode/qrcode.min.js}"></script>
 <script src="../../static/lib/prism/prism.js" th:src="@{/lib/prism/prism.js}"></script>
 <script src="../../static/lib/tocbot/tocbot.min.js" th:src="@{/lib/tocbot/tocbot.min.js}"></script>
-<!-- 看板娘 -->
-<script src="../../static/live2d-widget/autoload.js" th:src="@{/live2d-widget/autoload.js}"></script>
 
 <script src="../../static/lib/emoji/jquery.emoji.js" th:src="@{/lib/emoji/jquery.emoji.js}"></script>
 <script src="../../static/lib/emoji/emoji.list.js" th:src="@{/lib/emoji/emoji.list.js}"></script>
@@ -361,9 +360,8 @@
   * 回复评论
   * */
   function reply(element) {
-    // 滚动到底部位置(评论区位置)
-    // window.scrollTo(0, document.body.scrollHeight);
-
+      // 将焦点移动到评论框
+      document.getElementById('commentEditor').focus();
     // 获取回复的评论ID和昵称
     commentId = element.getAttribute("data-commentid");
     commentNickName = element.getAttribute("data-commentnickname");

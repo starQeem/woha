@@ -4,8 +4,8 @@ import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.captcha.generator.RandomGenerator;
 import com.starQeem.woha.dto.userDto;
-import com.starQeem.woha.pojo.pictures;
-import com.starQeem.woha.pojo.user;
+import com.starQeem.woha.pojo.Pictures;
+import com.starQeem.woha.pojo.User;
 import com.starQeem.woha.service.followService;
 import com.starQeem.woha.service.picturesService;
 import com.starQeem.woha.service.userService;
@@ -242,8 +242,8 @@ public class UserController {
             model.addAttribute("follow",false);  //未登录时显示未关注时的状态
             model.addAttribute("ifnone",true);  //显示关注或者未关注按钮
         }
-        user user = userService.getUserWithGrade(id);  //查询用户等级
-        List<pictures> pictures = picturesService.getUserPicturesWithUpdateTime(id);  //查询用户发布过的所有图片
+        User user = userService.getUserWithGrade(id);  //查询用户等级
+        List<Pictures> pictures = picturesService.getUserPicturesWithUpdateTime(id);  //查询用户发布过的所有图片
         model.addAttribute("user",user);
         model.addAttribute("pictures",pictures);
         return "user";

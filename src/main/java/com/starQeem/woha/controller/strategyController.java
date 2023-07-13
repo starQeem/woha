@@ -35,12 +35,12 @@ public class strategyController {
     public String strategy(@PathVariable(value = "id",required = false)Long id,
                           @RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
                           Model model, String title){
-        List<strategyType> typeList = strategyTypeService.queryStrategyType();  //查询所有文章分类
+        List<StrategyType> typeList = strategyTypeService.queryStrategyType();  //查询所有文章分类
         model.addAttribute("typeList",typeList);
         if (id == null){
             id = typeList.get(0).getId();
         }
-        PageInfo<strategy> pageInfo = strategyService.pageStrategyWithStrategyTypeById(pageNum, PAGE_SIZE, id, title);  //查询分类列表
+        PageInfo<Strategy> pageInfo = strategyService.pageStrategyWithStrategyTypeById(pageNum, PAGE_SIZE, id, title);  //查询分类列表
         model.addAttribute("page",pageInfo);
         model.addAttribute("currType",id);
         return "strategy";
@@ -52,7 +52,7 @@ public class strategyController {
     public String UserStrategy(@RequestParam(value = "pageNum",required = false)Integer pageNum,
                                @PathVariable("id") Long id,Model model){
         //根据文章分类id查询文章列表信息
-        PageInfo<strategy> pageInfo = strategyService.getUserWithStrategyWithStrategyType(pageNum, PAGE_SIZE, id);
+        PageInfo<Strategy> pageInfo = strategyService.getUserWithStrategyWithStrategyType(pageNum, PAGE_SIZE, id);
         model.addAttribute("page",pageInfo);
         model.addAttribute("userStrategy","1");
         model.addAttribute("userId",id);
@@ -68,14 +68,14 @@ public class strategyController {
         userDto user = (userDto) subject.getPrincipal();
         if (user != null){
             //已登录
-            strategy strategy = strategyService.queryStrategyDetailById(id,Long.valueOf(user.getId()));//查询文章详情包含任务相关的业务
+            Strategy strategy = strategyService.queryStrategyDetailById(id,Long.valueOf(user.getId()));//查询文章详情包含任务相关的业务
             boolean status = strategyService.getStatus(id);//查询是否点赞
             model.addAttribute("strategy", strategy);
             model.addAttribute("status",status);
             model.addAttribute("userId",Long.valueOf(user.getId())); //userId（这个是传给前端做评论区有没有点赞判断的）
         }else {
             //未登陆
-            strategy strategy = strategyService.getStrategyDetailById(id);//查询文章详情不包含任务相关的业务
+            Strategy strategy = strategyService.getStrategyDetailById(id);//查询文章详情不包含任务相关的业务
             model.addAttribute("message","登录后才能发布评论哦!");
             model.addAttribute("strategy", strategy);
             model.addAttribute("status",false);//默认未点赞
@@ -83,8 +83,8 @@ public class strategyController {
             model.addAttribute("userId",0); //未登陆时传个0过去（这个是传给前端做评论区有没有点赞判断的）
         }
         Integer liked = strategyService.getLikedCount(id);  //点赞数
-        List<comment> commentList = strategyService.getComments(id);  //评论区
-        List<user> likedUserThree = strategyService.getLikedUserThree(id);  //点赞排行榜
+        List<Comment> commentList = strategyService.getComments(id);  //评论区
+        List<User> likedUserThree = strategyService.getLikedUserThree(id);  //点赞排行榜
         model.addAttribute("commentsList", commentList);
         model.addAttribute("liked", liked);
         model.addAttribute("likedUserThree", likedUserThree);

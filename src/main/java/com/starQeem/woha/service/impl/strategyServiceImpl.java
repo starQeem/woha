@@ -2,10 +2,10 @@ package com.starQeem.woha.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -36,7 +36,7 @@ import static com.starQeem.woha.util.constant.*;
  * @author: Qeem
  */
 @Service
-public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> implements strategyService {
+public class strategyServiceImpl extends ServiceImpl<strategyMapper, Strategy> implements strategyService {
     @Resource
     private strategyService strategyService;
     @Resource
@@ -53,10 +53,10 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
     private userService userService;
 
     /*
-     * 新增攻略
+     * 新增文章
      * */
     @Override
-    public boolean saveStrategy(strategy strategy) {
+    public boolean saveStrategy(Strategy strategy) {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         strategy.setViews(0);
@@ -67,10 +67,10 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
     }
 
     /*
-     * 查询我发布的攻略
+     * 查询我发布的文章
      * */
     @Override
-    public PageInfo<strategy> getUserWithStrategyWithStrategyType(Integer pageNum, int pageSize, Long id) {
+    public PageInfo<Strategy> getUserWithStrategyWithStrategyType(Integer pageNum, int pageSize, Long id) {
         if (pageNum == null){
             pageNum = PAGE_NUM;
         }
@@ -79,19 +79,19 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
         PageHelper.startPage(pageNum, pageSize);
         PageHelper.orderBy("create_time desc");
         if (id.equals(0L)) { //查询我发布的攻略
-            List<strategy> strategyList = strategyMapper.getUserWithStrategyWithStrategyType(Long.valueOf(user.getId()));
+            List<Strategy> strategyList = strategyMapper.getUserWithStrategyWithStrategyType(Long.valueOf(user.getId()));
             return new PageInfo<>(strategyList, pageSize);
         } else { //查询用户发布的攻略
-            List<strategy> strategyList = strategyMapper.getUserWithStrategyWithStrategyType(id);
+            List<Strategy> strategyList = strategyMapper.getUserWithStrategyWithStrategyType(id);
             return new PageInfo<>(strategyList, pageSize);
         }
     }
 
     /*
-     * 查询攻略分类列表
+     * 查询文章分类列表
      * */
     @Override
-    public PageInfo<strategy> pageStrategyWithStrategyTypeById(Integer pageNum, int pageSize, Long id, String title) {
+    public PageInfo<Strategy> pageStrategyWithStrategyTypeById(Integer pageNum, int pageSize, Long id, String title) {
         if (title == null) {
             title = "";
         } else {
@@ -99,17 +99,17 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
         }
         PageHelper.startPage(pageNum, pageSize);
         //查询数据库
-        List<strategy> strategyList = strategyMapper.pageStrategyWithStrategyTypeById(id, title);
+        List<Strategy> strategyList = strategyMapper.pageStrategyWithStrategyTypeById(id, title);
         //返回分页集合
         return new PageInfo<>(strategyList, pageSize);
 
     }
 
     /*
-     * 攻略编辑回显
+     * 文章编辑回显
      * */
     @Override
-    public strategy getUserWithStrategyWithStrategyTypeById(Long id) {
+    public Strategy getUserWithStrategyWithStrategyTypeById(Long id) {
         return strategyMapper.getUserWithStrategyWithStrategyTypeById(id);
     }
 
@@ -117,7 +117,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
      * 文章编辑
      * */
     @Override
-    public boolean updateStrategy(strategy strategy) {
+    public boolean updateStrategy(Strategy strategy) {
         strategy.setUpdateTime(new Date());
         strategy.setCreateTime(new Date());
         boolean isSuccess = strategyService.updateById(strategy);
@@ -133,7 +133,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
      * 文章详情
      * */
     @Override
-    public strategy getStrategyDetailById(Long id) {
+    public Strategy getStrategyDetailById(Long id) {
         //查询redis中的文章详情
         String getStrategyDetail = stringRedisTemplate.opsForValue().get(STRATEGY_DETAIL + id);
 
@@ -144,7 +144,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
             return null;
         } else {
             //为空,查询数据库
-            strategy strategy = strategyMapper.getStrategyDetailById(id);
+            Strategy strategy = strategyMapper.getStrategyDetailById(id);
             if (strategy == null) {
                 //数据库中也没有,缓存空字符串
                 stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id, "", TIME_BIG, TimeUnit.SECONDS);
@@ -159,7 +159,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
     * 登录后查询文章详情
     * */
     @Override
-    public strategy queryStrategyDetailById(Long id, Long userId) {
+    public Strategy queryStrategyDetailById(Long id, Long userId) {
         //查询redis中的文章详情
         String getStrategyDetail = stringRedisTemplate.opsForValue().get(STRATEGY_DETAIL + id);
 
@@ -170,7 +170,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
             return null;
         } else {
             //为空,查询数据库
-            strategy strategy = strategyMapper.getStrategyDetailById(id);
+            Strategy strategy = strategyMapper.getStrategyDetailById(id);
             if (strategy == null) {
                 //数据库中也没有,缓存空字符串
                 stringRedisTemplate.opsForValue().set(STRATEGY_DETAIL + id, "", TIME_BIG, TimeUnit.SECONDS);
@@ -184,11 +184,9 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
     /*
     * 更新浏览次数和转换MarkDown格式
     * */
-    private strategy processStrategyDetail(String strategyDetail, Long id) {
-        strategy strategy = JSONUtil.toBean(strategyDetail, strategy.class);
-        UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.setSql("views = views + 1").eq("id", id); //浏览次数+1
-        strategyService.update(updateWrapper);
+    private Strategy processStrategyDetail(String strategyDetail, Long id) {
+        Strategy strategy = JSONUtil.toBean(strategyDetail, Strategy.class);
+        strategyService.update(Wrappers.<Strategy>lambdaUpdate().eq(Strategy::getId,id).setSql("views = views + 1"));
         //将文章内容转换为html格式
         String html = MarkdownUtil.markdownToHtml(strategy.getContent());
         strategy.setContent(html);
@@ -197,17 +195,12 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
     /*
      * 更新浏览次数和转换MarkDown格式和更新任务状态
      * */
-    private strategy processStrategyDetail(String strategyDetail, Long id, Long userId) {
-        strategy strategy = JSONUtil.toBean(strategyDetail, strategy.class);
-        UpdateWrapper<strategy> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.setSql("views = views + 1").eq("id", id); //浏览次数+1
-        strategyService.update(updateWrapper);
-
+    private Strategy processStrategyDetail(String strategyDetail, Long id, Long userId) {
+        Strategy strategy = JSONUtil.toBean(strategyDetail, Strategy.class);
+        strategyService.update(Wrappers.<Strategy>lambdaUpdate().eq(Strategy::getId,id).setSql("views = views + 1"));
         if (userId != null) {//判断用户是否为空
             //不为空,则已经登录,查询任务状态
-            QueryWrapper<userTask> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("user_id", userId);
-            userTask userTask = userTaskService.getBaseMapper().selectOne(queryWrapper);
+            UserTask userTask = userTaskService.getBaseMapper().selectOne(Wrappers.<UserTask>lambdaQuery().eq(UserTask::getUserId,userId));
             if (userTask != null && userTask.getDailytaskStrategy() == STATUS_ZERO) {
                 //未完成,设置为完成并增加经验值
                 userTask.setDailytaskStrategy(STATUS_ONE);
@@ -225,9 +218,9 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
      * 查询评论区
      * */
     @Override
-    public List<comment> getComments(Long id) {
+    public List<Comment> getComments(Long id) {
         //查询所有评论
-        List<comment> strategyComments = commentMapper.getStrategyComments(id);
+        List<Comment> strategyComments = commentMapper.getStrategyComments(id);
         //查询所有点赞
         Object likedUserIds = stringRedisTemplate.opsForHash().entries(COMMENT_LIKED);
         // 创建一个Map来存储likedUserIds的键值对
@@ -279,15 +272,10 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
      * 查询五条攻略记录(按照更新时间降序)
      * */
     @Override
-    public List<strategy> getStrategyListFive() {
-        //查询数据库
-        QueryWrapper<strategy> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id", "title", "update_time")
-                .orderByDesc("update_time")
-                .orderByDesc("liked")
-                .last("limit 5");
-        //返回图片列表
-        return strategyMapper.selectList(queryWrapper);
+    public List<Strategy> getStrategyListFive() {
+        return strategyMapper.selectList(Wrappers.<Strategy>lambdaQuery()
+                .select(Strategy::getId,Strategy::getTitle,Strategy::getUpdateTime)
+                .last("order by update_time,liked desc limit 5"));
 
     }
 
@@ -299,7 +287,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
     public boolean removeStrategyById(Long id) {
         strategyService.removeById(id);
         //删除关联的评论信息
-        QueryWrapper<comment> queryWrapperComment = new QueryWrapper<>();
+        QueryWrapper<Comment> queryWrapperComment = new QueryWrapper<>();
         queryWrapperComment.eq("strategy_id", id);
         commentService.remove(queryWrapperComment);
         //删除缓存
@@ -321,7 +309,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
     @Override
     public Integer getLikedCount(Long id) {
         int liked = stringRedisTemplate.opsForZSet().size(STRATEGY_LIKED + id.toString()).intValue();
-        strategy strategy = new strategy();
+        Strategy strategy = new Strategy();
         strategy.setId(id);
         strategy.setLiked(liked);
         strategyService.updateById(strategy);
@@ -332,15 +320,14 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, strategy> i
      * 获取点赞的前三名用户
      * */
     @Override
-    public List<user> getLikedUserThree(Long id) {
+    public List<User> getLikedUserThree(Long id) {
         Set<String> range = stringRedisTemplate.opsForZSet().range(STRATEGY_LIKED + id.toString(), 0, 2);
         if (!range.isEmpty()) {
             String firstThree = String.join(",", range);
-            QueryWrapper<user> queryWrapper = new QueryWrapper<>();
-            queryWrapper.select("id", "avatar")
+            return userService.getBaseMapper().selectList(Wrappers.<User>lambdaQuery()
+                    .select(User::getId,User::getAvatar)
                     .apply("FIND_IN_SET(id, {0})", firstThree)
-                    .last("ORDER BY FIELD(id, " + firstThree + ")");
-            return userService.getBaseMapper().selectList(queryWrapper);
+                    .last("ORDER BY FIELD(id, " + firstThree + ")"));
         } else {
             return null;
         }

@@ -1,7 +1,7 @@
 package com.starQeem.woha.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.starQeem.woha.pojo.follow;
+import com.starQeem.woha.pojo.Follow;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @author: Qeem
  */
 @Mapper
-public interface followMapper extends BaseMapper<follow> {
+public interface followMapper extends BaseMapper<Follow> {
 }

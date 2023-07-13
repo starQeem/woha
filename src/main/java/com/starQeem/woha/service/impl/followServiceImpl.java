@@ -1,12 +1,12 @@
 package com.starQeem.woha.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.starQeem.woha.dto.userDto;
 import com.starQeem.woha.mapper.followMapper;
 import com.starQeem.woha.mapper.userMapper;
-import com.starQeem.woha.pojo.follow;
-import com.starQeem.woha.pojo.user;
+import com.starQeem.woha.pojo.Follow;
+import com.starQeem.woha.pojo.User;
 import com.starQeem.woha.service.followService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -20,7 +20,7 @@ import java.util.List;
  * @author: Qeem
  */
 @Service
-public class followServiceImpl extends ServiceImpl<followMapper, follow> implements followService {
+public class followServiceImpl extends ServiceImpl<followMapper, Follow> implements followService {
     @Resource
     private followService followService;
     @Resource
@@ -30,10 +30,10 @@ public class followServiceImpl extends ServiceImpl<followMapper, follow> impleme
     * */
     @Override
     public void saveFollow(Long userId,Long followId) {
-        QueryWrapper<follow> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id",userId).eq("follow_user_id",followId);
-        follow getFollow = followService.getBaseMapper().selectOne(queryWrapper);
-        follow follow = new follow();
+        Follow getFollow = followService.getBaseMapper().selectOne(Wrappers.<Follow>lambdaQuery()
+                .eq(Follow::getUserId,userId)
+                .eq(Follow::getFollowUserId,followId));
+        Follow follow = new Follow();
         if (getFollow != null){
             followService.removeById(getFollow.getId());   //已关注,删除关注记录
         }else {
@@ -47,9 +47,9 @@ public class followServiceImpl extends ServiceImpl<followMapper, follow> impleme
     * */
     @Override
     public boolean followSuccess(Long id,Long IuserId) {
-        QueryWrapper<follow> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id",IuserId).eq("follow_user_id",id);
-        Integer count = followService.getBaseMapper().selectCount(queryWrapper);
+        Integer count = followService.getBaseMapper().selectCount(Wrappers.<Follow>lambdaQuery()
+                .eq(Follow::getUserId,IuserId)
+                .eq(Follow::getFollowUserId,id));
         if (count > 0){
             return true;
         }else {
@@ -60,7 +60,7 @@ public class followServiceImpl extends ServiceImpl<followMapper, follow> impleme
     * 查询关注列表
     * */
     @Override
-    public List<user> getFollowList() {
+    public List<User> getFollowList() {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         return userMapper.getFollowUser(Long.valueOf(user.getId()));
@@ -69,7 +69,7 @@ public class followServiceImpl extends ServiceImpl<followMapper, follow> impleme
     * 查询关注我的列表
     * */
     @Override
-    public List<user> getFansList() {
+    public List<User> getFansList() {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         return userMapper.getFansUser(Long.valueOf(user.getId()));

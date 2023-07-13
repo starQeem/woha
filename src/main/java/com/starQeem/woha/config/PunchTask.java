@@ -1,7 +1,7 @@
 package com.starQeem.woha.config;
 
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.starQeem.woha.pojo.userTask;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.starQeem.woha.pojo.UserTask;
 import com.starQeem.woha.service.userTaskService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -23,16 +23,14 @@ public class PunchTask {
     private userTaskService userTaskService;
     @Scheduled(cron = "0 0 0 * * ?")  //每日0点每日刷新任务状态
     public void resetPunchAndTaskStatusDay() {
-        UpdateWrapper<userTask> updateWrapper = new UpdateWrapper<>();
         //设置为未完成
-        updateWrapper.set("dailytask_strategy", STATUS_ZERO).set("dailytask_story",STATUS_ZERO).set("dailytask_login",STATUS_ZERO);
-        userTaskService.update(updateWrapper);
+        userTaskService.update(Wrappers.<UserTask>lambdaUpdate()
+                .set(UserTask::getDailytaskStrategy,STATUS_ZERO)
+                .set(UserTask::getDailytaskStory,STATUS_ZERO)
+                .set(UserTask::getDailytaskLogin,STATUS_ZERO));
     }
     @Scheduled(cron = "0 0 0 ? * MON")  //每周一0点刷新每周任务状态
     public void resetPunchAndTaskStatusWeek() {
-        UpdateWrapper<userTask> updateWrapper = new UpdateWrapper<>();
-        //设置为未完成
-        updateWrapper.set("weeklytask_pictures", STATUS_ZERO);
-        userTaskService.update(updateWrapper);
+        userTaskService.update(Wrappers.<UserTask>lambdaUpdate().set(UserTask::getWeeklytaskPictures,STATUS_ZERO));
     }
 }

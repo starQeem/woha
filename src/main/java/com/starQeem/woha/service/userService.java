@@ -2,16 +2,15 @@ package com.starQeem.woha.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.pagehelper.PageInfo;
-import com.starQeem.woha.pojo.user;
+import com.starQeem.woha.pojo.User;
 
 import javax.mail.MessagingException;
-import java.util.List;
 
 /**
  * @Date: 2023/4/17 0:02
  * @author: Qeem
  */
-public interface userService extends IService<user> {
+public interface userService extends IService<User> {
     /**
      * 用户注册
      *
@@ -25,16 +24,16 @@ public interface userService extends IService<user> {
     /**
      * 查询我信息
      *
-     * @return {@link user}
+     * @return {@link User}
      */
-    user queryMyMessage();
+    User queryMyMessage();
 
     /**
      * 我的信息回显
      *
-     * @return {@link user}
+     * @return {@link User}
      */
-    user getMessage();
+    User getMessage();
 
     /**
      * 任务
@@ -45,9 +44,9 @@ public interface userService extends IService<user> {
      * 获取用户信息
      *
      * @param id 用户id
-     * @return {@link user}
+     * @return {@link User}
      */
-    user getUserWithGrade(Long id);
+    User getUserWithGrade(Long id);
 
     /**
      * 发送验证码
@@ -60,9 +59,9 @@ public interface userService extends IService<user> {
     /**
      * 获取用户头像地址
      *
-     * @return {@link user}
+     * @return {@link User}
      */
-    user getAvatarAddress();
+    User getAvatarAddress();
 
     /**
      * 修改密码
@@ -94,7 +93,7 @@ public interface userService extends IService<user> {
      *
      * @param pageNum 页面num
      * @param title   标题
-     * @return {@link PageInfo}<{@link user}>
+     * @return {@link PageInfo}<{@link User}>
      */
-    PageInfo<user> getUserList(Integer pageNum, String title);
+    PageInfo<User> getUserList(Integer pageNum, String title);
 }

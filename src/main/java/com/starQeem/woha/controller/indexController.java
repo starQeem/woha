@@ -1,8 +1,8 @@
 package com.starQeem.woha.controller;
 
-import com.starQeem.woha.pojo.pictures;
-import com.starQeem.woha.pojo.story;
-import com.starQeem.woha.pojo.strategy;
+import com.starQeem.woha.pojo.Pictures;
+import com.starQeem.woha.pojo.Story;
+import com.starQeem.woha.pojo.Strategy;
 import com.starQeem.woha.service.picturesService;
 import com.starQeem.woha.service.storyService;
 import com.starQeem.woha.service.strategyService;
@@ -30,9 +30,9 @@ public class indexController {
     * */
     @GetMapping
     public String index(Model model){
-        List<story> storyList = storyService.getStoryListFive(); //查询五条问答列表信息
-        List<strategy> strategyList = strategyService.getStrategyListFive(); //查询五条文章列表信息
-        List<pictures> picturesList = picturesService.getPicturesListFiveBylike();  //查询图片列表
+        List<Story> storyList = storyService.getStoryListFive(); //查询五条问答列表信息
+        List<Strategy> strategyList = strategyService.getStrategyListFive(); //查询五条文章列表信息
+        List<Pictures> picturesList = picturesService.getPicturesListFiveBylike();  //查询图片列表
         model.addAttribute("storyList",storyList);
         model.addAttribute("strategyList",strategyList);
         model.addAttribute("picturesList",picturesList);

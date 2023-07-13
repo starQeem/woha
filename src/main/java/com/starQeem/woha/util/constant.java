@@ -27,12 +27,12 @@ public class constant {
             "R-C.baa2d1577cf82ad47aa705957237bff6?rik=IciTRLgFHnunww&riu=http%3a%2f%2fwww" +
             ".sucaijishi.com%2fuploadfile%2f2016%2f0203%2f20160203022632945.png&ehk=4PjlDtyiv" +
             "WKN7CP%2b5JlcgUiuD1nyme8IaxbNbPnANIw%3d&risl=&pid=ImgRaw&r=0";
-    public final static String USER_CODE = "woha:user:code:"; //注册验证码
+    public final static String USER_CODE = "woha:User:code:"; //注册验证码
     public final static String EMAIL_FORM = "2572277647@qq.com";  //邮箱发送者
     public final static String STRATEGY_TYPE_LIST = "woha:strategy:type"; //文章分类
     public final static String PICTURES_DETAIL = "woha:pictures:detail:"; //图片详情
     public final static String STORY_DETAIL = "woha:story:detail:";  //问答详情
-    public final static String STRATEGY_DETAIL = "woha:strategy:detail:";  //文章详情
+    public final static String STRATEGY_DETAIL = "woha:Strategy:detail:";  //文章详情
     public final static String PICTURES_LIKED = "woha:pictures:liked:";  //图片点赞的用户
     public final static String STORY_LIKED = "woha:story:liked:";  //问答点赞的用户
     public final static String STRATEGY_LIKED = "woha:strategy:liked:";  //文章点赞的用户

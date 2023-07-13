@@ -25,21 +25,21 @@ public class ShiroConfig {
         * 添加shiro过滤器
         * anon:无需认证就可以访问
         * authc:必须认证了才能访问
-        * user:必须拥有  记住我  功能才能用
+        * User:必须拥有  记住我  功能才能用
         * perms:拥有对某个资源的权限才能访问
         * role:拥有某个角色权限才能访问
         * */
         LinkedHashMap<String,String> filterMap = new LinkedHashMap<>();
         //拦截
-        filterMap.put("/admin", "perms[user:admin]"); //拥有管理员权限才能访问
-        filterMap.put("/admin/**", "perms[user:admin]"); //拥有管理员权限才能访问
+        filterMap.put("/admin", "perms[User:admin]"); //拥有管理员权限才能访问
+        filterMap.put("/admin/**", "perms[User:admin]"); //拥有管理员权限才能访问
         filterMap.put("/my/**","authc"); //登录后才能访问
         filterMap.put("/my","authc");  //登录后才能访问
         bean.setFilterChainDefinitionMap(filterMap);
         //设置登录的请求
         bean.setLoginUrl("/login");
         //登录成功后跳转的页面
-//        bean.setSuccessUrl("/user/index");
+//        bean.setSuccessUrl("/User/index");
         return bean;
     }
     //DefaultWebSecurityManger:2

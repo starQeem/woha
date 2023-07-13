@@ -1,7 +1,7 @@
 package com.starQeem.woha.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.starQeem.woha.pojo.strategy;
+import com.starQeem.woha.pojo.Strategy;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -11,9 +11,9 @@ import java.util.List;
  * @author: Qeem
  */
 @Mapper
-public interface strategyMapper extends BaseMapper<strategy> {
-    List<strategy> getUserWithStrategyWithStrategyType( Long userId);
-    strategy getUserWithStrategyWithStrategyTypeById(Long id);
-    List<strategy> pageStrategyWithStrategyTypeById(Long id, String title);
-    strategy getStrategyDetailById(Long id);
+public interface strategyMapper extends BaseMapper<Strategy> {
+    List<Strategy> getUserWithStrategyWithStrategyType(Long userId);
+    Strategy getUserWithStrategyWithStrategyTypeById(Long id);
+    List<Strategy> pageStrategyWithStrategyTypeById(Long id, String title);
+    Strategy getStrategyDetailById(Long id);
 }

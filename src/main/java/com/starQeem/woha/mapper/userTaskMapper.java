@@ -1,7 +1,7 @@
 package com.starQeem.woha.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.starQeem.woha.pojo.userTask;
+import com.starQeem.woha.pojo.UserTask;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @author: Qeem
  */
 @Mapper
-public interface userTaskMapper extends BaseMapper<userTask> {
+public interface userTaskMapper extends BaseMapper<UserTask> {
 }

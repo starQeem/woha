@@ -2,10 +2,10 @@ package com.starQeem.woha.controller.my;
 
 import com.github.pagehelper.PageInfo;
 import com.starQeem.woha.dto.userDto;
-import com.starQeem.woha.pojo.comment;
-import com.starQeem.woha.pojo.strategy;
-import com.starQeem.woha.pojo.strategyType;
-import com.starQeem.woha.pojo.user;
+import com.starQeem.woha.pojo.Comment;
+import com.starQeem.woha.pojo.Strategy;
+import com.starQeem.woha.pojo.StrategyType;
+import com.starQeem.woha.pojo.User;
 import com.starQeem.woha.service.strategyService;
 import com.starQeem.woha.service.strategyTypeService;
 import org.apache.shiro.SecurityUtils;
@@ -35,7 +35,7 @@ public class MyStrategyController {
     * */
     @GetMapping(value = {"/mystrategy","/mystrategy/{pageNum}"})
     public String strategy(@PathVariable(value = "pageNum",required = false)Integer pageNum,Model model){
-        PageInfo<strategy> pageInfo = strategyService.getUserWithStrategyWithStrategyType(pageNum, PAGE_SIZE, (long) STATUS_ZERO);//查询文章列表
+        PageInfo<Strategy> pageInfo = strategyService.getUserWithStrategyWithStrategyType(pageNum, PAGE_SIZE, (long) STATUS_ZERO);//查询文章列表
         model.addAttribute("page",pageInfo);
         return "my/strategy";
     }
@@ -44,7 +44,7 @@ public class MyStrategyController {
     * */
     @GetMapping("/strategyInput")
     public String getStrategyInput(Model model){
-        List<strategyType> typeList = strategyTypeService.list(); //查询所有文章分类
+        List<StrategyType> typeList = strategyTypeService.list(); //查询所有文章分类
         model.addAttribute("typeList",typeList);
         return "my/strategyInput";
     }
@@ -52,7 +52,7 @@ public class MyStrategyController {
     * 文章发布
     * */
     @PostMapping("/strategyInput")
-    public String strategyInput(strategy strategy){
+    public String strategyInput(Strategy strategy){
         strategyService.saveStrategy(strategy); //保存文章信息
         return "redirect:/my/strategy/mystrategy";
     }
@@ -61,8 +61,8 @@ public class MyStrategyController {
     * */
     @GetMapping("/strategyUpdate/{id}")
     public String getStrategyUpdate(@PathVariable("id") Long id,Model model){
-        strategy strategy = strategyService.getUserWithStrategyWithStrategyTypeById(id);//根据文章id查询文章详情
-        List<strategyType> typeList = strategyTypeService.list();//查询所有文章分类
+        Strategy strategy = strategyService.getUserWithStrategyWithStrategyTypeById(id);//根据文章id查询文章详情
+        List<StrategyType> typeList = strategyTypeService.list();//查询所有文章分类
         model.addAttribute("strategy", strategy);
         model.addAttribute("typeList",typeList);
         return "my/strategyUpdate";
@@ -71,7 +71,7 @@ public class MyStrategyController {
     * 文章编辑
     * */
     @PostMapping("/strategyUpdate")
-    public String strategyUpdate(strategy strategy){
+    public String strategyUpdate(Strategy strategy){
         strategyService.updateStrategy(strategy); //更新文章
         return "redirect:/my/strategy/mystrategy";
     }
@@ -95,11 +95,11 @@ public class MyStrategyController {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
 
-        strategy strategy = strategyService.queryStrategyDetailById(id,Long.valueOf(user.getId())); //查询文章详情
-        List<comment> commentList = strategyService.getComments(id); //查询评论信息
+        Strategy strategy = strategyService.queryStrategyDetailById(id,Long.valueOf(user.getId())); //查询文章详情
+        List<Comment> commentList = strategyService.getComments(id); //查询评论信息
         boolean status = strategyService.getStatus(id);//查询是否点赞
         Integer liked = strategyService.getLikedCount(id); //查询文章点赞数
-        List<user> likedUserThree = strategyService.getLikedUserThree(id); //查询点赞文章的前三名用户
+        List<User> likedUserThree = strategyService.getLikedUserThree(id); //查询点赞文章的前三名用户
         model.addAttribute("strategy", strategy);
         model.addAttribute("commentsList",commentList);
         model.addAttribute("status",status);

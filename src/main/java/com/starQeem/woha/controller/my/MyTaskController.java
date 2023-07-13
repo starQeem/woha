@@ -1,6 +1,6 @@
 package com.starQeem.woha.controller.my;
 
-import com.starQeem.woha.pojo.userTask;
+import com.starQeem.woha.pojo.UserTask;
 import com.starQeem.woha.service.userTaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +24,7 @@ public class MyTaskController {
     * */
     @GetMapping
     public String task(Model model){
-        userTask userTasks = userTaskService.getMyTaskByUserId(); //查询我的任务信息
+        UserTask userTasks = userTaskService.getMyTaskByUserId(); //查询我的任务信息
         model.addAttribute("task",userTasks);
         return "my/task";
     }

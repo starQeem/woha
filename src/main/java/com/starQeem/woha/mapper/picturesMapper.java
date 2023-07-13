@@ -1,7 +1,7 @@
 package com.starQeem.woha.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.starQeem.woha.pojo.pictures;
+import com.starQeem.woha.pojo.Pictures;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -11,10 +11,10 @@ import java.util.List;
  * @author: Qeem
  */
 @Mapper
-public interface picturesMapper extends BaseMapper<pictures> {
-    List<pictures> getUserWithPictures(Long userId);
-    pictures queryPicturesWithUserById(Long id,Long userId);
-    List<pictures> getMyPicturesIndexByUpdateTime(Long userId);
-    List<pictures> getPicturesListPageInfo(String title);
-    pictures getPicturesDetailById(Long id);
+public interface picturesMapper extends BaseMapper<Pictures> {
+    List<Pictures> getUserWithPictures(Long userId);
+    Pictures queryPicturesWithUserById(Long id, Long userId);
+    List<Pictures> getMyPicturesIndexByUpdateTime(Long userId);
+    List<Pictures> getPicturesListPageInfo(String title);
+    Pictures getPicturesDetailById(Long id);
 }

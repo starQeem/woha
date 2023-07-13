@@ -2,9 +2,9 @@ package com.starQeem.woha.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.pagehelper.PageInfo;
-import com.starQeem.woha.pojo.comment;
-import com.starQeem.woha.pojo.strategy;
-import com.starQeem.woha.pojo.user;
+import com.starQeem.woha.pojo.Comment;
+import com.starQeem.woha.pojo.Strategy;
+import com.starQeem.woha.pojo.User;
 
 import java.util.List;
 
@@ -12,14 +12,14 @@ import java.util.List;
  * @Date: 2023/4/22 14:34
  * @author: Qeem
  */
-public interface strategyService extends IService<strategy> {
+public interface strategyService extends IService<Strategy> {
     /**
      * 新增文章
      *
      * @param strategy 文章
      * @return boolean
      */
-    boolean saveStrategy(strategy strategy);
+    boolean saveStrategy(Strategy strategy);
 
     /**
      * 查询我发布的文章
@@ -27,17 +27,17 @@ public interface strategyService extends IService<strategy> {
      * @param pageNum  页码
      * @param pageSize 数据条数
      * @param id       用户id
-     * @return {@link PageInfo}<{@link strategy}>
+     * @return {@link PageInfo}<{@link Strategy}>
      */
-    PageInfo<strategy> getUserWithStrategyWithStrategyType(Integer pageNum, int pageSize,Long id);
+    PageInfo<Strategy> getUserWithStrategyWithStrategyType(Integer pageNum, int pageSize, Long id);
 
     /**
      * 文章回显
      *
      * @param id 文章id
-     * @return {@link strategy}
+     * @return {@link Strategy}
      */
-    strategy getUserWithStrategyWithStrategyTypeById(Long id);
+    Strategy getUserWithStrategyWithStrategyTypeById(Long id);
 
     /**
      * 更新文章
@@ -45,15 +45,15 @@ public interface strategyService extends IService<strategy> {
      * @param strategy 文章
      * @return boolean
      */
-    boolean updateStrategy(strategy strategy);
+    boolean updateStrategy(Strategy strategy);
 
     /**
      * 通过id获取文章详情
      *
      * @param id 文章id
-     * @return {@link strategy}
+     * @return {@link Strategy}
      */
-    strategy getStrategyDetailById(Long id);
+    Strategy getStrategyDetailById(Long id);
 
     /**
      * 查询文章分类列表
@@ -62,26 +62,26 @@ public interface strategyService extends IService<strategy> {
      * @param pageSize 数据条数
      * @param id       文章分类id
      * @param title    标题
-     * @return {@link PageInfo}<{@link strategy}>
+     * @return {@link PageInfo}<{@link Strategy}>
      */
-    PageInfo<strategy> pageStrategyWithStrategyTypeById(Integer pageNum, int pageSize, Long id, String title);
+    PageInfo<Strategy> pageStrategyWithStrategyTypeById(Integer pageNum, int pageSize, Long id, String title);
 
     /**
      * 登录后查询文章详情
      *
      * @param id     文章id
      * @param userId 用户id
-     * @return {@link strategy}
+     * @return {@link Strategy}
      */
-    strategy queryStrategyDetailById(Long id, Long userId);
+    Strategy queryStrategyDetailById(Long id, Long userId);
 
     /**
      * 根据文章id查询评论列表
      *
      * @param id 文章id
-     * @return {@link List}<{@link comment}>
+     * @return {@link List}<{@link Comment}>
      */
-    List<comment> getComments(Long id);
+    List<Comment> getComments(Long id);
 
     /**
      * 点赞
@@ -103,9 +103,9 @@ public interface strategyService extends IService<strategy> {
     /**
      * 查询五条文章记录
      *
-     * @return {@link List}<{@link strategy}>
+     * @return {@link List}<{@link Strategy}>
      */
-    List<strategy> getStrategyListFive();
+    List<Strategy> getStrategyListFive();
 
     /**
      * 通过id删除文章
@@ -127,7 +127,7 @@ public interface strategyService extends IService<strategy> {
      * 获取点赞的前三名用户
      *
      * @param id 文章id
-     * @return {@link List}<{@link user}>
+     * @return {@link List}<{@link User}>
      */
-    List<user> getLikedUserThree(Long id);
+    List<User> getLikedUserThree(Long id);
 }

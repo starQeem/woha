@@ -1,7 +1,7 @@
 package com.starQeem.woha.controller.my;
 
-import com.starQeem.woha.pojo.user;
-import com.starQeem.woha.pojo.userTask;
+import com.starQeem.woha.pojo.User;
+import com.starQeem.woha.pojo.UserTask;
 import com.starQeem.woha.service.userTaskService;
 import com.starQeem.woha.service.userService;
 import org.springframework.stereotype.Controller;
@@ -28,8 +28,8 @@ public class MyController {
      * */
     @GetMapping
     public String User(Model model){
-        user queryUser = userService.queryMyMessage(); //查询用户信息
-        userTask grade = userTaskService.getGradeByUserId();  //查询用户等级信息
+        User queryUser = userService.queryMyMessage(); //查询用户信息
+        UserTask grade = userTaskService.getGradeByUserId();  //查询用户等级信息
         model.addAttribute("user",queryUser);
         model.addAttribute("grade",grade);
         return "my/my";
@@ -39,7 +39,7 @@ public class MyController {
      * */
     @GetMapping("/mymessageUpdate")
     public String getMessageUpdate(Model model){
-        user user = userService.getMessage(); //查询我的信息(回显)
+        User user = userService.getMessage(); //查询我的信息(回显)
         model.addAttribute("user",user);
         return "my/messageUpdate";
     }
@@ -47,7 +47,7 @@ public class MyController {
      * 我的信息编辑
      * */
     @PostMapping("/mymessageUpdate")
-    public String messageUpdate(user user){
+    public String messageUpdate(User user){
         userService.updateById(user); //修改我的信息
         return "redirect:/my";
     }
@@ -56,7 +56,7 @@ public class MyController {
     * */
     @GetMapping("/avatar")
     public String getAvatar(Model model){
-        user user = userService.getAvatarAddress(); //查询用户信息
+        User user = userService.getAvatarAddress(); //查询用户信息
         model.addAttribute("user",user);
         return "my/avatarUpdate";
     }
@@ -64,7 +64,7 @@ public class MyController {
     * 修改我的头像
     * */
     @PostMapping("/avatar")
-    public String avatar(user user){
+    public String avatar(User user){
         userService.updateById(user); //修改我的头像
         return "redirect:/my";
     }

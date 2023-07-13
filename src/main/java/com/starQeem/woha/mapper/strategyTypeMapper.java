@@ -1,7 +1,7 @@
 package com.starQeem.woha.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.starQeem.woha.pojo.strategyType;
+import com.starQeem.woha.pojo.StrategyType;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @author: Qeem
  */
 @Mapper
-public interface strategyTypeMapper extends BaseMapper<strategyType> {
+public interface strategyTypeMapper extends BaseMapper<StrategyType> {
 }

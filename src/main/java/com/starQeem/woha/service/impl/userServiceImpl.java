@@ -2,16 +2,15 @@ package com.starQeem.woha.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.starQeem.woha.config.email;
 import com.starQeem.woha.dto.userDto;
-import com.starQeem.woha.mapper.picturesMapper;
 import com.starQeem.woha.mapper.userMapper;
-import com.starQeem.woha.pojo.pictures;
-import com.starQeem.woha.pojo.user;
-import com.starQeem.woha.pojo.userTask;
+import com.starQeem.woha.pojo.User;
+import com.starQeem.woha.pojo.UserTask;
 import com.starQeem.woha.service.userTaskService;
 import com.starQeem.woha.service.userService;
 import org.apache.shiro.SecurityUtils;
@@ -32,7 +31,7 @@ import static com.starQeem.woha.util.constant.*;
  * @author: Qeem
  */
 @Service
-public class userServiceImpl extends ServiceImpl<userMapper, user> implements userService {
+public class userServiceImpl extends ServiceImpl<userMapper, User> implements userService {
     @Resource
     private userMapper userMapper;
     @Resource
@@ -49,13 +48,13 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
      * */
     @Override
     public boolean saveRegister(String email, String password) {
-        QueryWrapper<user> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id", "email", "password", "username").eq("username", email);
-        user user = userMapper.selectOne(queryWrapper);
+        User user = userMapper.selectOne(Wrappers.<User>lambdaQuery()
+                .select(User::getId,User::getEmail,User::getPassword,User::getUsername)
+                .eq(User::getUsername,email));
         if (user != null) {
             return false;
         } else {
-            user newUser = new user();
+            User newUser = new User();
             String md5DigestAsHex = DigestUtils.md5DigestAsHex(password.getBytes());
             newUser.setUsername(email);
             newUser.setEmail(email);
@@ -82,14 +81,10 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
      * 获取用户信息
      * */
     @Override
-    public user queryMyMessage() {  //用户注册后第一次登录时设置默认信息
+    public User queryMyMessage() {  //用户注册后第一次登录时设置默认信息
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
-        QueryWrapper<user> queryWrapper = new QueryWrapper<>();
-        queryWrapper
-                .select("id", "email", "sex", "signature", "hobby", "nick_name", "avatar")
-                .eq("id", Long.valueOf(user.getId()));
-        user queryUser = userMapper.selectOne(queryWrapper);
+        User queryUser = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getId,Long.valueOf(user.getId())));
         if (queryUser.getEmail() == null || queryUser.getEmail().equals("")) {
             queryUser.setEmail(USER_MESSAGE);
         }
@@ -116,14 +111,10 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
      * 我的信息编辑回显
      * */
     @Override
-    public user getMessage() {
+    public User getMessage() {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
-        QueryWrapper<user> queryWrapper = new QueryWrapper<>();
-        queryWrapper
-                .select("id", "nick_name", "sex", "email", "signature", "hobby")
-                .eq("id", Long.valueOf(user.getId()));
-        return userMapper.selectOne(queryWrapper);
+        return userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getId,Long.valueOf(user.getId())));
     }
 
     /*
@@ -133,11 +124,10 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
     public void task() {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
-        QueryWrapper<userTask> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id", Long.valueOf(user.getId()));
-        userTask userTask = userTaskService.getBaseMapper().selectOne(queryWrapper);
+        UserTask userTask = userTaskService.getBaseMapper().selectOne(Wrappers.<UserTask>lambdaQuery()
+                .eq(UserTask::getUserId,Long.valueOf(user.getId())));
         if (userTask == null) {  //用户注册后第一次访问任务页面设置默认值
-            userTask task = new userTask();
+            UserTask task = new UserTask();
             task.setUserId(Long.valueOf(user.getId()));
             task.setGrade(GRADE);  //默认等级
             task.setDailytaskStrategy(STATUS_ZERO);
@@ -147,7 +137,8 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
             task.setExperience(STATUS_ZERO);
             boolean success = userTaskService.save(task);
             if (success) {
-                userTask = userTaskService.getBaseMapper().selectOne(queryWrapper);
+                userTask = userTaskService.getBaseMapper().selectOne(Wrappers.<UserTask>lambdaQuery()
+                        .eq(UserTask::getUserId,Long.valueOf(user.getId())));
             }
         }
         if (userTask.getDailytaskLogin() == STATUS_ZERO) {  //判断今日是否未登录过
@@ -162,7 +153,7 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
      * 查询用户信息
      * */
     @Override
-    public user getUserWithGrade(Long id) {
+    public User getUserWithGrade(Long id) {
         return userMapper.getUserWithGrade(id);
     }
 
@@ -170,12 +161,12 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
      * 获取用户头像
      * */
     @Override
-    public user getAvatarAddress() {
+    public User getAvatarAddress() {
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
-        QueryWrapper<user> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id", "avatar").eq("id", Long.valueOf(user.getId()));
-        return userMapper.selectOne(queryWrapper);
+        return userMapper.selectOne(Wrappers.<User>lambdaQuery()
+                .select(User::getId,User::getAvatar)
+                .eq(User::getId,Long.valueOf(user.getId())));
     }
 
     /*
@@ -187,12 +178,11 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
         userDto userDto = (userDto) subject.getPrincipal();
         String md5NewPassword = DigestUtils.md5DigestAsHex(newPassword.getBytes());
         String md5Password = DigestUtils.md5DigestAsHex(password.getBytes());
-        QueryWrapper<user> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id", "username", "password")
-                .eq("username", username)
-                .eq("password", md5Password)
-                .eq("id", Long.valueOf(userDto.getId()));
-        user user = userMapper.selectOne(queryWrapper);
+        User user = userMapper.selectOne(Wrappers.<User>lambdaQuery()
+                .select(User::getId,User::getUsername,User::getPassword)
+                .eq(User::getUsername,username)
+                .eq(User::getPassword,md5Password)
+                .eq(User::getId,Long.valueOf(userDto.getId())));
         if (user != null) {  //有值,说明用户名密码正确
             user.setPassword(md5NewPassword);
             int i = userMapper.updateById(user);
@@ -213,9 +203,7 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
      */
     @Override
     public void updateStatus(Long id) {
-        QueryWrapper<user> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id","status").eq("id",id);
-        user user = userMapper.selectOne(queryWrapper);
+        User user = userMapper.selectOne(Wrappers.<User>lambdaQuery().select(User::getId,User::getStatus).eq(User::getId,id));
         if (user.getStatus() == STATUS_ONE){
             user.setStatus(STATUS_ZERO);
         }else {
@@ -232,9 +220,7 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
      */
     @Override
     public boolean getUserStatus(String username) {
-        QueryWrapper<user> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username",username);
-        user user = userMapper.selectOne(queryWrapper);
+        User user = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername,username));
         if (user.getStatus() == STATUS_ONE){
             return true;
         }
@@ -245,10 +231,10 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
      * 获取用户列表
      *
      * @param pageNum 页面num
-     * @return {@link PageInfo}<{@link user}>
+     * @return {@link PageInfo}<{@link User}>
      */
     @Override
-    public PageInfo<user> getUserList(Integer pageNum, String nickName) {
+    public PageInfo<User> getUserList(Integer pageNum, String nickName) {
         int pageSize = PAGE_SIZE;
         if (pageNum == null){
             pageNum = PAGE_NUM;
@@ -260,7 +246,7 @@ public class userServiceImpl extends ServiceImpl<userMapper, user> implements us
         }
         PageHelper.startPage(pageNum, pageSize);
         //查询数据库
-        List<user> userList = userMapper.getUserList(nickName);
+        List<User> userList = userMapper.getUserList(nickName);
         //将List集合丢到分页对象里
         return new PageInfo<>(userList, pageSize);
     }
