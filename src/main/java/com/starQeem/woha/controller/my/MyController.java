@@ -79,12 +79,12 @@ public class MyController {
     * 修改我的密码
     * */
     @PostMapping("/password")
-    public String password(String username, String password, String newPassword,RedirectAttributes attributes){
-        boolean success = userService.updatePassword(username, password, newPassword); //修改我的密码
+    public String password(String password, String newPassword,RedirectAttributes attributes){
+        boolean success = userService.updatePassword(password, newPassword); //修改我的密码
         if (success){
             return "redirect:/logout";
         }else {
-            attributes.addFlashAttribute("message","修改失败,用户名或密码错误!");
+            attributes.addFlashAttribute("message","修改失败,密码错误!");
             return "redirect:/my/password";
         }
     }

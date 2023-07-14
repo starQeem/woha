@@ -71,7 +71,7 @@ public interface userService extends IService<User> {
      * @param newPassword 新密码
      * @return boolean
      */
-    boolean updatePassword(String username, String password, String newPassword);
+    boolean updatePassword( String password, String newPassword);
 
     /**
      * 更新状态

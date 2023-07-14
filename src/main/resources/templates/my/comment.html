@@ -88,8 +88,10 @@
                    th:href="@{/strategy/strategydetail/{id}(id=${comment.strategyId})}"
                    th:text="${comment.strategy.title}">文章：莉莉丝</a>
                 <br>
-                <span th:text="|评论了我的文章:${comment.content.length() > 25 ? comment.content.substring(0,25) + '...' : comment.content}|">
-                  评论：掵運崾伱晟苌の埘堠，總哙侒排①些讓伱卟順吢の亽彧亊刺激伱。</span><br>
+<!--                <div th:utext="|评论了我的文章:${comment.content.length() > 50 ? comment.content.substring(0,50) + '...' : comment.content}|">-->
+<!--                  评论：<img width="30" height="30" class="emoji_icon" src="../../static/images/emoji/bilibili/洛天依_前排.png">测试</div>-->
+                <div th:utext="|评论了我的文章:${comment.content}|">
+                  评论：<img width="30" height="30" class="emoji_icon" src="../../static/images/emoji/bilibili/洛天依_前排.png">测试</div>
                 <span th:text="${#dates.format(comment.updateTime,'yyyy-MM-dd HH:mm')}"
                       class="m-font-size-text-mini">2020-01-01</span>
               </div>

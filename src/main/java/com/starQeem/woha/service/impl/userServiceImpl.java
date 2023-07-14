@@ -173,14 +173,14 @@ public class userServiceImpl extends ServiceImpl<userMapper, User> implements us
      * 修改我的密码
      * */
     @Override
-    public boolean updatePassword(String username, String password, String newPassword) {
+    public boolean updatePassword( String password, String newPassword) {
         Subject subject = SecurityUtils.getSubject();
         userDto userDto = (userDto) subject.getPrincipal();
         String md5NewPassword = DigestUtils.md5DigestAsHex(newPassword.getBytes());
         String md5Password = DigestUtils.md5DigestAsHex(password.getBytes());
         User user = userMapper.selectOne(Wrappers.<User>lambdaQuery()
                 .select(User::getId,User::getUsername,User::getPassword)
-                .eq(User::getUsername,username)
+                .eq(User::getUsername,userDto.getUsername())
                 .eq(User::getPassword,md5Password)
                 .eq(User::getId,Long.valueOf(userDto.getId())));
         if (user != null) {  //有值,说明用户名密码正确

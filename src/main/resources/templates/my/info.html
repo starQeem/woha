@@ -88,8 +88,10 @@
                    th:href="@{/strategy/strategydetail/{id}(id=${comment.strategyId})}"
                    th:text="${comment.strategy.title}">文章：莉莉丝</a>
                 <br>
-                <span th:text="|回复了我的评论:${comment.content.length() > 25 ? comment.content.substring(0,25) + '...' : comment.content}|">
-                  回复：掵運崾伱晟苌の埘堠，總哙侒排①些讓伱卟順吢の亽彧亊刺激伱。</span><br>
+<!--                <div th:utext="|回复了我的评论:${comment.content.length() > 50 ? comment.content.substring(0,50) + '...' : comment.content}|">-->
+<!--                  回复：掵運崾伱晟苌の埘堠，總哙侒排①些讓伱卟順吢の亽彧亊刺激伱。</div>-->
+                <div th:utext="|回复了我的评论:${comment.content}|">
+                  回复：掵運崾伱晟苌の埘堠，總哙侒排①些讓伱卟順吢の亽彧亊刺激伱。</div>
                 <span th:text="${#dates.format(comment.updateTime,'yyyy-MM-dd HH:mm')}"
                       class="m-font-size-text-mini">2020-01-01</span>
               </div>
