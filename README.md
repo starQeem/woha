@@ -18,9 +18,9 @@
 - 6.每日、每周任务
 - 7.管理员后台管理用户和文章分类
 
-**技术架构**
+**项目架构**
 
-- 前端：html、css、JavaScript、jQuery、ajax
+- 前端：html、css、JavaScript、jQuery、ajax、segment ui、typo、prism
 - 后端：SpringBoot、SpringMVC、MyBatisPlus、thymeleaf、Shiro
 - 数据库: MySQL
 - 缓存中间件: Redis
