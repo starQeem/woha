@@ -43,10 +43,10 @@ public class constant {
     * */
     public final static int TIME_MIN = 1;
     public final static int TIME_SMALL = 60;
-    public final static int TIME_BIG = 180;
-    public final static int TIME_MAX = 1800;
-    public final static int TIME_CODE = 300;
-    public final static int TIME_STRATEGY = 7200;
+    public final static int TIME_BIG = 60*3;
+    public final static int TIME_MAX = 60*60*24*7;
+    public final static int TIME_CODE = 60*5;
+    public final static int TIME_STRATEGY = 60*60*24*7;
     public final static int TYPE_ONE = 1; //图片
     public final static int TYPE_TWO = 2; //问答
     public final static int TYPE_THREE = 3; //文章

@@ -3,8 +3,6 @@ package com.starQeem.woha.service.impl;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -157,7 +155,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, Story> implements
     @Override
     public Story getStoryById(Long id) {
         //查询redis中的问答详情
-        String getStoryDetail = stringRedisTemplate.opsForValue().get(STORY_DETAIL + id.toString());
+        String getStoryDetail = stringRedisTemplate.opsForValue().get(STORY_DETAIL + id);
 
         if (StrUtil.isNotBlank(getStoryDetail)) {
             //不为空,直接返回
