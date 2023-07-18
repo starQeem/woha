@@ -27,8 +27,6 @@ import static com.starQeem.woha.util.constant.*;
 @Service
 public class strategyTypeServiceImpl extends ServiceImpl<strategyTypeMapper, StrategyType> implements strategyTypeService {
     @Resource
-    private strategyTypeService strategyTypeService;
-    @Resource
     private StringRedisTemplate stringRedisTemplate;
 
     /**
@@ -46,7 +44,7 @@ public class strategyTypeServiceImpl extends ServiceImpl<strategyTypeMapper, Str
             return strategyTypeList;
         }else {
             //没有列表,查询数据库
-            List<StrategyType> strategyTypeList = strategyTypeService.list();
+            List<StrategyType> strategyTypeList = list();
             //将数据库中的列表信息存入redis中
             String strategyTypeListJson = JSONUtil.toJsonStr(strategyTypeList);
             stringRedisTemplate.opsForValue().set(STRATEGY_TYPE_LIST,strategyTypeListJson,TIME_STRATEGY, TimeUnit.SECONDS);
@@ -67,7 +65,7 @@ public class strategyTypeServiceImpl extends ServiceImpl<strategyTypeMapper, Str
         }
         PageHelper.startPage(pageNum,PAGE_SIZE);
         PageHelper.orderBy("id desc");
-        List<StrategyType> strategyTypeList = strategyTypeService.list();
+        List<StrategyType> strategyTypeList = list();
         return new PageInfo<>(strategyTypeList);
     }
 
@@ -78,7 +76,7 @@ public class strategyTypeServiceImpl extends ServiceImpl<strategyTypeMapper, Str
      */
     @Override
     public void saveStrategyType(StrategyType strategyType) {
-        boolean isSuccess = strategyTypeService.save(strategyType);
+        boolean isSuccess = save(strategyType);
         if (isSuccess){
             //查询redis中有没有分类列表
             String getStrategyTypeList = stringRedisTemplate.opsForValue().get(STRATEGY_TYPE_LIST);
@@ -96,7 +94,7 @@ public class strategyTypeServiceImpl extends ServiceImpl<strategyTypeMapper, Str
      */
     @Override
     public StrategyType getStrategyTypeById(Long id) {
-        return strategyTypeService.getBaseMapper().selectOne(Wrappers.<StrategyType>lambdaQuery().eq(StrategyType::getId,id));
+        return getBaseMapper().selectOne(Wrappers.<StrategyType>lambdaQuery().eq(StrategyType::getId,id));
     }
 
     /**
@@ -106,7 +104,7 @@ public class strategyTypeServiceImpl extends ServiceImpl<strategyTypeMapper, Str
      */
     @Override
     public void StrategyTypeUpdateById(StrategyType strategyType) {
-        boolean isSuccess = strategyTypeService.updateById(strategyType);
+        boolean isSuccess = updateById(strategyType);
         if (isSuccess){
             //查询redis中有没有分类列表
             String getStrategyTypeList = stringRedisTemplate.opsForValue().get(STRATEGY_TYPE_LIST);
@@ -123,7 +121,7 @@ public class strategyTypeServiceImpl extends ServiceImpl<strategyTypeMapper, Str
      */
     @Override
     public void StrategyTypeDeleteById(Long id) {
-        boolean isSuccess = strategyTypeService.removeById(id);
+        boolean isSuccess = removeById(id);
         if (isSuccess){
             //查询redis中有没有分类列表
             String getStrategyTypeList = stringRedisTemplate.opsForValue().get(STRATEGY_TYPE_LIST);

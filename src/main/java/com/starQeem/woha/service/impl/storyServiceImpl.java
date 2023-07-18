@@ -36,8 +36,6 @@ import static com.starQeem.woha.util.constant.*;
 @Service
 public class storyServiceImpl extends ServiceImpl<storyMapper, Story> implements storyService {
     @Resource
-    private storyService storyService;
-    @Resource
     private storyMapper storyMapper;
     @Resource
     private userTaskService userTaskService;
@@ -61,7 +59,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, Story> implements
         story.setUpdateTime(new Date());
         story.setViews(0);
         story.setUserId(Long.valueOf(user.getId()));
-        return storyService.save(story);
+        return save(story);
     }
 
     /*
@@ -111,7 +109,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, Story> implements
     public boolean updateStory(Story story) {
         story.setUpdateTime(new Date());
         story.setCreateTime(new Date());
-        boolean isSuccess = storyService.updateById(story);
+        boolean isSuccess = updateById(story);
         //删除故事缓存
         String redisStoryDetail = stringRedisTemplate.opsForValue().get(STORY_DETAIL + story.getId());
         if (StrUtil.isNotBlank(redisStoryDetail)) {
@@ -180,7 +178,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, Story> implements
     * */
     private Story processStoryDetail(String storyDetail, Long id, userDto user) {
         Story story = JSONUtil.toBean(storyDetail, Story.class);//将string类型转换为story类型
-        storyService.update(Wrappers.<Story>lambdaUpdate().eq(Story::getId,id).setSql("views = views + 1"));
+        update(Wrappers.<Story>lambdaUpdate().eq(Story::getId,id).setSql("views = views + 1"));
 
         if (user != null) { //判断用户是否为空
             //不为空,查询用户每日任务情况
@@ -271,7 +269,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, Story> implements
     @Override
     @Transactional
     public boolean removeStoryById(Long id) {
-        storyService.removeById(id);
+        removeById(id);
         //删除关联的评论信息
         commentService.remove(Wrappers.<Comment>lambdaQuery().eq(Comment::getStoryId,id));
         //删除故事缓存
@@ -296,7 +294,7 @@ public class storyServiceImpl extends ServiceImpl<storyMapper, Story> implements
         Story story = new Story();
         story.setId(id);
         story.setLiked(liked);
-        storyService.updateById(story);
+        updateById(story);
         return liked;
     }
 

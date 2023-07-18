@@ -3,8 +3,6 @@ package com.starQeem.woha.service.impl;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -34,8 +32,6 @@ import static com.starQeem.woha.util.constant.*;
  */
 @Service
 public class picturesServiceImpl extends ServiceImpl<picturesMapper, Pictures> implements picturesService {
-    @Resource
-    private picturesService picturesService;
     @Resource
     private picturesMapper picturesMapper;
     @Resource
@@ -104,7 +100,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, Pictures> i
             userTask.setWeeklytaskPictures(STATUS_ONE);   //设置为已完成状态
             userTaskService.updateById(updateGradeUtils.updateGrade(userTask));//更新等级
         }
-        return picturesService.save(pictures);
+        return save(pictures);
     }
 
     /*
@@ -114,7 +110,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, Pictures> i
     public boolean updatePictures(Pictures pictures) {
         pictures.setCreateTime(new Date());
         pictures.setUpdateTime(new Date());
-        boolean isSuccess = picturesService.updateById(pictures);
+        boolean isSuccess = updateById(pictures);
         String redisPicturesDetail = stringRedisTemplate.opsForValue().get(PICTURES_DETAIL + pictures.getId());
         if (StrUtil.isNotBlank(redisPicturesDetail)) {
             stringRedisTemplate.delete(PICTURES_DETAIL + pictures.getId());
@@ -130,7 +126,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, Pictures> i
         Subject subject = SecurityUtils.getSubject();
         userDto user = (userDto) subject.getPrincipal();
         Pictures pictures = picturesMapper.queryPicturesWithUserById(id, Long.valueOf(user.getId()));
-        picturesService.update(Wrappers.<Pictures>lambdaUpdate().eq(Pictures::getId,id).setSql("views = views + 1"));
+        update(Wrappers.<Pictures>lambdaUpdate().eq(Pictures::getId,id).setSql("views = views + 1"));
         return pictures;
     }
 
@@ -144,7 +140,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, Pictures> i
         if (StrUtil.isNotBlank(getPicturesDetail)) {
             //不为空,直接返回
             Pictures pictures = JSONUtil.toBean(getPicturesDetail, Pictures.class);
-            picturesService.update(Wrappers.<Pictures>lambdaUpdate().eq(Pictures::getId,id).setSql("views = views + 1"));
+            update(Wrappers.<Pictures>lambdaUpdate().eq(Pictures::getId,id).setSql("views = views + 1"));
             //返回图片详情
             return pictures;
         } else if (getPicturesDetail != null) {
@@ -159,7 +155,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, Pictures> i
             }
             //将数据库中查询出的图片详情写入redis中
             stringRedisTemplate.opsForValue().set(PICTURES_DETAIL + id, JSONUtil.toJsonStr(pictures), TIME_MAX + RandomUtil.randomInt(0, 300), TimeUnit.SECONDS);
-            picturesService.update(Wrappers.<Pictures>lambdaUpdate().eq(Pictures::getId,id).setSql("views = views + 1"));
+            update(Wrappers.<Pictures>lambdaUpdate().eq(Pictures::getId,id).setSql("views = views + 1"));
             //返回图片详情
             return pictures;
         }
@@ -250,7 +246,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, Pictures> i
     @Override
     @Transactional
     public boolean removePicturesById(Long id) {
-        boolean isSuccess = picturesService.removeById(id);
+        boolean isSuccess = removeById(id);
         //删除该图片的评论信息
         commentService.remove(Wrappers.<Comment>lambdaQuery().eq(Comment::getPicturesId,id));
         //删除图片缓存
@@ -275,7 +271,7 @@ public class picturesServiceImpl extends ServiceImpl<picturesMapper, Pictures> i
         Pictures pictures = new Pictures();
         pictures.setId(id);
         pictures.setLiked(liked);
-        picturesService.updateById(pictures);
+        updateById(pictures);
         return liked;
     }
 

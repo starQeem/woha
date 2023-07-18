@@ -22,24 +22,22 @@ import java.util.List;
 @Service
 public class followServiceImpl extends ServiceImpl<followMapper, Follow> implements followService {
     @Resource
-    private followService followService;
-    @Resource
     private userMapper userMapper;
     /*
     * 关注和取关
     * */
     @Override
     public void saveFollow(Long userId,Long followId) {
-        Follow getFollow = followService.getBaseMapper().selectOne(Wrappers.<Follow>lambdaQuery()
+        Follow getFollow = getBaseMapper().selectOne(Wrappers.<Follow>lambdaQuery()
                 .eq(Follow::getUserId,userId)
                 .eq(Follow::getFollowUserId,followId));
         Follow follow = new Follow();
         if (getFollow != null){
-            followService.removeById(getFollow.getId());   //已关注,删除关注记录
+            removeById(getFollow.getId());   //已关注,删除关注记录
         }else {
             follow.setUserId(userId);
             follow.setFollowUserId(followId);
-            followService.save(follow);  //未关注,新增关注记录
+            save(follow);  //未关注,新增关注记录
         }
     }
     /*
@@ -47,7 +45,7 @@ public class followServiceImpl extends ServiceImpl<followMapper, Follow> impleme
     * */
     @Override
     public boolean followSuccess(Long id,Long IuserId) {
-        Integer count = followService.getBaseMapper().selectCount(Wrappers.<Follow>lambdaQuery()
+        Integer count = getBaseMapper().selectCount(Wrappers.<Follow>lambdaQuery()
                 .eq(Follow::getUserId,IuserId)
                 .eq(Follow::getFollowUserId,id));
         if (count > 0){

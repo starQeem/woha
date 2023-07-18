@@ -93,7 +93,7 @@ public class commentServiceImpl extends ServiceImpl<commentMapper, Comment> impl
             sendEmailService.sendEmail(comment, title, type);
         }
 
-        return commentService.save(comment);
+        return save(comment);
     }
 
     /**

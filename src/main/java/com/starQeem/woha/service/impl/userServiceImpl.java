@@ -1,7 +1,6 @@
 package com.starQeem.woha.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -35,8 +34,6 @@ public class userServiceImpl extends ServiceImpl<userMapper, User> implements us
     @Resource
     private userMapper userMapper;
     @Resource
-    private userService userService;
-    @Resource
     private userTaskService userTaskService;
     @Resource
     private StringRedisTemplate stringRedisTemplate;
@@ -60,7 +57,7 @@ public class userServiceImpl extends ServiceImpl<userMapper, User> implements us
             newUser.setEmail(email);
             newUser.setPassword(md5DigestAsHex);
             newUser.setStatus(STATUS_ONE);
-            return userService.save(newUser);
+            return save(newUser);
         }
     }
 
@@ -103,7 +100,7 @@ public class userServiceImpl extends ServiceImpl<userMapper, User> implements us
         if (queryUser.getAvatar() == null || queryUser.getAvatar().equals("")) {
             queryUser.setAvatar(USER_AVATAR);
         }
-        userService.updateById(queryUser);
+        updateById(queryUser);
         return queryUser;
     }
 

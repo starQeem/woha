@@ -38,8 +38,6 @@ import static com.starQeem.woha.util.constant.*;
 @Service
 public class strategyServiceImpl extends ServiceImpl<strategyMapper, Strategy> implements strategyService {
     @Resource
-    private strategyService strategyService;
-    @Resource
     private strategyMapper strategyMapper;
     @Resource
     private userTaskService userTaskService;
@@ -63,7 +61,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, Strategy> i
         strategy.setUpdateTime(new Date());
         strategy.setCreateTime(new Date());
         strategy.setUserId(Long.valueOf(user.getId()));
-        return strategyService.save(strategy);
+        return save(strategy);
     }
 
     /*
@@ -120,7 +118,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, Strategy> i
     public boolean updateStrategy(Strategy strategy) {
         strategy.setUpdateTime(new Date());
         strategy.setCreateTime(new Date());
-        boolean isSuccess = strategyService.updateById(strategy);
+        boolean isSuccess = updateById(strategy);
         //删除缓存
         String redisStrategyDetail = stringRedisTemplate.opsForValue().get(STRATEGY_DETAIL + strategy.getId());
         if (StrUtil.isNotBlank(redisStrategyDetail)) {
@@ -186,7 +184,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, Strategy> i
     * */
     private Strategy processStrategyDetail(String strategyDetail, Long id) {
         Strategy strategy = JSONUtil.toBean(strategyDetail, Strategy.class);
-        strategyService.update(Wrappers.<Strategy>lambdaUpdate().eq(Strategy::getId,id).setSql("views = views + 1"));
+        update(Wrappers.<Strategy>lambdaUpdate().eq(Strategy::getId,id).setSql("views = views + 1"));
         //将文章内容转换为html格式
         String html = MarkdownUtil.markdownToHtml(strategy.getContent());
         strategy.setContent(html);
@@ -197,7 +195,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, Strategy> i
      * */
     private Strategy processStrategyDetail(String strategyDetail, Long id, Long userId) {
         Strategy strategy = JSONUtil.toBean(strategyDetail, Strategy.class);
-        strategyService.update(Wrappers.<Strategy>lambdaUpdate().eq(Strategy::getId,id).setSql("views = views + 1"));
+        update(Wrappers.<Strategy>lambdaUpdate().eq(Strategy::getId,id).setSql("views = views + 1"));
         if (userId != null) {//判断用户是否为空
             //不为空,则已经登录,查询任务状态
             UserTask userTask = userTaskService.getBaseMapper().selectOne(Wrappers.<UserTask>lambdaQuery().eq(UserTask::getUserId,userId));
@@ -285,7 +283,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, Strategy> i
     @Override
     @Transactional
     public boolean removeStrategyById(Long id) {
-        strategyService.removeById(id);
+        removeById(id);
         //删除关联的评论信息
         QueryWrapper<Comment> queryWrapperComment = new QueryWrapper<>();
         queryWrapperComment.eq("strategy_id", id);
@@ -312,7 +310,7 @@ public class strategyServiceImpl extends ServiceImpl<strategyMapper, Strategy> i
         Strategy strategy = new Strategy();
         strategy.setId(id);
         strategy.setLiked(liked);
-        strategyService.updateById(strategy);
+        updateById(strategy);
         return liked;
     }
 
